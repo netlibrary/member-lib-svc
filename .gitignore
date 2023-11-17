@@ -1,3 +1,10 @@
 .vscode
 .history
 node_modules/
+.env
+dist/
+.data/
+
+
+# dont ignore task.json
+!.vscode/tasks.json

@@ -13,29 +13,19 @@ export const typeDefs = gql`
     linkPath: String
   }
 
-  type Collection {
+  type Container {
     id: ID!
     createdAt: String
     updatedAt: String
     name: String
     position: Int
-    bookmarks: [Bookmark] @relationship(type: "CONTAINS", direction: OUT)
-    folders: [Folder] @relationship(type: "CONTAINS", direction: OUT)
-  }
-
-  type Folder {
-    id: ID!
-    createdAt: String
-    updatedAt: String
-    name: String
-    position: Int
-    bookmarks: [Bookmark] @relationship(type: "CONTAINS", direction: OUT)
-    folders: [Folder] @relationship(type: "CONTAINS", direction: OUT)
+    bookmarks: [Bookmark!]! @relationship(type: "CONTAINS", direction: OUT)
+    folders: [Container!]! @relationship(type: "CONTAINS", direction: OUT)
   }
 
   type Member {
     id: ID!
-    collections: [Collection] @relationship(type: "OWNED_BY", direction: OUT)
+    collections: [Container!]! @relationship(type: "OWNED_BY", direction: OUT)
   }
 `;
 
