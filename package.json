@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "@neo4j/graphql": "^4.4.2",
+    "@types/node": "^20.9.1",
+    "apollo-server": "^3.13.0",
+    "dotenv": "^16.3.1",
+    "neo4j-driver": "^5.14.0",
+    "typescript": "^5.2.2"
+  }
+}
