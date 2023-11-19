@@ -1,8 +1,8 @@
-import { ApolloServer, gql } from 'apollo-server';
 import { Neo4jGraphQL } from '@neo4j/graphql';
-import neo4j from 'neo4j-driver';
+import { ApolloServer } from 'apollo-server';
 import dotenv from 'dotenv';
-import { typeDefs, resolvers } from './schema'; // Assuming schema is defined in another file
+import neo4j from 'neo4j-driver';
+import { resolvers, typeDefs } from './graphql/schema'; // Assuming schema is defined in another file
 
 dotenv.config();
 console.log('Neo4j URI:', process.env.NEO4J_URI);

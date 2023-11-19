@@ -8,6 +8,7 @@
     "apollo-server": "^3.13.0",
     "dotenv": "^16.3.1",
     "neo4j-driver": "^5.14.0",
+    "neogma": "^1.12.3",
     "typescript": "^5.2.2"
   }
 }
