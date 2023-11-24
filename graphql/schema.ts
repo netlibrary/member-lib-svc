@@ -2,7 +2,7 @@ import { gql } from 'apollo-server';
 
 export const typeDefs = gql`
   type Bookmark {
-    id: ID!
+    id: ID! @id @unique
     createdAt: String
     updatedAt: String
     description: String
@@ -11,25 +11,50 @@ export const typeDefs = gql`
     domainName: String
     urlScheme: String
     linkPath: String
+    folder: Folder @relationship(type: "CONTAINS", direction: IN)
+    collection: Collection @relationship(type: "CONTAINS", direction: IN)
   }
 
-  type Container {
-    id: ID!
+  interface Container {
+    id: ID! @id
     createdAt: String
     updatedAt: String
     name: String
     position: Int
     bookmarks: [Bookmark!]! @relationship(type: "CONTAINS", direction: OUT)
-    folders: [Container!]! @relationship(type: "CONTAINS", direction: OUT)
+    folders: [Folder!]! @relationship(type: "CONTAINS", direction: OUT)
+  }
+
+  type Folder { 
+    id: ID! @id @unique
+    createdAt: String
+    updatedAt: String
+    name: String
+    position: Int
+    bookmarks: [Bookmark!]! @relationship(type: "CONTAINS", direction: OUT)
+    folders: [Folder!]! @relationship(type: "CONTAINS", direction: OUT)
+
+    parent: Folder @relationship(type: "CONTAINS", direction: IN)
+    collection: Collection @relationship(type: "CONTAINS", direction: IN)
+  }
+
+  type Collection implements Container {
+    id: ID! @id @unique
+    createdAt: String
+    updatedAt: String
+    name: String
+    position: Int
+    bookmarks: [Bookmark!]! @relationship(type: "CONTAINS", direction: OUT)
+    folders: [Folder!]! @relationship(type: "CONTAINS", direction: OUT)
+
+    member: Member @relationship(type: "OWNED_BY", direction: IN)
   }
 
   type Member {
-    id: ID!
-    collections: [Container!]! @relationship(type: "OWNED_BY", direction: OUT)
+    id: ID! @id @unique
+    collections: [Collection!]! @relationship(type: "OWNED_BY", direction: OUT)
   }
 `;
 
-export const resolvers = {
-  // Custom resolvers go here
-  // Since you are using @neo4j/graphql, basic CRUD operations are auto-generated
-};
+
+
