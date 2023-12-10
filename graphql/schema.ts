@@ -20,39 +20,52 @@ export const typeDefs = gql`
     createdAt: String
     updatedAt: String
     name: String
-    position: Int
+    containerMeta: ContainerMeta @relationship(type: "HAS", direction: OUT)
     bookmarks: [Bookmark!]! @relationship(type: "CONTAINS", direction: OUT)
     folders: [Folder!]! @relationship(type: "CONTAINS", direction: OUT)
   }
 
-  type Folder { 
+  type ContainerMeta {
+    id: ID! @id @unique
+    ElementPositions: [String!]!
+    container: Container @relationship(type: "HAS", direction: IN)
+  }
+
+  type Folder implements Container @node(additionalLabels: ["Container"]) { 
     id: ID! @id @unique
     createdAt: String
     updatedAt: String
     name: String
-    position: Int
     bookmarks: [Bookmark!]! @relationship(type: "CONTAINS", direction: OUT)
     folders: [Folder!]! @relationship(type: "CONTAINS", direction: OUT)
+    containerMeta: ContainerMeta @relationship(type: "HAS", direction: OUT)
 
     parent: Folder @relationship(type: "CONTAINS", direction: IN)
     collection: Collection @relationship(type: "CONTAINS", direction: IN)
   }
 
-  type Collection implements Container {
+  type Collection implements Container @node(additionalLabels: ["Container"]) {
     id: ID! @id @unique
     createdAt: String
     updatedAt: String
     name: String
-    position: Int
     bookmarks: [Bookmark!]! @relationship(type: "CONTAINS", direction: OUT)
     folders: [Folder!]! @relationship(type: "CONTAINS", direction: OUT)
+    containerMeta: ContainerMeta @relationship(type: "HAS", direction: OUT)
 
-    member: Member @relationship(type: "OWNED_BY", direction: IN)
+    member: Member @relationship(type: "OWNS", direction: IN)
   }
 
   type Member {
     id: ID! @id @unique
-    collections: [Collection!]! @relationship(type: "OWNED_BY", direction: OUT)
+    collections: [Collection!]! @relationship(type: "OWNS", direction: OUT)
+    memberMeta: MemberMeta @relationship(type: "HAS", direction: OUT)
+  }
+
+  type MemberMeta {
+    id: ID! @id @unique
+    CollectionPositions: [String!]!
+    member: Member @relationship(type: "HAS", direction: IN)
   }
 `;
 

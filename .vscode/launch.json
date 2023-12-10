@@ -8,6 +8,14 @@
         "program": "${workspaceFolder}/svc.ts",
         "preLaunchTask": "tsc: build - tsconfig.json",
         "outFiles": ["${workspaceFolder}/dist/**/*.js"]
+      },
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "init neo4j",
+        "program": "${workspaceFolder}/init-neo4j.ts",
+        "preLaunchTask": "tsc: build - tsconfig.json",
+        "outFiles": ["${workspaceFolder}/dist/**/*.js"]
       }
   ]
 }
