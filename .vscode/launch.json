@@ -12,8 +12,8 @@
       {
         "type": "node",
         "request": "launch",
-        "name": "init neo4j",
-        "program": "${workspaceFolder}/init-neo4j.ts",
+        "name": "seed db",
+        "program": "${workspaceFolder}/db_seeder/_db_seeder.ts",
         "preLaunchTask": "tsc: build - tsconfig.json",
         "outFiles": ["${workspaceFolder}/dist/**/*.js"]
       }

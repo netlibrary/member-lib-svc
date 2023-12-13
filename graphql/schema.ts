@@ -31,7 +31,7 @@ export const typeDefs = gql`
     container: Container @relationship(type: "HAS", direction: IN)
   }
 
-  type Folder implements Container @node(additionalLabels: ["Container"]) { 
+  type Folder implements Container { 
     id: ID! @id @unique
     createdAt: String
     updatedAt: String
@@ -44,7 +44,7 @@ export const typeDefs = gql`
     collection: Collection @relationship(type: "CONTAINS", direction: IN)
   }
 
-  type Collection implements Container @node(additionalLabels: ["Container"]) {
+  type Collection implements Container {
     id: ID! @id @unique
     createdAt: String
     updatedAt: String
