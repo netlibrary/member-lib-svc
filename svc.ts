@@ -12,7 +12,7 @@ const driver = neo4j.driver(
   neo4j.auth.basic(process.env.NEO4J_USER || '', process.env.NEO4J_PASSWORD || '')
 );
 
-const ogm = new OGM({ typeDefs, driver });
+export const ogm = new OGM({ typeDefs, driver });
 
 // Define your Collection model
 const Collection = ogm.model('Collection');
@@ -20,32 +20,7 @@ const Collection = ogm.model('Collection');
 // Define resolvers
 const resolvers = {
   Mutation: {
-    // Resolver to create a new Collection
-    createCollection: async (_, { name, memberId }) => {
-      try {
-        // Use the OGM model to create a new Collection
-        const createResult = await Collection.create({
-          input: [{
-            name,
-            member: {
-              connectOrCreate: {
-                where: { node: { id: memberId } },
-                onCreate: {
-                  node: {
-                    // other Member fields, if needed
-                  },
-                }
-              }
-            }
-          }],
-        });
 
-        return createResult.collections[0];
-      } catch (error) {
-        console.error("Error creating Collection: ", error);
-        throw new Error("Error creating Collection");
-      }
-    }
   }
 };
 

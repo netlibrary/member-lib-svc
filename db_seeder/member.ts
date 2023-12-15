@@ -1,3 +1,4 @@
+import { ogm } from "../svc";
 import { Member, driver } from "./_db_seeder";
 
 export const memberIds = [
@@ -14,12 +15,30 @@ export async function seedMembers() {
     try {
         for (const id of memberIds) {
             const result = await session.run(
-                'CREATE (m:Member {id: $id}) RETURN m', 
+                'CREATE (m:Member {id: $id}) RETURN m',
                 { id: id }
             );
             console.log(`Member created with ID: ${id}`);
         }
     } finally {
         await session.close();
+    }
+
+    seedMemberMeta()
+}
+
+async function seedMemberMeta() {
+    const MemberMeta = ogm.model('MemberMeta')
+    for (const memberId of memberIds) {
+
+        const memberMeta = await MemberMeta.create({
+            input: {
+                CollectionPositions: [],
+                member: {
+                    connect: { where: { node: { id: memberId } } }
+                }
+            }
+        });
+        console.log(`MemberMeta created with ID: ${memberMeta.memberMetas[0].id}`);
     }
 }

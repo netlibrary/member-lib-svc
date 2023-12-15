@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import { OGM } from "@neo4j/graphql-ogm";
 import { typeDefs } from '../graphql/schema';
 import { seedMembers } from './member';
+import { seedCollections } from './collection';
 
 dotenv.config();
 
@@ -19,7 +20,7 @@ export const Member = ogm.model('Member'); // Add this if not already defined
 // Seed function
 async function seedDatabase() {
   await seedMembers()
-
+  await seedCollections()
   console.log('Database seeded!');
 }
 
