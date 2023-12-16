@@ -7,7 +7,6 @@ import { seedMembers } from './member';
 async function seedDatabase() {
   await ogm.init()
   await seedMembers()
-  await seedCollections()
   console.log('Database seeded!');
 }
 
