@@ -3,11 +3,10 @@ import { gql } from 'apollo-server';
 export const typeDefs = gql`
   type Bookmark {
     id: ID! @id @unique
-    createdAt: String
-    updatedAt: String
+    createdAt: DateTime! @timestamp(operations: [CREATE])
+    updatedAt: DateTime! @timestamp(operations: [UPDATE])
     description: String
     title: String
-    position: Int
     domainName: String
     urlScheme: String
     linkPath: String
@@ -17,8 +16,8 @@ export const typeDefs = gql`
 
   interface Container {
     id: ID! @id
-    createdAt: String
-    updatedAt: String
+    createdAt: DateTime! @timestamp(operations: [CREATE])
+    updatedAt: DateTime! @timestamp(operations: [UPDATE])
     name: String
     containerMeta: ContainerMeta @relationship(type: "HAS", direction: OUT)
     bookmarks: [Bookmark!]! @relationship(type: "CONTAINS", direction: OUT)
@@ -33,8 +32,8 @@ export const typeDefs = gql`
 
   type Folder implements Container { 
     id: ID! @id @unique
-    createdAt: String
-    updatedAt: String
+    createdAt: DateTime! @timestamp(operations: [CREATE])
+    updatedAt: DateTime! @timestamp(operations: [UPDATE])
     name: String
     bookmarks: [Bookmark!]! @relationship(type: "CONTAINS", direction: OUT)
     folders: [Folder!]! @relationship(type: "CONTAINS", direction: OUT)
@@ -46,8 +45,8 @@ export const typeDefs = gql`
 
   type Collection implements Container {
     id: ID! @id @unique
-    createdAt: String
-    updatedAt: String
+    createdAt: DateTime! @timestamp(operations: [CREATE])
+    updatedAt: DateTime! @timestamp(operations: [UPDATE])
     name: String
     bookmarks: [Bookmark!]! @relationship(type: "CONTAINS", direction: OUT)
     folders: [Folder!]! @relationship(type: "CONTAINS", direction: OUT)
@@ -68,6 +67,3 @@ export const typeDefs = gql`
     member: Member @relationship(type: "HAS", direction: IN)
   }
 `;
-
-
-

@@ -1,5 +1,5 @@
-import { ogm } from "../svc";
-import { Member, driver } from "./_db_seeder";
+import { driver } from "../apollo-neo4j/driver";
+import { ogm } from "../apollo-neo4j/ogm";
 
 export const memberIds = [
     'f4e55dd4-b406-45b8-a407-6d686900b8c8',
