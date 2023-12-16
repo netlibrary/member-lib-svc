@@ -1,6 +1,5 @@
+import { collectionResolvers } from './collection';
 // Define resolvers
 export const resolvers = {
-    Mutation: {
-  
-    }
+  ...collectionResolvers
   };

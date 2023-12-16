@@ -8,7 +8,7 @@ export async function seedCollections(memberId) {
     const ogm_Collection = ogm.model('Collection')
     try {
         const collectionIds: any = []
-        for (let i = 0; i < 1; i++) {
+        for (let i = 0; i < 4; i++) {
             const ogm_collections_createRes = await ogm_Collection.create({
                 input: {
                     name: faker.commerce.department(),

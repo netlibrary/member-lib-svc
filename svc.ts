@@ -1,6 +1,7 @@
 import { ApolloServer } from 'apollo-server';
 import { ogm } from './apollo-neo4j/ogm';
 import { neoSchema } from './apollo-neo4j/schema'; // Assuming schema is defined in another file
+import { driver } from './apollo-neo4j/driver';
 
 
 
@@ -10,6 +11,7 @@ Promise.all([neoSchema.getSchema(), ogm.init()]).then(([schema]) => {
     context: ({ req }) => {
       return {
         ogm,
+        driver
       };
     }
   });
