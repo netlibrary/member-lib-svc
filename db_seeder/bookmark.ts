@@ -2,11 +2,11 @@ import { faker } from '@faker-js/faker';
 import { ogm } from '../apollo-neo4j/ogm';
 
 
-export async function seedBookmarks(containerName, containerId): Promise<[string]> {
+export async function seedBookmarks(containerName, containerId): Promise<string[]> {
     const ogm_Bookmark = ogm.model('Bookmark')
     const bookmarkIds: any = []
     try {
-        for (let i = 0; i < Math.floor(Math.random() * 3) + 3; i++) {
+        for (let i = 0; i < Math.floor(Math.random() * 2) + 2; i++) {
             const bookmarkInput = {
                 description: faker.lorem.sentences(2), // Replace with actual description
                 title: faker.company.catchPhrase(), // Replace with actual title
