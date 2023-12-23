@@ -23,7 +23,7 @@ export async function seedFolders(containerName, containerId, level = 0): Promis
             let elementIds = await seedBookmarks("folder", ogm_folders_createRes.folders[0].id)
             console.log(`folder level: ${level}`)
             if (level <= Math.floor(Math.random() * 2) + 1) {
-                const subFolderIds = elementIds.concat(await seedFolders("folder", ogm_folders_createRes.folders[0].id, ++level))
+                const subFolderIds = await seedFolders("folder", ogm_folders_createRes.folders[0].id, ++level)
                 elementIds = elementIds.concat(subFolderIds)
             }
             seedContainerMeta("folder", ogm_folders_createRes.folders[0].id, elementIds)
