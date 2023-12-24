@@ -8,7 +8,7 @@ export const general_typeDefs = gql`
             MATCH (n:DeleteCascade { id: $id })
             OPTIONAL MATCH (n)-[r*0..]->(sub)
             DETACH DELETE n, sub
-            RETURN (COUNT(sub) + 1) AS nodesDeleted
+            RETURN COUNT(sub) AS nodesDeleted
             """
             columnName: "nodesDeleted"
         )

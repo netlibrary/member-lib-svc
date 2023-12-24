@@ -14,11 +14,11 @@ export async function seedMembers() {
     try {
         for (const id of memberIds) {
             const result = await session.run(
-                'CREATE (m:Member {id: $id}) RETURN m',
+                'CREATE (m:Member:DeleteCascade {id: $id}) RETURN m',
                 { id: id }
             );
             console.log(`Member created with ID: ${id}`);
-            seedCollections(id)
+            await seedCollections(id)
         }
     } finally {
         await session.close();

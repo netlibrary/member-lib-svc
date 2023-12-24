@@ -1,5 +1,4 @@
 import { ogm } from '../apollo-neo4j/ogm';
-import { seedCollections } from './collection';
 import { seedMembers } from './member';
 
 

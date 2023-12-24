@@ -31,6 +31,5 @@ export async function seedCollections(memberId) {
     } catch (error: any) {
         console.error(`Error creating collection for Member ID ${memberId}: ${error.message}`);
     }
-
 }
 
