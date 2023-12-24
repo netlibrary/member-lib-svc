@@ -4,6 +4,7 @@ import { folder_typeDefs } from './folder';
 import { member_typeDefs } from './member';
 import { container_typeDefs } from './container';
 import { collection_typeDefs } from './collection';
+import { general_typeDefs } from './general';
 
 export const typeDefs = gql`
   ${member_typeDefs}
@@ -11,4 +12,5 @@ export const typeDefs = gql`
   ${collection_typeDefs}
   ${folder_typeDefs}
   ${bookmark_typeDefs}
+  ${general_typeDefs}
 `

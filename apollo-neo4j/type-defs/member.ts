@@ -1,7 +1,7 @@
 import { gql } from 'apollo-server';
 
 export const member_typeDefs = gql`
-  type Member {
+  type Member @node(labels: ["Member", "DeleteCascade"]) {
     id: ID! @id @unique
     collections: [Collection!]! @relationship(type: "OWNS", direction: OUT)
     memberMeta: MemberMeta @relationship(type: "HAS", direction: OUT)

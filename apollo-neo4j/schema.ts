@@ -7,7 +7,8 @@ import { resolvers } from "./resolvers/_resolvers";
 export const neoSchema = new Neo4jGraphQL({
     typeDefs,
     resolvers,
-    driver
+    driver,
+    debug: true,
 });
 
 

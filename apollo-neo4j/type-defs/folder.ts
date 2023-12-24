@@ -1,7 +1,7 @@
 import { gql } from 'apollo-server';
 
 export const folder_typeDefs = gql`
-  type Folder implements Container { 
+  type Folder implements Container @node(labels: ["Folder", "Container", "DeleteCascade"]) { 
     id: ID! @id @unique
     createdAt: DateTime @timestamp(operations: [CREATE])
     updatedAt: DateTime @timestamp(operations: [UPDATE])
