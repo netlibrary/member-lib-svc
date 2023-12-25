@@ -10,6 +10,7 @@ export const bookmark_typeDefs = gql`
     domainName: String
     urlScheme: String
     linkPath: String
+    iconUri: String
 
     folder: Folder @relationship(type: "CONTAINS", direction: IN)
     collection: Collection @relationship(type: "CONTAINS", direction: IN)

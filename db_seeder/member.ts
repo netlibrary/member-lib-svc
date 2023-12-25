@@ -1,5 +1,4 @@
 import { driver } from "../apollo-neo4j/driver";
-import { ogm } from "../apollo-neo4j/ogm";
 import { seedCollections } from "./collection";
 
 export const memberIds = [
