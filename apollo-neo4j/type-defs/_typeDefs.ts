@@ -1,4 +1,4 @@
-import { gql } from 'apollo-server';
+import { gql } from 'apollo-server-express';
 import { bookmark_typeDefs } from './bookmark';
 import { folder_typeDefs } from './folder';
 import { member_typeDefs } from './member';

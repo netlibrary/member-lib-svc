@@ -1,4 +1,4 @@
-import { gql } from "apollo-server";
+import { gql } from "apollo-server-express";
 
 export const collection_typeDefs = gql`
   type Collection implements Container

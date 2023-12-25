@@ -1,6 +1,8 @@
-import { gql } from "apollo-server";
+import { gql } from "apollo-server-express";
 
 export const general_typeDefs = gql`
+  scalar Upload
+
   type Mutation {
     deleteCascade(id: ID!): Int
       @cypher(
@@ -27,5 +29,6 @@ export const general_typeDefs = gql`
         """
         columnName: "nodesDeleted"
       )
+    importFirefoxBookmarks(file: Upload!): Boolean
   }
 `;

@@ -1,0 +1,240 @@
+{
+    "guid": "root________",
+    "title": "",
+    "index": 0,
+    "dateAdded": 1702645102907000,
+    "lastModified": 1703451095349000,
+    "id": 1,
+    "typeCode": 2,
+    "type": "text/x-moz-place-container",
+    "root": "placesRoot",
+    "children": [
+        {
+            "guid": "menu________",
+            "title": "menu",
+            "index": 0,
+            "dateAdded": 1702645102907000,
+            "lastModified": 1702645102973000,
+            "id": 2,
+            "typeCode": 2,
+            "type": "text/x-moz-place-container",
+            "root": "bookmarksMenuFolder",
+            "children": [
+                {
+                    "guid": "fKf_KDyx_F3L",
+                    "title": "Mozilla Firefox",
+                    "index": 0,
+                    "dateAdded": 1702645102973000,
+                    "lastModified": 1702645102973000,
+                    "id": 7,
+                    "typeCode": 2,
+                    "type": "text/x-moz-place-container",
+                    "children": [
+                        {
+                            "guid": "by_q0azipsNS",
+                            "title": "Hilfe erhalten",
+                            "index": 0,
+                            "dateAdded": 1702645102973000,
+                            "lastModified": 1702645102973000,
+                            "id": 8,
+                            "typeCode": 1,
+                            "iconUri": "fake-favicon-uri:https://support.mozilla.org/products/firefox",
+                            "type": "text/x-moz-place",
+                            "uri": "https://support.mozilla.org/products/firefox"
+                        },
+                        {
+                            "guid": "vHa8jjiawUVg",
+                            "title": "Firefox anpassen",
+                            "index": 1,
+                            "dateAdded": 1702645102973000,
+                            "lastModified": 1702645102973000,
+                            "id": 9,
+                            "typeCode": 1,
+                            "iconUri": "fake-favicon-uri:https://support.mozilla.org/kb/customize-firefox-controls-buttons-and-toolbars?utm_source=firefox-browser&utm_medium=default-bookmarks&utm_campaign=customize",
+                            "type": "text/x-moz-place",
+                            "uri": "https://support.mozilla.org/kb/customize-firefox-controls-buttons-and-toolbars?utm_source=firefox-browser&utm_medium=default-bookmarks&utm_campaign=customize"
+                        },
+                        {
+                            "guid": "Syq64sLB-HyJ",
+                            "title": "Mitmachen",
+                            "index": 2,
+                            "dateAdded": 1702645102973000,
+                            "lastModified": 1702645102973000,
+                            "id": 10,
+                            "typeCode": 1,
+                            "iconUri": "fake-favicon-uri:https://www.mozilla.org/contribute/",
+                            "type": "text/x-moz-place",
+                            "uri": "https://www.mozilla.org/contribute/"
+                        },
+                        {
+                            "guid": "93h7RsBCBl0q",
+                            "title": "Über uns",
+                            "index": 3,
+                            "dateAdded": 1702645102973000,
+                            "lastModified": 1702645102973000,
+                            "id": 11,
+                            "typeCode": 1,
+                            "iconUri": "fake-favicon-uri:https://www.mozilla.org/about/",
+                            "type": "text/x-moz-place",
+                            "uri": "https://www.mozilla.org/about/"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "guid": "toolbar_____",
+            "title": "toolbar",
+            "index": 1,
+            "dateAdded": 1702645102907000,
+            "lastModified": 1703451095349000,
+            "id": 3,
+            "typeCode": 2,
+            "type": "text/x-moz-place-container",
+            "root": "toolbarFolder",
+            "children": [
+                {
+                    "guid": "45tzQ3u1X3ry",
+                    "title": "Erste Schritte",
+                    "index": 0,
+                    "dateAdded": 1702645102975000,
+                    "lastModified": 1702645102975000,
+                    "id": 12,
+                    "typeCode": 1,
+                    "iconUri": "fake-favicon-uri:https://www.mozilla.org/firefox/?utm_medium=firefox-desktop&utm_source=bookmarks-toolbar&utm_campaign=new-users&utm_content=-global",
+                    "type": "text/x-moz-place",
+                    "uri": "https://www.mozilla.org/firefox/?utm_medium=firefox-desktop&utm_source=bookmarks-toolbar&utm_campaign=new-users&utm_content=-global"
+                },
+                {
+                    "guid": "L_usvlb83umZ",
+                    "title": "ChatGPT",
+                    "index": 1,
+                    "dateAdded": 1702657810753000,
+                    "lastModified": 1702657810753000,
+                    "id": 13,
+                    "typeCode": 1,
+                    "iconUri": "https://cdn.oaistatic.com/_next/static/media/apple-touch-icon.59f2e898.png",
+                    "type": "text/x-moz-place",
+                    "uri": "https://chat.openai.com/"
+                },
+                {
+                    "guid": "V7V2yC43F8Qv",
+                    "title": "(1) Create a Large Language Model from Scratch with Python – Tutorial - YouTube",
+                    "index": 2,
+                    "dateAdded": 1703354316833000,
+                    "lastModified": 1703354316833000,
+                    "id": 15,
+                    "typeCode": 1,
+                    "iconUri": "https://www.youtube.com/s/desktop/e4d15d2c/img/favicon_144x144.png",
+                    "type": "text/x-moz-place",
+                    "uri": "https://www.youtube.com/watch?v=UU1WVnMk4E8"
+                },
+                {
+                    "guid": "m3hhhYCnEvBC",
+                    "title": "(1) Fine-tuning Large Language Models (LLMs) | w/ Example Code - YouTube",
+                    "index": 3,
+                    "dateAdded": 1703361896609000,
+                    "lastModified": 1703361896609000,
+                    "id": 16,
+                    "typeCode": 1,
+                    "iconUri": "https://www.youtube.com/s/desktop/e4d15d2c/img/favicon_144x144.png",
+                    "type": "text/x-moz-place",
+                    "uri": "https://www.youtube.com/watch?v=eC6Hd1hFvos"
+                },
+                {
+                    "guid": "4-VlGoOSXl9L",
+                    "title": "domain",
+                    "index": 4,
+                    "dateAdded": 1703374159061000,
+                    "lastModified": 1703429582063000,
+                    "id": 18,
+                    "typeCode": 2,
+                    "type": "text/x-moz-place-container",
+                    "children": [
+                        {
+                            "guid": "3WDCP0J_HXvb",
+                            "title": "Domain registrieren: Preiswert, einfach & schnell",
+                            "index": 0,
+                            "dateAdded": 1703374174810000,
+                            "lastModified": 1703374174810000,
+                            "id": 19,
+                            "typeCode": 1,
+                            "iconUri": "https://www.united-domains.de/apple-touch-icon.png",
+                            "type": "text/x-moz-place",
+                            "uri": "https://www.united-domains.de/suchergebnis/?is-single-search=1&single-group=web-community-category&multi-group=web-community-category&domain=linkit"
+                        },
+                        {
+                            "guid": "oS-ndTV03BxQ",
+                            "title": "GoDaddy Domainnamen-Suche",
+                            "index": 1,
+                            "dateAdded": 1703374180841000,
+                            "lastModified": 1703374180841000,
+                            "id": 20,
+                            "typeCode": 1,
+                            "iconUri": "https://img6.wsimg.com/ux/favicon/android-icon-192x192.png",
+                            "type": "text/x-moz-place",
+                            "uri": "https://www.godaddy.com/de-de/domainsearch/find?domainToCheck=linkspace"
+                        },
+                        {
+                            "guid": "ooxllHJMXifo",
+                            "title": "E-Mail – Hornig, Paul – Outlook",
+                            "index": 2,
+                            "dateAdded": 1703429582063000,
+                            "lastModified": 1703429582063000,
+                            "id": 21,
+                            "typeCode": 1,
+                            "iconUri": "https://res.cdn.office.net/assets/mail/pwa/v1/pngs/apple-touch-icon.png",
+                            "type": "text/x-moz-place",
+                            "uri": "https://outlook.office365.com/mail/"
+                        }
+                    ]
+                },
+                {
+                    "guid": "LtoG7zuIJNJJ",
+                    "title": "fom",
+                    "index": 5,
+                    "dateAdded": 1703429602273000,
+                    "lastModified": 1703429605497000,
+                    "id": 22,
+                    "typeCode": 2,
+                    "type": "text/x-moz-place-container",
+                    "children": [
+                        {
+                            "guid": "FUhjclvEyN6_",
+                            "title": "fom mail",
+                            "index": 0,
+                            "dateAdded": 1702815333783000,
+                            "lastModified": 1703429605497000,
+                            "id": 14,
+                            "typeCode": 1,
+                            "type": "text/x-moz-place",
+                            "uri": "https://adfs.fom-net.de/adfs/oauth2/authorize/?client_id=d5e45e36-8497-4bf7-a033-9a303bd9b062&redirect_uri=https%3A%2F%2Foc.fom-digital.de%2Fauth%2Fsigninwin%2Fonlinecampus&response_type=id_token%20token&scope=openid&state=af0ab440ed154a8eb893e6713504ccf2&nonce=36fcf96d144644cf856fd9eaafc79d3c"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "guid": "unfiled_____",
+            "title": "unfiled",
+            "index": 3,
+            "dateAdded": 1702645102907000,
+            "lastModified": 1702645102972000,
+            "id": 5,
+            "typeCode": 2,
+            "type": "text/x-moz-place-container",
+            "root": "unfiledBookmarksFolder"
+        },
+        {
+            "guid": "mobile______",
+            "title": "mobile",
+            "index": 4,
+            "dateAdded": 1702645102907000,
+            "lastModified": 1702645102972000,
+            "id": 6,
+            "typeCode": 2,
+            "type": "text/x-moz-place-container",
+            "root": "mobileFolder"
+        }
+    ]
+}

@@ -1,4 +1,4 @@
-import { gql } from 'apollo-server';
+import { gql } from 'apollo-server-express';
 
 export const bookmark_typeDefs = gql`
   type Bookmark {

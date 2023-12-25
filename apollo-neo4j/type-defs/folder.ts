@@ -1,4 +1,4 @@
-import { gql } from 'apollo-server';
+import { gql } from 'apollo-server-express';
 
 export const folder_typeDefs = gql`
   type Folder implements Container @node(labels: ["Folder", "Container", "DeleteCascade"]) { 
