@@ -117,8 +117,8 @@ async function createBookmark(bookmarkData, containerId, containerName) {
     input: {
       title: bookmarkData.title,
       domainName: urlParts.hostname,
-      urlScheme: urlParts.protocol,
-      linkPath: urlParts.pathname,
+      urlScheme: urlParts.protocol.replace(":", ""),
+      linkPath: urlParts.pathname + urlParts.search + urlParts.hash,
       iconUri: bookmarkData.iconUri,
       // createdAt: new Date(bookmarkData.dateAdded / 1000),
       // updatedAt: new Date(bookmarkData.lastModified / 1000),
