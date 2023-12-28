@@ -13,4 +13,13 @@ export const folder_typeDefs = gql`
     folder: Folder @relationship(type: "CONTAINS", direction: IN)
     collection: Collection @relationship(type: "CONTAINS", direction: IN)
   }
+
+  type FolderResp {
+    id: ID!
+    name: String!
+    bookmarkCount: Int!
+    folders: [FolderResp]!
+    bookmarks: [BookmarkResp]!
+    elementPositions: [String]!
+  }
 `;

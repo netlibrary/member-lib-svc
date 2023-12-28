@@ -14,25 +14,36 @@ export const collection_typeDefs = gql`
     member: Member @relationship(type: "OWNS", direction: IN)
   }
 
+  type CollectionResp {
+        id: ID!
+        name: String!
+        bookmarkCount: Int!
+      }
+
   type CollectionListResp {
-    id: ID!
-    name: String
-    bookmarkCount: Int
-  }
+      collections: [CollectionResp],
+      collectionPositions: [String]
+    }
 
   type Query {
-    collectionList(memberId: String!): [CollectionListResp]
+    collectionList(memberId: String!): CollectionListResp
       @cypher(
         statement: """
         MATCH (m:Member {id: $memberId})-[:OWNS]->(c:Collection)
-        CALL {
-          WITH c
-          MATCH path = (c)-[:CONTAINS*0..]->(:Folder)-[:CONTAINS*0..]->(b:Bookmark)
-          RETURN COUNT(DISTINCT b) AS bookmarkCount
-        }
-        RETURN {id: c.id, name: c.name, bookmarkCount: bookmarkCount} as r
-        """,
+      OPTIONAL MATCH (m)-[:HAS]->(mm:MemberMeta)
+      WITH c, mm
+      CALL {
+        WITH c
+        MATCH (c)-[:CONTAINS*0..]->(:Folder)-[:CONTAINS*0..]->(b:Bookmark)
+        RETURN c AS collection, COUNT(DISTINCT b) AS bookmarkCount
+      }
+      WITH mm, COLLECT({id: collection.id, name: collection.name, bookmarkCount: bookmarkCount}) AS collections
+      RETURN {
+        collections: collections,
+        collectionPositions: mm.collectionPositions
+      } as r
+      """,
         columnName: "r"
       ),
   }
-`;
+  `;

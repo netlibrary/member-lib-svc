@@ -11,21 +11,22 @@ export const container_typeDefs = gql`
     folders: [Folder!]! @relationship(type: "CONTAINS", direction: OUT)
   }
 
-  type Mutation {
-    deleteContainer(id: ID!): Boolean
-      @cypher(
-        statement: """
-        CREATE (a:Actor {name: $name})
-        RETURN a
-        """
-        columnName: "a"
-      )
-  }
-
   type ContainerMeta {
     id: ID! @id @unique
     elementPositions: [String!]!
     folder: Folder @relationship(type: "HAS", direction: IN)
     collection: Collection @relationship(type: "HAS", direction: IN)
   }
+
+
+  type ContainerContentResp {
+    elementPositions: [String]
+    folders: [FolderResp]!
+    bookmarks: [BookmarkResp]!
+  }
+
+  type Query {
+    containerContent(id: String!, level: Int!): ContainerContentResp
+  }
+
 `;
