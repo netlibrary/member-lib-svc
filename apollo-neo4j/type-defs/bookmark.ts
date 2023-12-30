@@ -19,9 +19,9 @@ export const bookmark_typeDefs = gql`
   type BookmarkResp {
     id: ID!
     title: String!
-    domainName: String
-    urlScheme: String
-    linkPath: String
+    domainName: String!
+    urlScheme: String!
+    linkPath: String!
     iconUri: String
     description: String
   }
