@@ -20,9 +20,9 @@ export const container_typeDefs = gql`
 
 
   type ContainerContentResp {
-    elementPositions: [String]
-    folders: [FolderResp]
-    bookmarks: [BookmarkResp]
+    elementPositions: [String!]!
+    folders: [FolderResp!]!
+    bookmarks: [BookmarkResp!]!
   }
 
   type Query {

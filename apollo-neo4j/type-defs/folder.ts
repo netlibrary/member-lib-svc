@@ -18,8 +18,8 @@ export const folder_typeDefs = gql`
     id: ID!
     name: String!
     bookmarkCount: Int
-    folders: [FolderResp]
-    bookmarks: [BookmarkResp]
-    elementPositions: [String]
+    folders: [FolderResp!]
+    bookmarks: [BookmarkResp!]
+    elementPositions: [String!]
   }
 `;
