@@ -1,31 +1,30 @@
 import { gql } from "apollo-server-express";
 
 export const collection_typeDefs = gql`
-  type Collection implements Container
-    @node(labels: ["Collection", "Container", "DeleteCascade"]) {
+  type Collection implements Parent
+    @node(labels: ["Collection", "Parent", "DeleteCascade"]) {
     id: ID! @id @unique
     createdAt: DateTime @timestamp(operations: [CREATE])
     updatedAt: DateTime @timestamp(operations: [UPDATE])
     name: String
-    bookmarks: [Bookmark!]! @relationship(type: "CONTAINS", direction: OUT)
-    folders: [Folder!]! @relationship(type: "CONTAINS", direction: OUT)
-    containerMeta: ContainerMeta @relationship(type: "HAS", direction: OUT)
+    children: [Child!]! @relationship(type: "CONTAINS", direction: OUT)
+    parentMeta: ParentMeta @relationship(type: "HAS", direction: OUT)
 
     member: Member @relationship(type: "OWNS", direction: IN)
   }
 
-  type CollectionDS1 {
+  type CollectionDs1 {
     id: ID!
     name: String!
     bookmarkCount: Int!
   }
 
-  type CollectionListDS1 {
-    collections: [CollectionDS1!]
+  type CollectionListDs1 {
+    collections: [CollectionDs1!]
   }
 
   type Query {
-    collectionList(memberId: String!): CollectionListDS1
+    collectionList(memberId: String!): CollectionListDs1
       @cypher(
         statement: """
         MATCH (m:Member {id: $memberId})-[:OWNS]->(c:Collection)

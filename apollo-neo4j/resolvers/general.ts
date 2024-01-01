@@ -1,6 +1,6 @@
 import { GraphQLUpload } from "graphql-upload-ts";
 import { memberIds } from "../../db_seeder/member";
-import { seedContainerMeta } from "../../db_seeder/meta";
+import { seedParentMeta } from "../../db_seeder/meta";
 import { ogm } from "../ogm";
 
 export const generalResolvers = {
@@ -72,45 +72,45 @@ async function processBookmarksData(bookmarksData) {
 
 async function processChildren(
   children,
-  containerId,
-  containerName = "collection"
+  parentId,
+  parentName = "collection"
 ) {
-  const elementPositions: string[] = [];
+  const childPositions: string[] = [];
   for (const child of children) {
     if (child.uri) {
       // It's a bookmark
       const bookmarkId = await createBookmark(
         child,
-        containerId,
-        containerName
+        parentId,
+        parentName
       );
-      elementPositions.push(bookmarkId);
+      childPositions.push(bookmarkId);
     } else if (child.children) {
       // It's a folder
-      const folderId = await createFolder(child, containerId, containerName);
+      const folderId = await createFolder(child, parentId, parentName);
       await processChildren(child.children, folderId, "folder");
-      elementPositions.push(folderId);
+      childPositions.push(folderId);
     }
   }
-  seedContainerMeta(containerName, containerId, elementPositions);
+  seedParentMeta(parentId, childPositions);
 }
 
-async function createFolder(folderData, containerId, containerName) {
+async function createFolder(folderData, parentId, parentName) {
   const ogm_Folder = ogm.model("Folder");
   const folder = await ogm_Folder.create({
     input: {
       name: folderData.title,
       // createdAt: new Date(folderData.dateAdded / 1000),
       // updatedAt: new Date(folderData.lastModified / 1000),
-      [containerName]: {
-        connect: { where: { node: { id: containerId } } },
+      [parentName]: {
+        connect: { where: { node: { id: parentId } } },
       },
     },
   });
   return folder.folders[0].id;
 }
 
-async function createBookmark(bookmarkData, containerId, containerName) {
+async function createBookmark(bookmarkData, parentId, parentName) {
   const ogm_Bookmark = ogm.model("Bookmark");
   const urlParts = new URL(bookmarkData.uri);
   const bookmark = await ogm_Bookmark.create({
@@ -122,8 +122,8 @@ async function createBookmark(bookmarkData, containerId, containerName) {
       iconUri: bookmarkData.iconUri,
       // createdAt: new Date(bookmarkData.dateAdded / 1000),
       // updatedAt: new Date(bookmarkData.lastModified / 1000),
-      [containerName]: {
-        connect: { where: { node: { id: containerId } } },
+      [parentName]: {
+        connect: { where: { node: { id: parentId } } },
       },
     },
   });

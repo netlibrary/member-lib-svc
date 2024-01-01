@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker';
 import { ogm } from '../apollo-neo4j/ogm';
 import { seedBookmarks } from './bookmark';
 import { seedFolders } from './folder';
-import { seedContainerMeta, seedMemberMeta } from './meta';
+import { seedParentMeta, seedMemberMeta } from './meta';
 
 export async function seedCollections(memberId) {
     const ogm_Collection = ogm.model('Collection')
@@ -19,11 +19,11 @@ export async function seedCollections(memberId) {
                 }
             });
             console.log(`Collection created with ID: ${ogm_collections_createRes.collections[0].id}`);
-            Promise.all([seedBookmarks("collection", ogm_collections_createRes.collections[0].id),
-            seedFolders("collection", ogm_collections_createRes.collections[0].id)])
+            Promise.all([seedBookmarks(ogm_collections_createRes.collections[0].id),
+            seedFolders(ogm_collections_createRes.collections[0].id)])
             .then(res => {
-                const elementIds = [...res[0], ...res[1]]
-                seedContainerMeta("collection", ogm_collections_createRes.collections[0].id, elementIds)
+                const childIds = [...res[0], ...res[1]]
+                seedParentMeta(ogm_collections_createRes.collections[0].id, childIds)
             })
             collectionIds.push(ogm_collections_createRes.collections[0].id)
         }

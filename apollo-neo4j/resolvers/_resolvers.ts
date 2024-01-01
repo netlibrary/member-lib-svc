@@ -1,9 +1,9 @@
 import { collectionResolvers } from './collection';
 import { generalResolvers } from './general';
-import { containerResolvers } from './container';
+import { collectionTreeResolvers } from './collection-tree';
 // Define resolvers
 export const resolvers = {
   ...collectionResolvers,
-  ...containerResolvers,
+  ...collectionTreeResolvers,
   ...generalResolvers
   };

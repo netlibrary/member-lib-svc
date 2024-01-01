@@ -12,11 +12,10 @@ export const bookmark_typeDefs = gql`
     linkPath: String
     iconUri: String
 
-    folder: Folder @relationship(type: "CONTAINS", direction: IN)
-    collection: Collection @relationship(type: "CONTAINS", direction: IN)
+    parent: Parent @relationship(type: "CONTAINS", direction: IN)
   }
 
-  type BookmarkResp {
+  type BookmarkDd1 {
     id: ID!
     type: String
     title: String!

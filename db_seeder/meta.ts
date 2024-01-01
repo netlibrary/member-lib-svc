@@ -14,15 +14,15 @@ export async function seedMemberMeta(memberId, collectionIds) {
     console.log(`MemberMeta created with ID: ${memberMeta.memberMetas[0].id}`);
 }
 
-export async function seedContainerMeta(containerName, containerId, elementIds) {
-    const ContainerMeta = ogm.model('ContainerMeta')
-    const containerMeta = await ContainerMeta.create({
+export async function seedParentMeta(parentId, childIds) {
+    const ParentMeta = ogm.model('ParentMeta')
+    const parentMeta = await ParentMeta.create({
         input: {
-            elementPositions: elementIds,
-            [containerName]: {
-                connect: { where: { node: { id: containerId } } }
+            childPositions: childIds,
+            parent: {
+                connect: { where: { node: { id: parentId } } }
             }
         }
     });
-    console.log(`ContainerMeta created with ID: ${containerMeta.containerMetas[0].id}`);
+    console.log(`ParentMeta created with ID: ${parentMeta.parentMetas[0].id}`);
 }

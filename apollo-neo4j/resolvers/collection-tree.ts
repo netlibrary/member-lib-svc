@@ -1,19 +1,32 @@
-export const containerResolvers = {
-  ChildrenResp: {
+export const collectionTreeResolvers = {
+  ChildrenDd1: {
     __resolveType(obj, context, info) {
       // Logic to determine the type
       if (obj.type == "folder") {
-        return "FolderResp";
+        return "FolderDs1";
       } else {
-        return "BookmarkResp";
+        return "BookmarkDd1";
       }
     },
   },
+  Child: {
+    __resolveType(obj, context, info){
+      if(obj.someBookmarkProperty){
+        return 'Bookmark';
+      }
+
+      if(obj.someFolderProperty){
+        return 'Folder';
+      }
+
+      return null; // Or handle the error case
+    },
+  },
   Query: {
-    containerContent: async (_, { id: rootId, level }, { driver }) => {
+    parentChildren: async (_, { id: rootId, level }, { driver }) => {
       const session = driver.session();
       try {
-        return await Query_DeepContainerContent(0, level, rootId, session);
+        return await Query_DeepParentChildren(0, level, rootId, session);
       } catch (error) {
         throw error;
       } finally {
@@ -47,8 +60,8 @@ const CypherSelection = {
 };
 
 const CypherQuery = {
-  ContentLvl1WithDeepBookmarkCount: `MATCH (c:Container {id: $id}) 
-  MATCH (c)-[:HAS]->(cm:ContainerMeta)
+  ChildrenLvl1WithDeepBookmarkCount: `MATCH (c:Parent {id: $id}) 
+  MATCH (c)-[:HAS]->(cm:ParentMeta)
   OPTIONAL MATCH (c)-[:CONTAINS]->(b:Bookmark)
   OPTIONAL MATCH (c)-[:CONTAINS]->(f:Folder)
   CALL {
@@ -64,14 +77,15 @@ const CypherQuery = {
     "b"
   )} END) AS bookmarks
   WITH cm, folders + bookmarks AS children
-  UNWIND cm.elementPositions AS pos
+  UNWIND cm.childPositions AS pos
   WITH pos, [child IN children WHERE child.id = pos][0] AS sortedChild
   WITH COLLECT(sortedChild) AS sortedChildren
   RETURN { 
     children: sortedChildren
-  } AS containerContent`,
-  ContentLvl1: `MATCH (c:Container {id: $id}) 
-  MATCH (c)-[:HAS]->(cm:ContainerMeta)
+  } AS parentChildren`,
+  
+  ChildrenLvl1: `MATCH (c:Parent {id: $id}) 
+  MATCH (c)-[:HAS]->(cm:ParentMeta)
   OPTIONAL MATCH (c)-[:CONTAINS]->(b:Bookmark)
   OPTIONAL MATCH (c)-[:CONTAINS]->(f:Folder)
   WITH c, cm,
@@ -82,45 +96,45 @@ const CypherQuery = {
     "b"
   )} END) AS bookmarks
   WITH cm, folders + bookmarks AS children
-  UNWIND cm.elementPositions AS pos
+  UNWIND cm.childPositions AS pos
   WITH pos, [child IN children WHERE child.id = pos][0] AS sortedChild
   WITH COLLECT(sortedChild) AS sortedChildren
   RETURN { 
       children: sortedChildren
-  } AS containerContent`,
+  } AS parentChildren`,
 };
 
-async function Query_DeepContainerContent(
+async function Query_DeepParentChildren(
   currentLevel: number,
   totalLevels: number,
-  containerId: any,
+  parentId: any,
   session: any
 ) {
   const nextLevel = currentLevel + 1;
   let ogm_result: any = null;
   if (nextLevel == totalLevels) {
     ogm_result = await session.run(
-      CypherQuery.ContentLvl1WithDeepBookmarkCount,
-      { id: containerId }
+      CypherQuery.ChildrenLvl1WithDeepBookmarkCount,
+      { id: parentId }
     );
   } else {
-    ogm_result = await session.run(CypherQuery.ContentLvl1, {
-      id: containerId,
+    ogm_result = await session.run(CypherQuery.ChildrenLvl1, {
+      id: parentId,
     });
   }
-  const result = ogm_result!.records[0].get("containerContent");
+  const result = ogm_result!.records[0].get("parentChildren");
   if (currentLevel == totalLevels) {
     return result;
   }
   for (let child of result.children) {
     if (child.type != "folder") continue;
-    const folderContent = await Query_DeepContainerContent(
+    const folderChildren = await Query_DeepParentChildren(
       nextLevel,
       totalLevels,
       child.id,
       session
     );
-    Object.assign(child, folderContent);
+    Object.assign(child, folderChildren);
   }
   return result;
 }

@@ -1,24 +1,22 @@
 import { gql } from 'apollo-server-express';
 
 export const folder_typeDefs = gql`
-  type Folder implements Container @node(labels: ["Folder", "Container", "DeleteCascade", "Child"]) { 
+  type Folder implements Parent @node(labels: ["Folder", "Parent", "DeleteCascade", "Child"]) { 
     id: ID! @id @unique
     createdAt: DateTime @timestamp(operations: [CREATE])
     updatedAt: DateTime @timestamp(operations: [UPDATE])
     name: String
-    bookmarks: [Bookmark!]! @relationship(type: "CONTAINS", direction: OUT)
-    folders: [Folder!]! @relationship(type: "CONTAINS", direction: OUT)
-    containerMeta: ContainerMeta @relationship(type: "HAS", direction: OUT)
+    children: [Child!]! @relationship(type: "CONTAINS", direction: OUT)
+    parentMeta: ParentMeta @relationship(type: "HAS", direction: OUT)
 
-    folder: Folder @relationship(type: "CONTAINS", direction: IN)
-    collection: Collection @relationship(type: "CONTAINS", direction: IN)
+    parent: Parent @relationship(type: "CONTAINS", direction: IN)
   }
 
-  type FolderResp {
+  type FolderDs1 {
     id: ID!
     type: String
     name: String!
     bookmarkCount: Int
-    children: [ChildrenResp!]
+    children: [ChildrenDd1!]
   }
 `;
