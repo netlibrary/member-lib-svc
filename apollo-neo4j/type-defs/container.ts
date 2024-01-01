@@ -1,4 +1,4 @@
-import { gql } from 'apollo-server-express';
+import { gql } from "apollo-server-express";
 
 export const container_typeDefs = gql`
   interface Container {
@@ -18,15 +18,13 @@ export const container_typeDefs = gql`
     collection: Collection @relationship(type: "HAS", direction: IN)
   }
 
+  union ChildrenResp = FolderResp | BookmarkResp
 
   type ContainerContentResp {
-    elementPositions: [String!]!
-    folders: [FolderResp!]!
-    bookmarks: [BookmarkResp!]!
+    children: [ChildrenResp!]!
   }
 
   type Query {
     containerContent(id: String!, level: Int!): ContainerContentResp
   }
-
 `;

@@ -14,36 +14,34 @@ export const collection_typeDefs = gql`
     member: Member @relationship(type: "OWNS", direction: IN)
   }
 
-  type CollectionResp {
-        id: ID!
-        name: String!
-        bookmarkCount: Int!
-      }
+  type CollectionDS1 {
+    id: ID!
+    name: String!
+    bookmarkCount: Int!
+  }
 
-  type CollectionListResp {
-      collections: [CollectionResp],
-      collectionPositions: [String]
-    }
+  type CollectionListDS1 {
+    collections: [CollectionDS1!]
+  }
 
   type Query {
-    collectionList(memberId: String!): CollectionListResp
+    collectionList(memberId: String!): CollectionListDS1
       @cypher(
         statement: """
         MATCH (m:Member {id: $memberId})-[:OWNS]->(c:Collection)
-      OPTIONAL MATCH (m)-[:HAS]->(mm:MemberMeta)
-      WITH c, mm
-      CALL {
-        WITH c
+        OPTIONAL MATCH (m)-[:HAS]->(mm:MemberMeta)
+        WITH c, mm
         MATCH (c)-[:CONTAINS*0..]->(:Folder)-[:CONTAINS*0..]->(b:Bookmark)
-        RETURN c AS collection, COUNT(DISTINCT b) AS bookmarkCount
-      }
-      WITH mm, COLLECT({id: collection.id, name: collection.name, bookmarkCount: bookmarkCount}) AS collections
-      RETURN {
-        collections: collections,
-        collectionPositions: mm.collectionPositions
-      } as r
-      """,
+        WITH c AS collection, COUNT(DISTINCT b) AS bookmarkCount, mm
+        WITH mm, COLLECT({id: collection.id, name: collection.name, bookmarkCount: bookmarkCount}) AS collections
+        UNWIND mm.collectionPositions AS pos
+        WITH pos, [collection IN collections WHERE collection.id = pos][0] AS sortedCollection
+        WITH COLLECT(sortedCollection) AS sortedCollections
+        RETURN {
+          collections: sortedCollections
+        }  as r
+        """
         columnName: "r"
-      ),
+      )
   }
-  `;
+`;

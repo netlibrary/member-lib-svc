@@ -1,4 +1,14 @@
 export const containerResolvers = {
+  ChildrenResp: {
+    __resolveType(obj, context, info) {
+      // Logic to determine the type
+      if (obj.type == "folder") {
+        return "FolderResp";
+      } else {
+        return "BookmarkResp";
+      }
+    },
+  },
   Query: {
     containerContent: async (_, { id: rootId, level }, { driver }) => {
       const session = driver.session();
@@ -20,7 +30,19 @@ const CypherSelection = {
   domainName: ${alias}.domainName, 
   linkPath: ${alias}.linkPath, 
   urlScheme: ${alias}.urlScheme,
-  iconUri: ${alias}.iconUri
+  iconUri: ${alias}.iconUri,
+  type: "bookmark"
+}`,
+  Folder: (alias: string) => `{
+  id: ${alias}.id, 
+  name: ${alias}.name, 
+  type: "folder"
+}`,
+  FolderWithDeepBookmarkCount: (alias: string) => `{
+  id: ${alias}.id, 
+  name: ${alias}.name, 
+  type: "folder",
+  bookmarkCount: bookmarkCount
 }`,
 };
 
@@ -35,24 +57,36 @@ const CypherQuery = {
     RETURN COUNT(DISTINCT b) AS bookmarkCount
   }
   WITH c, cm,
-  COLLECT(DISTINCT CASE WHEN f IS NOT NULL THEN {id: f.id, name: f.name, bookmarkCount: bookmarkCount} END) AS folders, 
-  COLLECT(DISTINCT CASE WHEN b IS NOT NULL THEN ${CypherSelection.Bookmark("b")} END) AS bookmarks
+  COLLECT(DISTINCT CASE WHEN f IS NOT NULL THEN ${CypherSelection.FolderWithDeepBookmarkCount(
+    "f"
+  )} END) AS folders, 
+  COLLECT(DISTINCT CASE WHEN b IS NOT NULL THEN ${CypherSelection.Bookmark(
+    "b"
+  )} END) AS bookmarks
+  WITH cm, folders + bookmarks AS children
+  UNWIND cm.elementPositions AS pos
+  WITH pos, [child IN children WHERE child.id = pos][0] AS sortedChild
+  WITH COLLECT(sortedChild) AS sortedChildren
   RETURN { 
-      folders: folders, 
-      bookmarks: bookmarks,
-      elementPositions: cm.elementPositions 
+    children: sortedChildren
   } AS containerContent`,
   ContentLvl1: `MATCH (c:Container {id: $id}) 
   MATCH (c)-[:HAS]->(cm:ContainerMeta)
   OPTIONAL MATCH (c)-[:CONTAINS]->(b:Bookmark)
   OPTIONAL MATCH (c)-[:CONTAINS]->(f:Folder)
   WITH c, cm,
-  COLLECT(DISTINCT CASE WHEN f IS NOT NULL THEN {id: f.id, name: f.name} END) AS folders, 
-  COLLECT(DISTINCT CASE WHEN b IS NOT NULL THEN ${CypherSelection.Bookmark("b")} END) AS bookmarks
+  COLLECT(DISTINCT CASE WHEN f IS NOT NULL THEN ${CypherSelection.Folder(
+    "f"
+  )} END) AS folders, 
+  COLLECT(DISTINCT CASE WHEN b IS NOT NULL THEN ${CypherSelection.Bookmark(
+    "b"
+  )} END) AS bookmarks
+  WITH cm, folders + bookmarks AS children
+  UNWIND cm.elementPositions AS pos
+  WITH pos, [child IN children WHERE child.id = pos][0] AS sortedChild
+  WITH COLLECT(sortedChild) AS sortedChildren
   RETURN { 
-      folders: folders, 
-      bookmarks: bookmarks,
-      elementPositions: cm.elementPositions 
+      children: sortedChildren
   } AS containerContent`,
 };
 
@@ -78,14 +112,15 @@ async function Query_DeepContainerContent(
   if (currentLevel == totalLevels) {
     return result;
   }
-  for (let folder of result.folders) {
+  for (let child of result.children) {
+    if (child.type != "folder") continue;
     const folderContent = await Query_DeepContainerContent(
       nextLevel,
       totalLevels,
-      folder.id,
+      child.id,
       session
     );
-    Object.assign(folder, folderContent);
+    Object.assign(child, folderContent);
   }
   return result;
 }

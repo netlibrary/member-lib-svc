@@ -1,7 +1,7 @@
 import { gql } from 'apollo-server-express';
 
 export const folder_typeDefs = gql`
-  type Folder implements Container @node(labels: ["Folder", "Container", "DeleteCascade"]) { 
+  type Folder implements Container @node(labels: ["Folder", "Container", "DeleteCascade", "Child"]) { 
     id: ID! @id @unique
     createdAt: DateTime @timestamp(operations: [CREATE])
     updatedAt: DateTime @timestamp(operations: [UPDATE])
@@ -16,10 +16,9 @@ export const folder_typeDefs = gql`
 
   type FolderResp {
     id: ID!
+    type: String
     name: String!
     bookmarkCount: Int
-    folders: [FolderResp!]
-    bookmarks: [BookmarkResp!]
-    elementPositions: [String!]
+    children: [ChildrenResp!]
   }
 `;
