@@ -43,4 +43,8 @@ export const collection_typeDefs = gql`
         columnName: "r"
       )
   }
+
+  type Mutation {
+    createCollection(name: String!, memberId: ID!): ID
+  }
 `;

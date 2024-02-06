@@ -10,13 +10,13 @@ export const collectionTreeResolvers = {
     },
   },
   Child: {
-    __resolveType(obj, context, info){
-      if(obj.someBookmarkProperty){
-        return 'Bookmark';
+    __resolveType(obj, context, info) {
+      if (obj.someBookmarkProperty) {
+        return "Bookmark";
       }
 
-      if(obj.someFolderProperty){
-        return 'Folder';
+      if (obj.someFolderProperty) {
+        return "Folder";
       }
 
       return null; // Or handle the error case
@@ -42,9 +42,9 @@ const CypherSelection = {
   title: ${alias}.title, 
   domainName: ${alias}.domainName, 
   linkPath: ${alias}.linkPath, 
-  urlScheme: ${alias}.urlScheme,
-  iconUri: ${alias}.iconUri,
-  type: "bookmark"
+  urlScheme: ${alias}.urlScheme, 
+  iconUri: ${alias}.iconUri, 
+  type: "bookmark" 
 }`,
   Folder: (alias: string) => `{
   id: ${alias}.id, 
@@ -83,7 +83,7 @@ const CypherQuery = {
   RETURN { 
     children: sortedChildren
   } AS parentChildren`,
-  
+
   ChildrenLvl1: `MATCH (c:Parent {id: $id}) 
   MATCH (c)-[:HAS]->(cm:ParentMeta)
   OPTIONAL MATCH (c)-[:CONTAINS]->(b:Bookmark)
