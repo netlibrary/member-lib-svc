@@ -5,7 +5,6 @@ export const ogm_Collection = ogm.model("Collection");
 export const collectionResolvers = {
   Mutation: {
     createCollection: async (_, { name, memberId }, { driver }) => {
-      const t = 0
       try {
         const collection = await ogm_Collection.create({
           input: {
