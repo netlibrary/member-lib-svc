@@ -6,13 +6,67 @@ import { neoSchema } from "./apollo-neo4j/schema"; // Assuming schema is defined
 import { graphqlUploadExpress } from "graphql-upload-ts";
 import { ApolloServerPluginLandingPageLocalDefault } from "apollo-server-core";
 
+
+const myPlugin = {
+
+  // Fires whenever a GraphQL request is received from a client.
+
+  async requestDidStart(requestContext) {
+
+
+
+    return {
+
+      // Fires whenever Apollo Server will parse a GraphQL
+
+      // request to create its associated document AST.
+
+      async parsingDidStart(requestContext) {
+
+        console.log('Parsing started!');
+
+      },
+
+      async executionDidStart(requestContext) {
+        return {
+          willResolveField({ source, args, context, info }) {
+            const { fieldName, parentType } = info;
+            console.log(`Resolving field: ${parentType.name}.${fieldName}`, source, args, context);
+            return (error, result) => {
+              if (error) {
+                console.error(`Error resolving field: ${error.message}`);
+              } else {
+                console.log(`Field resolved: ${parentType.name}.${fieldName}, Result: ${JSON.stringify(result)}`);
+              }
+            };
+          },
+        };
+      },
+      // Fires whenever Apollo Server will validate a
+
+      // request's document AST against your GraphQL schema.
+
+      async validationDidStart(requestContext) {
+
+        console.log('Validation started!');
+
+      },
+
+    };
+
+  },
+
+};
+
+
+
 Promise.all([neoSchema.getSchema(), ogm.init()])
   .then(async ([schema]) => {
     const server = new ApolloServer({
       schema: schema,
       csrfPrevention: true,
       cache: "bounded",
-      plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
+      plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true }), myPlugin],
       context: ({ req }) => {
         return {
           ogm,
@@ -22,6 +76,7 @@ Promise.all([neoSchema.getSchema(), ogm.init()])
     });
     await server.start();
     const app = express();
+    // app.use(morgan("combined"));
     // This middleware should be added before calling `applyMiddleware`.
     app.use(graphqlUploadExpress());
     server.applyMiddleware({ app });
