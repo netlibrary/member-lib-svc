@@ -30,7 +30,7 @@ export const collection_typeDefs = gql`
         MATCH (m:Member {id: $memberId})-[:OWNS]->(c:Collection)
         OPTIONAL MATCH (m)-[:HAS]->(mm:MemberMeta)
         WITH c, mm
-        MATCH (c)-[:CONTAINS*0..]->(:Folder)-[:CONTAINS*0..]->(b:Bookmark)
+        OPTIONAL MATCH (c)-[:CONTAINS*0..]->(:Folder)-[:CONTAINS*0..]->(b:Bookmark)
         WITH c AS collection, COUNT(DISTINCT b) AS bookmarkCount, mm
         WITH mm, COLLECT({id: collection.id, name: collection.name, bookmarkCount: bookmarkCount}) AS collections
         UNWIND mm.collectionPositions AS pos
