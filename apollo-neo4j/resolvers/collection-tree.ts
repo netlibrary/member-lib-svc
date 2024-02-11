@@ -1,9 +1,9 @@
 export const collectionTreeResolvers = {
-  ChildrenDd1: {
+  ChildDd1: {
     __resolveType(obj, context, info) {
       // Logic to determine the type
       if (obj.type == "folder") {
-        return "FolderDs1";
+        return "FolderDd1";
       } else {
         return "BookmarkDd1";
       }
@@ -80,9 +80,8 @@ const CypherQuery = {
   UNWIND cm.childPositions AS pos
   WITH pos, [child IN children WHERE child.id = pos][0] AS sortedChild
   WITH COLLECT(sortedChild) AS sortedChildren
-  RETURN { 
-    children: sortedChildren
-  } AS parentChildren`,
+  RETURN sortedChildren
+   AS children`,
 
   ChildrenLvl1: `MATCH (c:Parent {id: $id}) 
   MATCH (c)-[:HAS]->(cm:ParentMeta)
@@ -99,9 +98,8 @@ const CypherQuery = {
   UNWIND cm.childPositions AS pos
   WITH pos, [child IN children WHERE child.id = pos][0] AS sortedChild
   WITH COLLECT(sortedChild) AS sortedChildren
-  RETURN { 
-      children: sortedChildren
-  } AS parentChildren`,
+  RETURN sortedChildren
+   AS children`,
 };
 
 async function Query_DeepParentChildren(
@@ -122,11 +120,11 @@ async function Query_DeepParentChildren(
       id: parentId,
     });
   }
-  const result = ogm_result!.records[0].get("parentChildren");
+  const result = ogm_result!.records[0].get("children");
   if (currentLevel == totalLevels) {
     return result;
   }
-  for (let child of result.children) {
+  for (let child of result) {
     if (child.type != "folder") continue;
     const folderChildren = await Query_DeepParentChildren(
       nextLevel,
@@ -134,7 +132,7 @@ async function Query_DeepParentChildren(
       child.id,
       session
     );
-    Object.assign(child, folderChildren);
+    child.children =  folderChildren;
   }
   return result;
 }
