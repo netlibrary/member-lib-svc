@@ -1,7 +1,7 @@
 {
   "scripts": {
     "start": "tsc && node dist/svc.js",
-    "init-neo4j": "tsc && node dist/init-neo4j.js"
+    "seed-db": "tsc && node dist/db_seeder/_db_seeder.js"
   },
   "dependencies": {
     "@neo4j/graphql": "^4.4.2",

@@ -46,5 +46,6 @@ export const collection_typeDefs = gql`
 
   type Mutation {
     createCollection(name: String!, memberId: ID!): ID
+    deleteCollection(id: ID!, memberId: ID!): Int!
   }
 `;
