@@ -25,4 +25,9 @@ export const bookmark_typeDefs = gql`
     iconUri: String
     description: String
   }
+
+  type Mutation {
+    #    createFolder(name: String!, memberId: ID!): ID
+    deleteBookmark(id: ID!, parentId: ID!): Int!
+  }
 `;

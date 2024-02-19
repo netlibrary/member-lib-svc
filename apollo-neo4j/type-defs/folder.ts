@@ -19,4 +19,9 @@ export const folder_typeDefs = gql`
     bookmarkCount: Int
     children: [ChildDd1!]!
   }
+
+  type Mutation {
+#    createFolder(name: String!, memberId: ID!): ID
+    deleteFolder(id: ID!, parentId: ID!): Int!
+  }
 `;
