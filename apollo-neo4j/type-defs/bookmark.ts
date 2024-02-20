@@ -26,8 +26,19 @@ export const bookmark_typeDefs = gql`
     description: String
   }
 
+  input CreateBookmarkDlGeneral {
+      parentId: ID
+      position: Int
+      title: String
+      domainName: String!
+      urlScheme: String!
+      linkPath: String!
+      iconUri: String
+      description: String
+  }
+
   type Mutation {
-    #    createFolder(name: String!, memberId: ID!): ID
+    createBookmarkDlGeneral(data: CreateBookmarkDlGeneral!): ID
     deleteBookmark(id: ID!, parentId: ID!): Int!
   }
 `;

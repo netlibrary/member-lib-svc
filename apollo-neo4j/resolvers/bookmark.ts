@@ -1,12 +1,14 @@
 import {ogm} from "../ogm";
-import { Driver } from 'neo4j-driver';
+import {Driver} from 'neo4j-driver';
+import {ogm_Collection} from "./collection";
+import {BookmarkCreateInput, CreateBookmarkDlGeneral} from "../gen/types";
+import {addChildPosition} from "../services/parent-meta";
 
 export const ogm_Bookmark = ogm.model("Bookmark");
 
 export const bookmarkResolvers = {
     Mutation: {
-        deleteBookmark: async (_, { id, parentId }, { driver }: { driver: Driver }) => {
-            // Your code here
+        deleteBookmark: async (_, {id, parentId}, {driver}: { driver: Driver }) => {
             const tx = await driver.session().beginTransaction();
             try {
                 // Construct and execute the Cypher query
@@ -50,21 +52,45 @@ export const bookmarkResolvers = {
                 await tx.close();
             }
         },
-        // deleteBookmark: async (_, { id }, { driver }) => {
-        //   const session = driver.session();
-        //   try {
-        //     await session.run(
-        //       `MATCH (n{ id: $id })
-        //                 OPTIONAL MATCH (n)-[r*]->(m)
-        //                 DETACH DELETE n, r, m`,
-        //       { id }
-        //     );
-        //     return true;
-        //   } catch (error) {
-        //     throw error;
-        //   } finally {
-        //     await session.close();
-        //   }
-        // },
+        createBookmarkDlGeneral: async (_, {data}: {
+            data: CreateBookmarkDlGeneral
+        }, {driver}) => {
+            const tx = await driver.session().beginTransaction();
+            try {
+                const {parentId, position, title, domainName, urlScheme, linkPath, iconUri, description} = data;
+
+                const createBookmarkInput: BookmarkCreateInput = {
+                    description: description,
+                    title: title,
+                    domainName: domainName,
+                    urlScheme: urlScheme,
+                    linkPath: linkPath,
+                    iconUri: iconUri,
+                    ...(parentId ? {
+                        parent: {
+                            connect: {where: {node: {id: parentId}}}
+                        }
+                    } : {})
+                }
+
+                const bookmark = await ogm_Bookmark.create({input: createBookmarkInput,});
+
+                const bookmarkId = bookmark.bookmarks[0].id
+                console.log(
+                    `Bookmark created with ID: ${bookmarkId}`
+                );
+
+                if (parentId) {
+                    await addChildPosition(bookmarkId, parentId, position)
+                }
+
+                return bookmarkId;
+            } catch (error) {
+                await tx.rollback()
+                throw error;
+            } finally {
+                await tx.close();
+            }
+        },
     },
 };

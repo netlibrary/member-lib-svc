@@ -1,7 +1,8 @@
 {
   "scripts": {
     "start": "tsc && node dist/svc.js",
-    "seed-db": "tsc && node dist/db_seeder/_db_seeder.js"
+    "seed-db": "tsc && node dist/db_seeder/_db_seeder.js",
+    "gengql": "graphql-codegen --config gen_graphql.ts"
   },
   "dependencies": {
     "@neo4j/graphql": "^4.4.2",
@@ -18,6 +19,9 @@
     "typescript": "^5.2.2"
   },
   "devDependencies": {
-    "@faker-js/faker": "^8.3.1"
+    "@faker-js/faker": "^8.3.1",
+    "@graphql-codegen/cli": "5.0.2",
+    "@graphql-codegen/typescript-resolvers": "4.0.4",
+    "@graphql-codegen/typescript": "4.0.4"
   }
 }
