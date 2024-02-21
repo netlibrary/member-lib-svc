@@ -19,9 +19,15 @@ export const collectionTree_typeDefs = gql`
         parent: Parent @relationship(type: "HAS", direction: IN)
     }
 
-    union ChildDd1 = FolderDd1 | BookmarkDd1
+    union ChildDlGeneral = FolderDd1 | BookmarkDd1
+    
+    type ParentsChildren {
+        id: ID!
+        children: [ChildDlGeneral!]!
+    }
 
     type Query {
-        parentChildren(id: String!, level: Int!): [ChildDd1!]!
+        parentChildren(id: String!, level: Int!): [ChildDlGeneral!]!
+        parentsChildren(ids: [String!]!, level: Int!): [ParentsChildren!]!
     }
 `;

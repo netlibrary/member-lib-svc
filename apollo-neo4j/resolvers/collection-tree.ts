@@ -1,5 +1,7 @@
+import {ParentsChildren} from "../gen/types";
+
 export const collectionTreeResolvers = {
-  ChildDd1: {
+  ChildDlGeneral: {
     __resolveType(obj, context, info) {
       // Logic to determine the type
       if (obj.type == "folder") {
@@ -24,13 +26,30 @@ export const collectionTreeResolvers = {
   },
   Query: {
     parentChildren: async (_, { id: rootId, level }, { driver }) => {
-      const session = driver.session();
+      const tx = await driver.session().beginTransaction();
       try {
-        return await Query_DeepParentChildren(0, level, rootId, session);
+        return await Query_DeepParentChildren(0, level, rootId, tx);
       } catch (error) {
+        await tx.rollback()
         throw error;
       } finally {
-        await session.close();
+        await tx.close();
+      }
+    },
+    parentsChildren: async (_, { ids, level }, { driver }) => {
+      const tx = await driver.session().beginTransaction();
+      try {
+        const res: ParentsChildren[] = [];
+        for (const id of ids) {
+            const children = await Query_DeepParentChildren(0, level, id, tx);
+            res.push({ id, children });
+        }
+        return res;
+      } catch (error) {
+        await tx.rollback()
+        throw error;
+      } finally {
+        await tx.close();
       }
     },
   },

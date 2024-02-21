@@ -17,7 +17,7 @@ export const folder_typeDefs = gql`
     type: String
     name: String!
     bookmarkCount: Int
-    children: [ChildDd1!]!
+    children: [ChildDlGeneral!]!
   }
 
   type Mutation {
