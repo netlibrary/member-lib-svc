@@ -8,54 +8,37 @@ import { ApolloServerPluginLandingPageLocalDefault } from "apollo-server-core";
 
 
 const myPlugin = {
-
-  // Fires whenever a GraphQL request is received from a client.
-
   async requestDidStart(requestContext) {
-
-
-
     return {
-
       // Fires whenever Apollo Server will parse a GraphQL
-
       // request to create its associated document AST.
-
       async parsingDidStart(requestContext) {
-
         console.log('Parsing started!');
-
       },
 
       async executionDidStart(requestContext) {
         return {
           willResolveField({ source, args, context, info }) {
             const { fieldName, parentType } = info;
-            console.log(`Resolving field: ${parentType.name}.${fieldName}`, source, args, context);
+            // console.log(`Resolving field: ${parentType.name}.${fieldName}`, source, args, context);
             return (error, result) => {
               if (error) {
                 console.error(`Error resolving field: ${error.message}`);
               } else {
-                console.log(`Field resolved: ${parentType.name}.${fieldName}, Result: ${JSON.stringify(result)}`);
+                // console.log(`Field resolved: ${parentType.name}.${fieldName}, Result: ${JSON.stringify(result)}`);
               }
             };
           },
         };
       },
       // Fires whenever Apollo Server will validate a
-
       // request's document AST against your GraphQL schema.
 
       async validationDidStart(requestContext) {
-
         console.log('Validation started!');
-
       },
-
     };
-
   },
-
 };
 
 

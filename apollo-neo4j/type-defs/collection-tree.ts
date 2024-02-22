@@ -28,6 +28,6 @@ export const collectionTree_typeDefs = gql`
 
     type Query {
         parentChildren(id: String!, level: Int!): [ChildDlGeneral!]!
-        parentsChildren(ids: [String!]!, level: Int!): [ParentsChildren!]!
+        nl_parentsChildren(ids: [String!]!, level: Int!): [ParentsChildren!]!
     }
 `;

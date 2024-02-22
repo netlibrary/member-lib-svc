@@ -36,7 +36,7 @@ export const collectionTreeResolvers = {
         await tx.close();
       }
     },
-    parentsChildren: async (_, { ids, level }, { driver }) => {
+    nl_parentsChildren: async (_, { ids, level }, { driver }) => {
       const tx = await driver.session().beginTransaction();
       try {
         const res: ParentsChildren[] = [];
