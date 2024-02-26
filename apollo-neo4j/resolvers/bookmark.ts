@@ -1,7 +1,7 @@
 import {ogm} from "../ogm";
 import {Driver} from 'neo4j-driver';
 import {ogm_Collection} from "./collection";
-import {BookmarkCreateInput, CreateBookmarkDlGeneral} from "../gen/types";
+import {BookmarkCreateInput} from "../gen/types";
 import {addChildPosition} from "../services/parent-meta";
 
 export const ogm_Bookmark = ogm.model("Bookmark");
@@ -52,16 +52,16 @@ export const bookmarkResolvers = {
                 await tx.close();
             }
         },
-        createBookmarkDlGeneral: async (_, {data}: {
-            data: CreateBookmarkDlGeneral
+        createBookmarkDl: async (_, {data}: {
+            data: any
         }, {driver}) => {
             const tx = await driver.session().beginTransaction();
             try {
-                const {parentId, position, title, domainName, urlScheme, linkPath, iconUri, description} = data;
+                const {parentId, position, name, domainName, urlScheme, linkPath, iconUri, description} = data;
 
-                const createBookmarkInput: BookmarkCreateInput = {
+                const createBookmarkInput: any = {
                     description: description,
-                    title: title,
+                    name: name,
                     domainName: domainName,
                     urlScheme: urlScheme,
                     linkPath: linkPath,

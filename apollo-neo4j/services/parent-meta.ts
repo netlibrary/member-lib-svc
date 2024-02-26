@@ -41,11 +41,11 @@ export const addChildPosition = async (childId, parentId, position) => {
         let childPositions = currentParentMeta[0].childPositions || [];
 
         // Step 2: Insert childId at the specified position
-        childPositions.splice(position, 0, childId);
+        childPositions.splice(position-1, 0, childId);
 
         // Step 3: Update the ParentMeta with the new childPositions array
         const updateInput: MutationUpdateParentMetasArgs = {
-            where: {id: parentId},
+            where: {id: currentParentMeta[0].id},
             update: {
                 childPositions: childPositions,
             },

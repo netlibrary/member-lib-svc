@@ -13,18 +13,18 @@ export const collection_typeDefs = gql`
     member: Member @relationship(type: "OWNS", direction: IN)
   }
 
-  type CollectionDs1 {
+  type CollectionDs {
     id: ID!
     name: String!
     bookmarkCount: Int!
   }
 
-  type CollectionListDs1 {
-    collections: [CollectionDs1!]
+  type CollectionDsList {
+    collections: [CollectionDs!]
   }
 
   type Query {
-    collectionList(memberId: String!): CollectionListDs1
+    collectionList(memberId: String!): CollectionDsList
       @cypher(
         statement: """
         MATCH (m:Member {id: $memberId})-[:OWNS]->(c:Collection)

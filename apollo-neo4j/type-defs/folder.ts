@@ -12,12 +12,12 @@ export const folder_typeDefs = gql`
     parent: Parent @relationship(type: "CONTAINS", direction: IN)
   }
 
-  type FolderDd1 {
+  type FolderDl {
     id: ID!
     type: String
     name: String!
     bookmarkCount: Int
-    children: [ChildDlGeneral!]!
+    children: [ChildDl!]!
   }
 
   type Mutation {

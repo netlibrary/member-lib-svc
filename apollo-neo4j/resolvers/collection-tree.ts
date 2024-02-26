@@ -1,13 +1,13 @@
 import {ParentsChildren} from "../gen/types";
 
 export const collectionTreeResolvers = {
-  ChildDlGeneral: {
+  ChildDl: {
     __resolveType(obj, context, info) {
       // Logic to determine the type
       if (obj.type == "folder") {
-        return "FolderDd1";
+        return "FolderDl";
       } else {
-        return "BookmarkDd1";
+        return "BookmarkDl";
       }
     },
   },
@@ -58,7 +58,7 @@ export const collectionTreeResolvers = {
 const CypherSelection = {
   Bookmark: (alias: string) => `{
   id: ${alias}.id, 
-  title: ${alias}.title, 
+  name: ${alias}.name, 
   domainName: ${alias}.domainName, 
   linkPath: ${alias}.linkPath, 
   urlScheme: ${alias}.urlScheme, 

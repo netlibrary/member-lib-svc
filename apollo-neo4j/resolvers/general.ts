@@ -99,7 +99,7 @@ async function createFolder(folderData, parentId, parentName) {
   const ogm_Folder = ogm.model("Folder");
   const folder = await ogm_Folder.create({
     input: {
-      name: folderData.title,
+      name: folderData.name,
       // createdAt: new Date(folderData.dateAdded / 1000),
       // updatedAt: new Date(folderData.lastModified / 1000),
       [parentName]: {
@@ -115,7 +115,7 @@ async function createBookmark(bookmarkData, parentId, parentName) {
   const urlParts = new URL(bookmarkData.uri);
   const bookmark = await ogm_Bookmark.create({
     input: {
-      title: bookmarkData.title,
+      name: bookmarkData.name,
       domainName: urlParts.hostname,
       urlScheme: urlParts.protocol.replace(":", ""),
       linkPath: urlParts.pathname + urlParts.search + urlParts.hash,
