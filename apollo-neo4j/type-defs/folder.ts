@@ -21,7 +21,7 @@ export const folder_typeDefs = gql`
   }
 
   type Mutation {
-#    createFolder(name: String!, memberId: ID!): ID
+    createFolder(name: String!, position: Int!, parentId: ID!): ID
     deleteFolder(id: ID!, parentId: ID!): Int!
   }
 `;

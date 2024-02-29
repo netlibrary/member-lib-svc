@@ -1,43 +1,53 @@
 import {ogm} from "../ogm";
-import { Driver } from 'neo4j-driver';
+import {Driver} from 'neo4j-driver';
+import {addChildPosition} from "../services/parent-meta";
+import {ogm_Bookmark} from "./bookmark";
+import {FolderCreateInput} from "../gen/types";
 
 export const ogm_Folder = ogm.model("Folder");
 
 export const folderResolvers = {
     Mutation: {
-        // createFolder: async (_, {name, memberId}, {driver}) => {
-        //     try {
-        //         const folder = await ogm_Folder.create({
-        //             input: {
-        //                 name: name,
-        //                 member: {
-        //                     connect: {where: {node: {id: memberId}}},
-        //                 },
-        //             },
-        //         });
-        //         const folderId = folder.folders[0].id
-        //         console.log(
-        //             `Folder created with ID: ${folderId}`
-        //         );
-        //         const MemberMeta = ogm.model("MemberMeta");
-        //         await MemberMeta.update({
-        //             update: {
-        //                 folderPositions_PUSH: folderId,
-        //             },
-        //             where: {
-        //                 member: {
-        //                     id: memberId,
-        //                 },
-        //             },
-        //         });
-        //         return folderId;
-        //     } catch (error) {
-        //         throw error;
-        //     }
-        // },
-        // ...
+        createFolder: async (_, {name, position, parentId}: {
+            name: string, position: number, parentId: string
+        }, {driver}) => {
+            const tx = await driver.session().beginTransaction();
+            try {
+                const createFolderInput: FolderCreateInput = {
+                    name: name,
+                    parentMeta: {
+                        create: {
+                            node: {
+                                childPositions: []
+                            }
+                        }
+                    },
+                    ...(parentId ? {
+                        parent: {
+                            connect: {where: {node: {id: parentId}}}
+                        }
+                    } : {})
+                }
 
-        deleteFolder: async (_, { id, parentId }, { driver }: { driver: Driver }) => {
+                const folder = await ogm_Folder.create({input: createFolderInput,});
+
+                const folderId = folder.folders[0].id
+                console.log(
+                    `Bookmark created with ID: ${folderId}`
+                );
+
+                await addChildPosition(folderId, parentId, position)
+
+                return folderId;
+            } catch (error) {
+                await tx.rollback()
+                throw error;
+            } finally {
+                await tx.close();
+            }
+        },
+
+        deleteFolder: async (_, {id, parentId}, {driver}: { driver: Driver }) => {
             // Your code here
             const tx = await driver.session().beginTransaction();
             try {
