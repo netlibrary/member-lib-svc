@@ -2100,6 +2100,7 @@ export type Mutation = {
   createCollectionDs: CreateCollectionDsMutationResponse;
   createCollectionDsLists: CreateCollectionDsListsMutationResponse;
   createCollections: CreateCollectionsMutationResponse;
+  createFolder?: Maybe<Scalars['ID']['output']>;
   createFolderDls: CreateFolderDlsMutationResponse;
   createFolders: CreateFoldersMutationResponse;
   createMemberMetas: CreateMemberMetasMutationResponse;
@@ -2118,6 +2119,7 @@ export type Mutation = {
   deleteFolderDls: DeleteInfo;
   deleteFolders: DeleteInfo;
   deleteListCascade?: Maybe<Scalars['Int']['output']>;
+  deleteManyNodes: Scalars['Int']['output'];
   deleteMemberMetas: DeleteInfo;
   deleteMembers: DeleteInfo;
   deleteParentMetas: DeleteInfo;
@@ -2170,6 +2172,13 @@ export type MutationCreateCollectionDsListsArgs = {
 
 export type MutationCreateCollectionsArgs = {
   input: Array<CollectionCreateInput>;
+};
+
+
+export type MutationCreateFolderArgs = {
+  name: Scalars['String']['input'];
+  parentId: Scalars['ID']['input'];
+  position: Scalars['Int']['input'];
 };
 
 
@@ -2266,6 +2275,11 @@ export type MutationDeleteFoldersArgs = {
 
 export type MutationDeleteListCascadeArgs = {
   ids: Array<Scalars['ID']['input']>;
+};
+
+
+export type MutationDeleteManyNodesArgs = {
+  nodes: SelectedNodes;
 };
 
 
@@ -3301,6 +3315,17 @@ export type QueryOptions = {
   offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type SelectedChilds = {
+  bookmarkIds: Array<Scalars['ID']['input']>;
+  folderIds: Array<Scalars['ID']['input']>;
+  parentId: Scalars['ID']['input'];
+};
+
+export type SelectedNodes = {
+  childs: Array<SelectedChilds>;
+  collectionIds: Array<Scalars['ID']['input']>;
+};
+
 /** An enum for sorting in either ascending or descending order. */
 export enum SortDirection {
   /** Sort by field values in ascending order. */
@@ -3837,6 +3862,8 @@ export type ResolversTypes = {
   ParentsChildrenWhere: ParentsChildrenWhere;
   Query: ResolverTypeWrapper<{}>;
   QueryOptions: QueryOptions;
+  SelectedChilds: SelectedChilds;
+  SelectedNodes: SelectedNodes;
   SortDirection: SortDirection;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   StringAggregateSelectionNonNullable: ResolverTypeWrapper<StringAggregateSelectionNonNullable>;
@@ -4217,6 +4244,8 @@ export type ResolversParentTypes = {
   ParentsChildrenWhere: ParentsChildrenWhere;
   Query: {};
   QueryOptions: QueryOptions;
+  SelectedChilds: SelectedChilds;
+  SelectedNodes: SelectedNodes;
   String: Scalars['String']['output'];
   StringAggregateSelectionNonNullable: StringAggregateSelectionNonNullable;
   StringAggregateSelectionNullable: StringAggregateSelectionNullable;
@@ -4805,6 +4834,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createCollectionDs?: Resolver<ResolversTypes['CreateCollectionDsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateCollectionDsArgs, 'input'>>;
   createCollectionDsLists?: Resolver<ResolversTypes['CreateCollectionDsListsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateCollectionDsListsArgs, 'input'>>;
   createCollections?: Resolver<ResolversTypes['CreateCollectionsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateCollectionsArgs, 'input'>>;
+  createFolder?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType, RequireFields<MutationCreateFolderArgs, 'name' | 'parentId' | 'position'>>;
   createFolderDls?: Resolver<ResolversTypes['CreateFolderDlsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateFolderDlsArgs, 'input'>>;
   createFolders?: Resolver<ResolversTypes['CreateFoldersMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateFoldersArgs, 'input'>>;
   createMemberMetas?: Resolver<ResolversTypes['CreateMemberMetasMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateMemberMetasArgs, 'input'>>;
@@ -4823,6 +4853,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteFolderDls?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteFolderDlsArgs>>;
   deleteFolders?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteFoldersArgs>>;
   deleteListCascade?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationDeleteListCascadeArgs, 'ids'>>;
+  deleteManyNodes?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationDeleteManyNodesArgs, 'nodes'>>;
   deleteMemberMetas?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteMemberMetasArgs>>;
   deleteMembers?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteMembersArgs>>;
   deleteParentMetas?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteParentMetasArgs>>;

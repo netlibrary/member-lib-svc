@@ -1,6 +1,6 @@
 import { gql } from "apollo-server-express";
 
-export const collectionTree_typeDefs = gql`
+export const hierarchNodes_typeDefs = gql`
     union Child = Bookmark | Folder
     union Parent = Collection | Folder
 
@@ -29,5 +29,20 @@ export const collectionTree_typeDefs = gql`
     type Query {
         parentChildren(id: String!, level: Int!): [ChildDl!]!
         nl_parentsChildren(ids: [String!]!, level: Int!): [ParentsChildren!]!
+    }
+
+    input SelectedChilds {
+        parentId: ID!
+        bookmarkIds: [ID!]!
+        folderIds: [ID!]!
+    }
+
+    input SelectedNodes {
+        collectionIds: [ID!]!
+        childs: [SelectedChilds!]!
+    }
+
+    type Mutation {
+        deleteManyNodes(nodes: SelectedNodes!): Int!
     }
 `;

@@ -1,8 +1,8 @@
 import {ogm} from "../ogm";
 import {Driver} from 'neo4j-driver';
-import {addChildPosition} from "../services/parent-meta";
 import {ogm_Bookmark} from "./bookmark";
 import {FolderCreateInput} from "../gen/types";
+import {ParentMetaSvc} from "../services/parent_meta";
 
 export const ogm_Folder = ogm.model("Folder");
 
@@ -36,7 +36,7 @@ export const folderResolvers = {
                     `Bookmark created with ID: ${folderId}`
                 );
 
-                await addChildPosition(folderId, parentId, position)
+                await ParentMetaSvc.addChildPosition(folderId, parentId, position)
 
                 return folderId;
             } catch (error) {

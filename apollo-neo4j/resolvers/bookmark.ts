@@ -2,7 +2,7 @@ import {ogm} from "../ogm";
 import {Driver} from 'neo4j-driver';
 import {ogm_Collection} from "./collection";
 import {BookmarkCreateInput} from "../gen/types";
-import {addChildPosition} from "../services/parent-meta";
+import {ParentMetaSvc} from "../services/parent_meta";
 
 export const ogm_Bookmark = ogm.model("Bookmark");
 
@@ -81,7 +81,7 @@ export const bookmarkResolvers = {
                 );
 
                 if (parentId) {
-                    await addChildPosition(bookmarkId, parentId, position)
+                    await ParentMetaSvc.addChildPosition(bookmarkId, parentId, position)
                 }
 
                 return bookmarkId;

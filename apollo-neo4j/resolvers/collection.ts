@@ -1,4 +1,7 @@
 import {ogm} from "../ogm";
+import {Driver} from "neo4j-driver";
+import {MemberMetaSvc} from "../services/member_meta";
+import {NodeSvc} from "../services/node";
 
 export const ogm_Collection = ogm.model("Collection");
 
@@ -37,37 +40,9 @@ export const collectionResolvers = {
         deleteCollection: async (_, {id, memberId}, {driver}) => {
             const session = driver.session();
             try {
-                // Construct and execute the Cypher query
-                const result = await session.run(`
-                    MATCH (n:DeleteCascade { id: $id })
-                    OPTIONAL MATCH (n)-[r*0..]->(sub)
-                    DETACH DELETE n, sub
-                    RETURN COUNT(sub) AS nodesDeleted
-                `, {id});
-
                 // Extract the nodesDeleted count from the result
-                const nodesDeleted = result.records[0].get('nodesDeleted').toNumber();
-
-                // Return the count of nodes deleted or any other relevant information
-                const MemberMeta = ogm.model("MemberMeta");
-                const memberMeta = await MemberMeta.find({
-                    where: {
-                        member: {
-                            id: memberId
-                        }
-                    }
-                });
-                // If memberMeta is found, update the collection positions
-                if (memberMeta && memberMeta.length > 0) {
-                    const collectionPositions = memberMeta[0].collectionPositions.filter(collection => collection !== id);
-                    await MemberMeta.update({
-                        where: {id: memberMeta[0].id},
-                        update: {collectionPositions: collectionPositions},
-                    });
-                } else {
-                    // Handle case where MemberMeta object is not found
-                    throw new Error('MemberMeta not found for memberId: ' + memberId);
-                }
+                const nodesDeleted = await NodeSvc.deleteCascade(id, session);
+                await MemberMetaSvc.deleteCollectionPositions(memberId, [id]);
 
                 return nodesDeleted;
             } catch (error) {
@@ -76,21 +51,19 @@ export const collectionResolvers = {
                 await session.close();
             }
         },
-        // deleteCollection: async (_, { id }, { driver }) => {
-        //   const session = driver.session();
-        //   try {
-        //     await session.run(
-        //       `MATCH (n{ id: $id })
-        //                 OPTIONAL MATCH (n)-[r*]->(m)
-        //                 DETACH DELETE n, r, m`,
-        //       { id }
-        //     );
-        //     return true;
-        //   } catch (error) {
-        //     throw error;
-        //   } finally {
-        //     await session.close();
-        //   }
-        // },
-    },
+        deleteCollections: async (_, {ids, memberId}, {driver}: { driver: Driver }) => {
+            const session = driver.session();
+            try {
+                // Construct and execute the Cypher query for multiple IDs
+                const nDeleted = await NodeSvc.deleteManyCascade(ids, session);
+                await MemberMetaSvc.deleteCollectionPositions(memberId, ids);
+
+                return nDeleted;
+            } catch (error) {
+                throw error;
+            } finally {
+                await session.close();
+            }
+        },
+    }
 };
