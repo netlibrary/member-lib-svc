@@ -38,31 +38,33 @@ export const collectionResolvers = {
             }
         },
         deleteCollection: async (_, {id, memberId}, {driver}) => {
-            const session = driver.session();
+            const tx = await driver.session().beginTransaction();
             try {
                 // Extract the nodesDeleted count from the result
-                const nodesDeleted = await NodeSvc.deleteCascade(id, session);
+                const nodesDeleted = await NodeSvc.deleteCascade(id, tx);
                 await MemberMetaSvc.deleteCollectionPositions(memberId, [id]);
 
                 return nodesDeleted;
             } catch (error) {
+                await tx.rollback()
                 throw error;
             } finally {
-                await session.close();
+                await tx.close();
             }
         },
         deleteCollections: async (_, {ids, memberId}, {driver}: { driver: Driver }) => {
-            const session = driver.session();
+            const tx = await driver.session().beginTransaction();
             try {
                 // Construct and execute the Cypher query for multiple IDs
-                const nDeleted = await NodeSvc.deleteManyCascade(ids, session);
+                const nDeleted = await NodeSvc.deleteManyCascade(ids, tx);
                 await MemberMetaSvc.deleteCollectionPositions(memberId, ids);
 
                 return nDeleted;
             } catch (error) {
+                await tx.rollback()
                 throw error;
             } finally {
-                await session.close();
+                await tx.close();
             }
         },
     }

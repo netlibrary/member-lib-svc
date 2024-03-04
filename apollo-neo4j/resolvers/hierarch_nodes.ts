@@ -5,6 +5,7 @@ import {NodeSvc} from "../services/node";
 import {MemberMetaSvc} from "../services/member_meta";
 import {memberIds} from "../../db_seeder/member";
 import {ParentMetaSvc} from "../services/parent_meta";
+import {Session} from "neo4j-driver";
 
 export const hierarchNodesResolvers = {
     ChildDl: {
@@ -32,6 +33,7 @@ export const hierarchNodesResolvers = {
     },
     Mutation: {
         deleteManyNodes: async (_, {nodes}: { nodes: SelectedNodes }, {driver}) => {
+            const tx = await driver.session().beginTransaction();
             try {
                 console.log("deleteManyNodes", nodes);
                 const deleteCascadeIds = nodes.collectionIds
@@ -39,14 +41,17 @@ export const hierarchNodesResolvers = {
                     deleteCascadeIds.push(...child.bookmarkIds)
                     deleteCascadeIds.push(...child.folderIds)
                 }
-                const nDeleted = await NodeSvc.deleteManyCascade(deleteCascadeIds, driver);
+                const nDeleted = await NodeSvc.deleteManyCascade(deleteCascadeIds, tx);
                 await MemberMetaSvc.deleteCollectionPositions(memberIds[0], nodes.collectionIds)
                 for (const childsWrapper of nodes.childs) {
                     await ParentMetaSvc.deleteChildPositions([...childsWrapper.bookmarkIds, ...childsWrapper.folderIds], childsWrapper.parentId)
                 }
                 return nDeleted;
             } catch (error) {
+                await tx.rollback()
                 throw error;
+            } finally {
+                await tx.close();
             }
         },
     },

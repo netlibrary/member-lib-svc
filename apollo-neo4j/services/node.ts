@@ -1,7 +1,7 @@
-import {Session} from "neo4j-driver";
+import {Session, Transaction} from "neo4j-driver";
 
-const deleteManyCascade = async (ids: string[], session: Session): Promise<number> => {
-    const result = await session.run(`
+const deleteManyCascade = async (ids: string[], tx: Transaction): Promise<number> => {
+    const result = await tx.run(`
             UNWIND $ids AS id
             MATCH (n:DeleteCascade { id: id })
             OPTIONAL MATCH (n)-[r*0..]->(sub)
@@ -13,8 +13,8 @@ const deleteManyCascade = async (ids: string[], session: Session): Promise<numbe
     return result.records.reduce((acc, record) => acc + record.get('nodesDeleted').toNumber(), 0);
 }
 
-const deleteCascade = async (id: string, session: Session): Promise<number> => {
-    const result = await session.run(`
+const deleteCascade = async (id: string, tx: Transaction): Promise<number> => {
+    const result = await tx.run(`
             MATCH (n:DeleteCascade { id: id })
             OPTIONAL MATCH (n)-[r*0..]->(sub)
             DETACH DELETE n, sub

@@ -59,10 +59,10 @@ const deleteChildPositions = async (childIds: string[], parentId: string) => {
     const parentMeta = await getParentMeta(parentId);
     if (parentMeta) {
         // Filter out the deleted collection IDs from collectionPositions
-        const updatedCollectionPositions = parentMeta[0].collectionPositions.filter(collection => !childIds.includes(collection));
-        await ogm_MemberMeta.update({
-            where: {id: parentMeta[0].id},
-            update: {collectionPositions: updatedCollectionPositions},
+        const updatedChildPositions = parentMeta.childPositions.filter(collection => !childIds.includes(collection));
+        await ogm_ParentMeta.update({
+            where: {id: parentMeta.id},
+            update: {childPositions: updatedChildPositions},
         });
     } else {
         // Handle case where MemberMeta object is not found
