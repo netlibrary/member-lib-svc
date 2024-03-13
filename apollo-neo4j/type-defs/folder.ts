@@ -17,6 +17,7 @@ export const folder_typeDefs = gql`
     type: String
     name: String!
     bookmarkCount: Int
+    hasUnfetchedChildren: Boolean
     children: [ChildDl!]!
   }
 

@@ -59,7 +59,7 @@ export const hierarchNodesResolvers = {
         parentChildren: async (_, {id: rootId, level}, {driver}) => {
             const tx = await driver.session().beginTransaction();
             try {
-                return await Query_DeepParentChildren(0, level, rootId, tx);
+                return await Query_DeepParentChildren(1, level, rootId, tx);
             } catch (error) {
                 await tx.rollback()
                 throw error;
@@ -105,7 +105,8 @@ const CypherSelection = {
   id: ${alias}.id, 
   name: ${alias}.name, 
   type: "folder",
-  bookmarkCount: bookmarkCount
+  bookmarkCount: bookmarkCount,
+  hasUnfetchedChildren: hasUnfetchedChildren
 }`,
 };
 
@@ -118,6 +119,11 @@ const CypherQuery = {
     WITH f
     MATCH (f)-[:CONTAINS*0..]->(:Folder)-[:CONTAINS*0..]->(b:Bookmark)
     RETURN COUNT(DISTINCT b) AS bookmarkCount
+  }
+  CALL {
+    WITH f
+    OPTIONAL MATCH (f)-[:CONTAINS]->(child)
+    RETURN COUNT(child) > 0 AS hasUnfetchedChildren
   }
   WITH c, cm,
   COLLECT(DISTINCT CASE WHEN f IS NOT NULL THEN ${CypherSelection.FolderWithDeepBookmarkCount(
@@ -160,7 +166,7 @@ async function Query_DeepParentChildren(
 ) {
     const nextLevel = currentLevel + 1;
     let ogm_result: any = null;
-    if (nextLevel == totalLevels) {
+    if (currentLevel == totalLevels) {
         ogm_result = await session.run(
             CypherQuery.ChildrenLvl1WithDeepBookmarkCount,
             {id: parentId}

@@ -560,6 +560,7 @@ export type CollectionDisconnectInput = {
 export type CollectionDs = {
   __typename?: 'CollectionDs';
   bookmarkCount: Scalars['Int']['output'];
+  deepness: Scalars['Int']['output'];
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
 };
@@ -568,6 +569,7 @@ export type CollectionDsAggregateSelection = {
   __typename?: 'CollectionDsAggregateSelection';
   bookmarkCount: IntAggregateSelectionNonNullable;
   count: Scalars['Int']['output'];
+  deepness: IntAggregateSelectionNonNullable;
   id: IdAggregateSelectionNonNullable;
   name: StringAggregateSelectionNonNullable;
 };
@@ -581,6 +583,7 @@ export type CollectionDsConnection = {
 
 export type CollectionDsCreateInput = {
   bookmarkCount: Scalars['Int']['input'];
+  deepness: Scalars['Int']['input'];
   id: Scalars['ID']['input'];
   name: Scalars['String']['input'];
 };
@@ -645,6 +648,7 @@ export type CollectionDsOptions = {
 /** Fields to sort CollectionDs by. The order in which sorts are applied is not guaranteed when specifying many fields in one CollectionDsSort object. */
 export type CollectionDsSort = {
   bookmarkCount?: InputMaybe<SortDirection>;
+  deepness?: InputMaybe<SortDirection>;
   id?: InputMaybe<SortDirection>;
   name?: InputMaybe<SortDirection>;
 };
@@ -653,6 +657,9 @@ export type CollectionDsUpdateInput = {
   bookmarkCount?: InputMaybe<Scalars['Int']['input']>;
   bookmarkCount_DECREMENT?: InputMaybe<Scalars['Int']['input']>;
   bookmarkCount_INCREMENT?: InputMaybe<Scalars['Int']['input']>;
+  deepness?: InputMaybe<Scalars['Int']['input']>;
+  deepness_DECREMENT?: InputMaybe<Scalars['Int']['input']>;
+  deepness_INCREMENT?: InputMaybe<Scalars['Int']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
 };
@@ -667,6 +674,12 @@ export type CollectionDsWhere = {
   bookmarkCount_IN?: InputMaybe<Array<Scalars['Int']['input']>>;
   bookmarkCount_LT?: InputMaybe<Scalars['Int']['input']>;
   bookmarkCount_LTE?: InputMaybe<Scalars['Int']['input']>;
+  deepness?: InputMaybe<Scalars['Int']['input']>;
+  deepness_GT?: InputMaybe<Scalars['Int']['input']>;
+  deepness_GTE?: InputMaybe<Scalars['Int']['input']>;
+  deepness_IN?: InputMaybe<Array<Scalars['Int']['input']>>;
+  deepness_LT?: InputMaybe<Scalars['Int']['input']>;
+  deepness_LTE?: InputMaybe<Scalars['Int']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   id_CONTAINS?: InputMaybe<Scalars['ID']['input']>;
   id_ENDS_WITH?: InputMaybe<Scalars['ID']['input']>;
@@ -1156,6 +1169,7 @@ export type FolderDl = {
   __typename?: 'FolderDl';
   bookmarkCount?: Maybe<Scalars['Int']['output']>;
   children: Array<ChildDl>;
+  hasUnfetchedChildren?: Maybe<Scalars['Boolean']['output']>;
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
   type?: Maybe<Scalars['String']['output']>;
@@ -1172,6 +1186,7 @@ export type FolderDlAggregateSelection = {
 
 export type FolderDlCreateInput = {
   bookmarkCount?: InputMaybe<Scalars['Int']['input']>;
+  hasUnfetchedChildren?: InputMaybe<Scalars['Boolean']['input']>;
   id: Scalars['ID']['input'];
   name: Scalars['String']['input'];
   type?: InputMaybe<Scalars['String']['input']>;
@@ -1193,6 +1208,7 @@ export type FolderDlOptions = {
 /** Fields to sort FolderDls by. The order in which sorts are applied is not guaranteed when specifying many fields in one FolderDlSort object. */
 export type FolderDlSort = {
   bookmarkCount?: InputMaybe<SortDirection>;
+  hasUnfetchedChildren?: InputMaybe<SortDirection>;
   id?: InputMaybe<SortDirection>;
   name?: InputMaybe<SortDirection>;
   type?: InputMaybe<SortDirection>;
@@ -1202,6 +1218,7 @@ export type FolderDlUpdateInput = {
   bookmarkCount?: InputMaybe<Scalars['Int']['input']>;
   bookmarkCount_DECREMENT?: InputMaybe<Scalars['Int']['input']>;
   bookmarkCount_INCREMENT?: InputMaybe<Scalars['Int']['input']>;
+  hasUnfetchedChildren?: InputMaybe<Scalars['Boolean']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<Scalars['String']['input']>;
@@ -1217,6 +1234,7 @@ export type FolderDlWhere = {
   bookmarkCount_IN?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
   bookmarkCount_LT?: InputMaybe<Scalars['Int']['input']>;
   bookmarkCount_LTE?: InputMaybe<Scalars['Int']['input']>;
+  hasUnfetchedChildren?: InputMaybe<Scalars['Boolean']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   id_CONTAINS?: InputMaybe<Scalars['ID']['input']>;
   id_ENDS_WITH?: InputMaybe<Scalars['ID']['input']>;
@@ -4392,6 +4410,7 @@ export type CollectionAggregateSelectionResolvers<ContextType = any, ParentType 
 
 export type CollectionDsResolvers<ContextType = any, ParentType extends ResolversParentTypes['CollectionDs'] = ResolversParentTypes['CollectionDs']> = {
   bookmarkCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  deepness?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -4400,6 +4419,7 @@ export type CollectionDsResolvers<ContextType = any, ParentType extends Resolver
 export type CollectionDsAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['CollectionDsAggregateSelection'] = ResolversParentTypes['CollectionDsAggregateSelection']> = {
   bookmarkCount?: Resolver<ResolversTypes['IntAggregateSelectionNonNullable'], ParentType, ContextType>;
   count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  deepness?: Resolver<ResolversTypes['IntAggregateSelectionNonNullable'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['StringAggregateSelectionNonNullable'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -4606,6 +4626,7 @@ export type FolderAggregateSelectionResolvers<ContextType = any, ParentType exte
 export type FolderDlResolvers<ContextType = any, ParentType extends ResolversParentTypes['FolderDl'] = ResolversParentTypes['FolderDl']> = {
   bookmarkCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   children?: Resolver<Array<ResolversTypes['ChildDl']>, ParentType, ContextType>;
+  hasUnfetchedChildren?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
