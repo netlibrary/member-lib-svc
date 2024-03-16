@@ -1,10 +1,10 @@
 import {ogm_MemberMeta, ogm_ParentMeta} from "../ogm";
 import {MutationUpdateParentMetasArgs, ParentMeta, ParentMetaWhere} from "../gen/types";
 
-const pushChildPosition = async (childId, parentId) => {
+const pushChildPosition = async (childIds: string[], parentId) => {
     const updateInput: MutationUpdateParentMetasArgs = {
         update: {
-            childPositions_PUSH: childId,
+            childPositions_PUSH: childIds,
         },
         where: {
             parentConnection: {
@@ -17,9 +17,9 @@ const pushChildPosition = async (childId, parentId) => {
     await ogm_ParentMeta.update(updateInput as any);
 }
 
-const addChildPosition = async (childId, parentId, position) => {
+const addChildPositions = async (childIds, parentId, position) => {
     if (position == null) {
-        await pushChildPosition(childId, parentId);
+        await pushChildPosition(childIds, parentId);
         return;
     }
 
@@ -39,7 +39,7 @@ const addChildPosition = async (childId, parentId, position) => {
         let childPositions = currentParentMeta[0].childPositions || [];
 
         // Step 2: Insert childId at the specified position
-        childPositions.splice(position-1, 0, childId);
+        childPositions.splice(position-1, 0, ...childIds);
 
         // Step 3: Update the ParentMeta with the new childPositions array
         const updateInput: MutationUpdateParentMetasArgs = {
@@ -59,7 +59,7 @@ const deleteChildPositions = async (childIds: string[], parentId: string) => {
     const parentMeta = await getParentMeta(parentId);
     if (parentMeta) {
         // Filter out the deleted collection IDs from collectionPositions
-        const updatedChildPositions = parentMeta.childPositions.filter(collection => !childIds.includes(collection));
+        const updatedChildPositions = parentMeta.childPositions.filter(child => !childIds.includes(child));
         await ogm_ParentMeta.update({
             where: {id: parentMeta.id},
             update: {childPositions: updatedChildPositions},
@@ -71,8 +71,8 @@ const deleteChildPositions = async (childIds: string[], parentId: string) => {
 }
 
 export const ParentMetaSvc = {
-    addChildPosition: addChildPosition,
-    pushChildPosition: pushChildPosition,
+    addChildPositions: addChildPositions,
+    pushChildPositions: pushChildPosition,
     deleteChildPositions: deleteChildPositions
 }
 

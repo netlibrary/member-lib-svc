@@ -36,7 +36,7 @@ export const folderResolvers = {
                     `Bookmark created with ID: ${folderId}`
                 );
 
-                await ParentMetaSvc.addChildPosition(folderId, parentId, position)
+                await ParentMetaSvc.addChildPositions(folderId, parentId, position)
 
                 return folderId;
             } catch (error) {

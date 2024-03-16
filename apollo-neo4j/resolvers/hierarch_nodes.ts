@@ -1,11 +1,12 @@
-import {ParentsChildren, SelectedNodes} from "../gen/types";
+import {NodesToMove, ParentsChildren, SelectedNodes} from "../gen/types";
 import {ogm} from "../ogm";
 import {ogm_Collection} from "./collection";
 import {NodeSvc} from "../services/node";
 import {MemberMetaSvc} from "../services/member_meta";
 import {memberIds} from "../../db_seeder/member";
 import {ParentMetaSvc} from "../services/parent_meta";
-import {Session} from "neo4j-driver";
+import {Session, Transaction} from "neo4j-driver";
+import {de} from "@faker-js/faker";
 
 export const hierarchNodesResolvers = {
     ChildDl: {
@@ -46,7 +47,27 @@ export const hierarchNodesResolvers = {
                 for (const childsWrapper of nodes.childs) {
                     await ParentMetaSvc.deleteChildPositions([...childsWrapper.bookmarkIds, ...childsWrapper.folderIds], childsWrapper.parentId)
                 }
+                await tx.commit()
+
                 return nDeleted;
+            } catch (error) {
+                await tx.rollback()
+                throw error;
+            } finally {
+                await tx.close();
+            }
+        },
+        moveManyNodes: async (_, {nodes, destinationId, position}: {nodes: NodesToMove, destinationId: string | null, position: number | null}, {driver}) => {
+            const tx: Transaction = await driver.session().beginTransaction();
+            try {
+                console.log("moveManyNodes", nodes, destinationId, position);
+                if(destinationId == null){
+                    await NodeSvc.removeHierarch(nodes, tx)
+                } else {
+                    await NodeSvc.moveToDest(nodes, destinationId, position, memberIds[0], tx)
+                }
+                await tx.commit()
+                return true
             } catch (error) {
                 await tx.rollback()
                 throw error;
@@ -72,7 +93,7 @@ export const hierarchNodesResolvers = {
             try {
                 const res: ParentsChildren[] = [];
                 for (const id of ids) {
-                    const children = await Query_DeepParentChildren(0, level, id, tx);
+                    const children = await Query_DeepParentChildren(1, level, id, tx);
                     res.push({id, children});
                 }
                 return res;

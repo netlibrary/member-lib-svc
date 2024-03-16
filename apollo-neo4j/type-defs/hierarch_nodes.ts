@@ -37,6 +37,16 @@ export const hierarchNodes_typeDefs = gql`
         folderIds: [ID!]!
     }
 
+    input ChildsToMove {
+        parentId: ID!
+        childIds: [ID!]!
+    }
+
+    input NodesToMove {
+        collectionIds: [ID!]!
+        childs: [ChildsToMove!]!
+    }
+
     input SelectedNodes {
         collectionIds: [ID!]!
         childs: [SelectedChilds!]!
@@ -44,5 +54,6 @@ export const hierarchNodes_typeDefs = gql`
 
     type Mutation {
         deleteManyNodes(nodes: SelectedNodes!): Int!
+        moveManyNodes(nodes: NodesToMove!, destinationId: ID, position: Int): Boolean!
     }
 `;

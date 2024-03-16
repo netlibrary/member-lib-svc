@@ -404,6 +404,11 @@ export type ChildWhere = {
   Folder?: InputMaybe<FolderWhere>;
 };
 
+export type ChildsToMove = {
+  childIds: Array<Scalars['ID']['input']>;
+  parentId: Scalars['ID']['input'];
+};
+
 export type Collection = Parent & {
   __typename?: 'Collection';
   children: Array<Child>;
@@ -2143,6 +2148,7 @@ export type Mutation = {
   deleteParentMetas: DeleteInfo;
   deleteParentsChildren: DeleteInfo;
   importFirefoxBookmarks?: Maybe<Scalars['Boolean']['output']>;
+  moveManyNodes: Scalars['Boolean']['output'];
   updateBookmarkDls: UpdateBookmarkDlsMutationResponse;
   updateBookmarks: UpdateBookmarksMutationResponse;
   updateCollectionDs: UpdateCollectionDsMutationResponse;
@@ -2329,6 +2335,13 @@ export type MutationImportFirefoxBookmarksArgs = {
 };
 
 
+export type MutationMoveManyNodesArgs = {
+  destinationId?: InputMaybe<Scalars['ID']['input']>;
+  nodes: NodesToMove;
+  position?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
 export type MutationUpdateBookmarkDlsArgs = {
   update?: InputMaybe<BookmarkDlUpdateInput>;
   where?: InputMaybe<BookmarkDlWhere>;
@@ -2420,6 +2433,11 @@ export type MutationUpdateParentMetasArgs = {
 export type MutationUpdateParentsChildrenArgs = {
   update?: InputMaybe<ParentsChildrenUpdateInput>;
   where?: InputMaybe<ParentsChildrenWhere>;
+};
+
+export type NodesToMove = {
+  childs: Array<ChildsToMove>;
+  collectionIds: Array<Scalars['ID']['input']>;
 };
 
 /** Pagination information (Relay) */
@@ -3562,6 +3580,7 @@ export type ResolversTypes = {
   Child: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['Child']>;
   ChildDl: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['ChildDl']>;
   ChildWhere: ChildWhere;
+  ChildsToMove: ChildsToMove;
   Collection: ResolverTypeWrapper<Omit<Collection, 'children'> & { children: Array<ResolversTypes['Child']> }>;
   CollectionAggregateSelection: ResolverTypeWrapper<CollectionAggregateSelection>;
   CollectionChildrenConnectInput: CollectionChildrenConnectInput;
@@ -3782,6 +3801,7 @@ export type ResolversTypes = {
   MemberWhere: MemberWhere;
   MembersConnection: ResolverTypeWrapper<MembersConnection>;
   Mutation: ResolverTypeWrapper<{}>;
+  NodesToMove: NodesToMove;
   PageInfo: ResolverTypeWrapper<PageInfo>;
   Parent: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Parent']>;
   ParentChildrenBookmarkConnectFieldInput: ParentChildrenBookmarkConnectFieldInput;
@@ -3944,6 +3964,7 @@ export type ResolversParentTypes = {
   Child: ResolversUnionTypes<ResolversParentTypes>['Child'];
   ChildDl: ResolversUnionTypes<ResolversParentTypes>['ChildDl'];
   ChildWhere: ChildWhere;
+  ChildsToMove: ChildsToMove;
   Collection: Omit<Collection, 'children'> & { children: Array<ResolversParentTypes['Child']> };
   CollectionAggregateSelection: CollectionAggregateSelection;
   CollectionChildrenConnectInput: CollectionChildrenConnectInput;
@@ -4164,6 +4185,7 @@ export type ResolversParentTypes = {
   MemberWhere: MemberWhere;
   MembersConnection: MembersConnection;
   Mutation: {};
+  NodesToMove: NodesToMove;
   PageInfo: PageInfo;
   Parent: ResolversInterfaceTypes<ResolversParentTypes>['Parent'];
   ParentChildrenBookmarkConnectFieldInput: ParentChildrenBookmarkConnectFieldInput;
@@ -4880,6 +4902,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteParentMetas?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteParentMetasArgs>>;
   deleteParentsChildren?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteParentsChildrenArgs>>;
   importFirefoxBookmarks?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationImportFirefoxBookmarksArgs, 'file'>>;
+  moveManyNodes?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationMoveManyNodesArgs, 'nodes'>>;
   updateBookmarkDls?: Resolver<ResolversTypes['UpdateBookmarkDlsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateBookmarkDlsArgs>>;
   updateBookmarks?: Resolver<ResolversTypes['UpdateBookmarksMutationResponse'], ParentType, ContextType, Partial<MutationUpdateBookmarksArgs>>;
   updateCollectionDs?: Resolver<ResolversTypes['UpdateCollectionDsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateCollectionDsArgs>>;

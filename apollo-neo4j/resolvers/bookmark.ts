@@ -81,7 +81,7 @@ export const bookmarkResolvers = {
                 );
 
                 if (parentId) {
-                    await ParentMetaSvc.addChildPosition(bookmarkId, parentId, position)
+                    await ParentMetaSvc.addChildPositions(bookmarkId, parentId, position)
                 }
 
                 return bookmarkId;
