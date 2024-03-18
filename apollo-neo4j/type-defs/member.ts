@@ -4,6 +4,8 @@ export const member_typeDefs = gql`
   type Member @node(labels: ["Member", "DeleteCascade"]) {
     id: ID! @id @unique
     collections: [Collection!]! @relationship(type: "OWNS", direction: OUT)
+    bmsContainer: BmsContainer @relationship(type: "OWNS", direction: OUT)
+    
     memberMeta: MemberMeta @relationship(type: "HAS", direction: OUT)
   }
 

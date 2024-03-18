@@ -13,6 +13,14 @@ export const bookmark_typeDefs = gql`
         iconUri: String
 
         parent: Parent @relationship(type: "CONTAINS", direction: IN)
+        tags: [Tag!]! @relationship(type: "BELONGS_TO", direction: OUT)
+        container: BmsContainer @relationship(type: "CONTAINS", direction: IN)
+    }
+
+    type BmsContainer @node(labels: ["BmsContainer"]) {
+        id: ID! @id @unique
+        member: Member @relationship(type: "OWNS", direction: IN)
+        bookmarks: [Bookmark!]! @relationship(type: "CONTAINS", direction: OUT)
     }
 
     type BookmarkDl {
@@ -40,5 +48,17 @@ export const bookmark_typeDefs = gql`
     type Mutation {
         createBookmarkDl(data: CreateBookmarkDl!): ID
         deleteBookmark(id: ID!, parentId: ID!): Int!
+    }
+
+    type Query {
+        nonHierarchBmCount(memberId: String!): Int!
+        @cypher(
+            statement: """
+            MATCH (m:Member {id: $memberId})-[:OWNS]->(c:BmsContainer)
+            OPTIONAL MATCH (c)-[:CONTAINS]->(b:Bookmark)
+            RETURN COUNT(b) AS count
+            """
+            columnName: "count"
+        )
     }
 `;
