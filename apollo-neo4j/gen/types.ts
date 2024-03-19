@@ -19,7 +19,7 @@ export type Scalars = {
   Upload: { input: any; output: any; }
 };
 
-export type BmsContainer = {
+export type BmsContainer = Parent & {
   __typename?: 'BmsContainer';
   bookmarks: Array<Bookmark>;
   bookmarksAggregate?: Maybe<BmsContainerBookmarkBookmarksAggregationSelection>;
@@ -514,7 +514,7 @@ export type BmsContainersConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
-export type Bookmark = Parent & {
+export type Bookmark = {
   __typename?: 'Bookmark';
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   description?: Maybe<Scalars['String']['output']>;
@@ -751,6 +751,349 @@ export type BookmarkEdge = {
   __typename?: 'BookmarkEdge';
   cursor: Scalars['String']['output'];
   node: Bookmark;
+};
+
+export type BookmarkFilter = {
+  __typename?: 'BookmarkFilter';
+  bmLoose?: Maybe<Scalars['Boolean']['output']>;
+  bmParentsTxt?: Maybe<Scalars['String']['output']>;
+  bmTags: Array<Scalars['String']['output']>;
+  bmTxt?: Maybe<Scalars['String']['output']>;
+  bmUrl?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  member?: Maybe<Member>;
+  memberAggregate?: Maybe<BookmarkFilterMemberMemberAggregationSelection>;
+  memberConnection: BookmarkFilterMemberConnection;
+  name?: Maybe<Scalars['String']['output']>;
+  sortBy?: Maybe<Scalars['String']['output']>;
+  sortDir?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+};
+
+
+export type BookmarkFilterMemberArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  options?: InputMaybe<MemberOptions>;
+  where?: InputMaybe<MemberWhere>;
+};
+
+
+export type BookmarkFilterMemberAggregateArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  where?: InputMaybe<MemberWhere>;
+};
+
+
+export type BookmarkFilterMemberConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<BookmarkFilterMemberConnectionSort>>;
+  where?: InputMaybe<BookmarkFilterMemberConnectionWhere>;
+};
+
+export type BookmarkFilterAggregateSelection = {
+  __typename?: 'BookmarkFilterAggregateSelection';
+  bmParentsTxt: StringAggregateSelectionNullable;
+  bmTxt: StringAggregateSelectionNullable;
+  bmUrl: StringAggregateSelectionNullable;
+  count: Scalars['Int']['output'];
+  createdAt: DateTimeAggregateSelectionNullable;
+  description: StringAggregateSelectionNullable;
+  id: IdAggregateSelectionNonNullable;
+  name: StringAggregateSelectionNullable;
+  sortBy: StringAggregateSelectionNullable;
+  sortDir: StringAggregateSelectionNullable;
+  updatedAt: DateTimeAggregateSelectionNullable;
+};
+
+export type BookmarkFilterConnectInput = {
+  member?: InputMaybe<BookmarkFilterMemberConnectFieldInput>;
+};
+
+export type BookmarkFilterConnectOrCreateInput = {
+  member?: InputMaybe<BookmarkFilterMemberConnectOrCreateFieldInput>;
+};
+
+export type BookmarkFilterConnectOrCreateWhere = {
+  node: BookmarkFilterUniqueWhere;
+};
+
+export type BookmarkFilterConnectWhere = {
+  node: BookmarkFilterWhere;
+};
+
+export type BookmarkFilterCreateInput = {
+  bmLoose?: InputMaybe<Scalars['Boolean']['input']>;
+  bmParentsTxt?: InputMaybe<Scalars['String']['input']>;
+  bmTags: Array<Scalars['String']['input']>;
+  bmTxt?: InputMaybe<Scalars['String']['input']>;
+  bmUrl?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  member?: InputMaybe<BookmarkFilterMemberFieldInput>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  sortBy?: InputMaybe<Scalars['String']['input']>;
+  sortDir?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type BookmarkFilterDeleteInput = {
+  member?: InputMaybe<BookmarkFilterMemberDeleteFieldInput>;
+};
+
+export type BookmarkFilterDisconnectInput = {
+  member?: InputMaybe<BookmarkFilterMemberDisconnectFieldInput>;
+};
+
+export type BookmarkFilterEdge = {
+  __typename?: 'BookmarkFilterEdge';
+  cursor: Scalars['String']['output'];
+  node: BookmarkFilter;
+};
+
+export type BookmarkFilterMemberAggregateInput = {
+  AND?: InputMaybe<Array<BookmarkFilterMemberAggregateInput>>;
+  NOT?: InputMaybe<BookmarkFilterMemberAggregateInput>;
+  OR?: InputMaybe<Array<BookmarkFilterMemberAggregateInput>>;
+  count?: InputMaybe<Scalars['Int']['input']>;
+  count_GT?: InputMaybe<Scalars['Int']['input']>;
+  count_GTE?: InputMaybe<Scalars['Int']['input']>;
+  count_LT?: InputMaybe<Scalars['Int']['input']>;
+  count_LTE?: InputMaybe<Scalars['Int']['input']>;
+  node?: InputMaybe<BookmarkFilterMemberNodeAggregationWhereInput>;
+};
+
+export type BookmarkFilterMemberConnectFieldInput = {
+  connect?: InputMaybe<MemberConnectInput>;
+  /** Whether or not to overwrite any matching relationship with the new properties. */
+  overwrite?: Scalars['Boolean']['input'];
+  where?: InputMaybe<MemberConnectWhere>;
+};
+
+export type BookmarkFilterMemberConnectOrCreateFieldInput = {
+  onCreate: BookmarkFilterMemberConnectOrCreateFieldInputOnCreate;
+  where: MemberConnectOrCreateWhere;
+};
+
+export type BookmarkFilterMemberConnectOrCreateFieldInputOnCreate = {
+  node: MemberOnCreateInput;
+};
+
+export type BookmarkFilterMemberConnection = {
+  __typename?: 'BookmarkFilterMemberConnection';
+  edges: Array<BookmarkFilterMemberRelationship>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type BookmarkFilterMemberConnectionSort = {
+  node?: InputMaybe<MemberSort>;
+};
+
+export type BookmarkFilterMemberConnectionWhere = {
+  AND?: InputMaybe<Array<BookmarkFilterMemberConnectionWhere>>;
+  NOT?: InputMaybe<BookmarkFilterMemberConnectionWhere>;
+  OR?: InputMaybe<Array<BookmarkFilterMemberConnectionWhere>>;
+  node?: InputMaybe<MemberWhere>;
+};
+
+export type BookmarkFilterMemberCreateFieldInput = {
+  node: MemberCreateInput;
+};
+
+export type BookmarkFilterMemberDeleteFieldInput = {
+  delete?: InputMaybe<MemberDeleteInput>;
+  where?: InputMaybe<BookmarkFilterMemberConnectionWhere>;
+};
+
+export type BookmarkFilterMemberDisconnectFieldInput = {
+  disconnect?: InputMaybe<MemberDisconnectInput>;
+  where?: InputMaybe<BookmarkFilterMemberConnectionWhere>;
+};
+
+export type BookmarkFilterMemberFieldInput = {
+  connect?: InputMaybe<BookmarkFilterMemberConnectFieldInput>;
+  connectOrCreate?: InputMaybe<BookmarkFilterMemberConnectOrCreateFieldInput>;
+  create?: InputMaybe<BookmarkFilterMemberCreateFieldInput>;
+};
+
+export type BookmarkFilterMemberMemberAggregationSelection = {
+  __typename?: 'BookmarkFilterMemberMemberAggregationSelection';
+  count: Scalars['Int']['output'];
+  node?: Maybe<BookmarkFilterMemberMemberNodeAggregateSelection>;
+};
+
+export type BookmarkFilterMemberMemberNodeAggregateSelection = {
+  __typename?: 'BookmarkFilterMemberMemberNodeAggregateSelection';
+  id: IdAggregateSelectionNonNullable;
+};
+
+export type BookmarkFilterMemberNodeAggregationWhereInput = {
+  AND?: InputMaybe<Array<BookmarkFilterMemberNodeAggregationWhereInput>>;
+  NOT?: InputMaybe<BookmarkFilterMemberNodeAggregationWhereInput>;
+  OR?: InputMaybe<Array<BookmarkFilterMemberNodeAggregationWhereInput>>;
+};
+
+export type BookmarkFilterMemberRelationship = {
+  __typename?: 'BookmarkFilterMemberRelationship';
+  cursor: Scalars['String']['output'];
+  node: Member;
+};
+
+export type BookmarkFilterMemberUpdateConnectionInput = {
+  node?: InputMaybe<MemberUpdateInput>;
+};
+
+export type BookmarkFilterMemberUpdateFieldInput = {
+  connect?: InputMaybe<BookmarkFilterMemberConnectFieldInput>;
+  connectOrCreate?: InputMaybe<BookmarkFilterMemberConnectOrCreateFieldInput>;
+  create?: InputMaybe<BookmarkFilterMemberCreateFieldInput>;
+  delete?: InputMaybe<BookmarkFilterMemberDeleteFieldInput>;
+  disconnect?: InputMaybe<BookmarkFilterMemberDisconnectFieldInput>;
+  update?: InputMaybe<BookmarkFilterMemberUpdateConnectionInput>;
+  where?: InputMaybe<BookmarkFilterMemberConnectionWhere>;
+};
+
+export type BookmarkFilterOnCreateInput = {
+  bmLoose?: InputMaybe<Scalars['Boolean']['input']>;
+  bmParentsTxt?: InputMaybe<Scalars['String']['input']>;
+  bmTags: Array<Scalars['String']['input']>;
+  bmTxt?: InputMaybe<Scalars['String']['input']>;
+  bmUrl?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  sortBy?: InputMaybe<Scalars['String']['input']>;
+  sortDir?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type BookmarkFilterOptions = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  /** Specify one or more BookmarkFilterSort objects to sort BookmarkFilters by. The sorts will be applied in the order in which they are arranged in the array. */
+  sort?: InputMaybe<Array<BookmarkFilterSort>>;
+};
+
+export type BookmarkFilterRelationInput = {
+  member?: InputMaybe<BookmarkFilterMemberCreateFieldInput>;
+};
+
+/** Fields to sort BookmarkFilters by. The order in which sorts are applied is not guaranteed when specifying many fields in one BookmarkFilterSort object. */
+export type BookmarkFilterSort = {
+  bmLoose?: InputMaybe<SortDirection>;
+  bmParentsTxt?: InputMaybe<SortDirection>;
+  bmTxt?: InputMaybe<SortDirection>;
+  bmUrl?: InputMaybe<SortDirection>;
+  createdAt?: InputMaybe<SortDirection>;
+  description?: InputMaybe<SortDirection>;
+  id?: InputMaybe<SortDirection>;
+  name?: InputMaybe<SortDirection>;
+  sortBy?: InputMaybe<SortDirection>;
+  sortDir?: InputMaybe<SortDirection>;
+  updatedAt?: InputMaybe<SortDirection>;
+};
+
+export type BookmarkFilterUniqueWhere = {
+  id?: InputMaybe<Scalars['ID']['input']>;
+};
+
+export type BookmarkFilterUpdateInput = {
+  bmLoose?: InputMaybe<Scalars['Boolean']['input']>;
+  bmParentsTxt?: InputMaybe<Scalars['String']['input']>;
+  bmTags?: InputMaybe<Array<Scalars['String']['input']>>;
+  bmTags_POP?: InputMaybe<Scalars['Int']['input']>;
+  bmTags_PUSH?: InputMaybe<Array<Scalars['String']['input']>>;
+  bmTxt?: InputMaybe<Scalars['String']['input']>;
+  bmUrl?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  member?: InputMaybe<BookmarkFilterMemberUpdateFieldInput>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  sortBy?: InputMaybe<Scalars['String']['input']>;
+  sortDir?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type BookmarkFilterWhere = {
+  AND?: InputMaybe<Array<BookmarkFilterWhere>>;
+  NOT?: InputMaybe<BookmarkFilterWhere>;
+  OR?: InputMaybe<Array<BookmarkFilterWhere>>;
+  bmLoose?: InputMaybe<Scalars['Boolean']['input']>;
+  bmParentsTxt?: InputMaybe<Scalars['String']['input']>;
+  bmParentsTxt_CONTAINS?: InputMaybe<Scalars['String']['input']>;
+  bmParentsTxt_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
+  bmParentsTxt_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  bmParentsTxt_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
+  bmTags?: InputMaybe<Array<Scalars['String']['input']>>;
+  bmTags_INCLUDES?: InputMaybe<Scalars['String']['input']>;
+  bmTxt?: InputMaybe<Scalars['String']['input']>;
+  bmTxt_CONTAINS?: InputMaybe<Scalars['String']['input']>;
+  bmTxt_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
+  bmTxt_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  bmTxt_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
+  bmUrl?: InputMaybe<Scalars['String']['input']>;
+  bmUrl_CONTAINS?: InputMaybe<Scalars['String']['input']>;
+  bmUrl_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
+  bmUrl_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  bmUrl_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_IN?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
+  createdAt_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  description_CONTAINS?: InputMaybe<Scalars['String']['input']>;
+  description_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
+  description_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  description_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  id_CONTAINS?: InputMaybe<Scalars['ID']['input']>;
+  id_ENDS_WITH?: InputMaybe<Scalars['ID']['input']>;
+  id_IN?: InputMaybe<Array<Scalars['ID']['input']>>;
+  id_STARTS_WITH?: InputMaybe<Scalars['ID']['input']>;
+  member?: InputMaybe<MemberWhere>;
+  memberAggregate?: InputMaybe<BookmarkFilterMemberAggregateInput>;
+  memberConnection?: InputMaybe<BookmarkFilterMemberConnectionWhere>;
+  memberConnection_NOT?: InputMaybe<BookmarkFilterMemberConnectionWhere>;
+  member_NOT?: InputMaybe<MemberWhere>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  name_CONTAINS?: InputMaybe<Scalars['String']['input']>;
+  name_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
+  name_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  name_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
+  sortBy?: InputMaybe<Scalars['String']['input']>;
+  sortBy_CONTAINS?: InputMaybe<Scalars['String']['input']>;
+  sortBy_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
+  sortBy_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  sortBy_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
+  sortDir?: InputMaybe<Scalars['String']['input']>;
+  sortDir_CONTAINS?: InputMaybe<Scalars['String']['input']>;
+  sortDir_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
+  sortDir_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  sortDir_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_IN?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
+  updatedAt_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+export type BookmarkFilter_In = {
+  bmLoose?: InputMaybe<Scalars['Boolean']['input']>;
+  bmParentsTxt?: InputMaybe<Scalars['String']['input']>;
+  bmTags: Array<Scalars['String']['input']>;
+  bmTxt?: InputMaybe<Scalars['String']['input']>;
+  bmUrl?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  sortBy?: InputMaybe<Scalars['String']['input']>;
+  sortDir?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type BookmarkFiltersConnection = {
+  __typename?: 'BookmarkFiltersConnection';
+  edges: Array<BookmarkFilterEdge>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
 };
 
 export type BookmarkOnCreateInput = {
@@ -1858,6 +2201,12 @@ export type CreateBookmarkDlsMutationResponse = {
   info: CreateInfo;
 };
 
+export type CreateBookmarkFiltersMutationResponse = {
+  __typename?: 'CreateBookmarkFiltersMutationResponse';
+  bookmarkFilters: Array<BookmarkFilter>;
+  info: CreateInfo;
+};
+
 export type CreateBookmarksMutationResponse = {
   __typename?: 'CreateBookmarksMutationResponse';
   bookmarks: Array<Bookmark>;
@@ -2600,6 +2949,9 @@ export type IntAggregateSelectionNullable = {
 
 export type Member = {
   __typename?: 'Member';
+  bmFilters: Array<BookmarkFilter>;
+  bmFiltersAggregate?: Maybe<MemberBookmarkFilterBmFiltersAggregationSelection>;
+  bmFiltersConnection: MemberBmFiltersConnection;
   bmsContainer?: Maybe<BmsContainer>;
   bmsContainerAggregate?: Maybe<MemberBmsContainerBmsContainerAggregationSelection>;
   bmsContainerConnection: MemberBmsContainerConnection;
@@ -2610,6 +2962,28 @@ export type Member = {
   memberMeta?: Maybe<MemberMeta>;
   memberMetaAggregate?: Maybe<MemberMemberMetaMemberMetaAggregationSelection>;
   memberMetaConnection: MemberMemberMetaConnection;
+};
+
+
+export type MemberBmFiltersArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  options?: InputMaybe<BookmarkFilterOptions>;
+  where?: InputMaybe<BookmarkFilterWhere>;
+};
+
+
+export type MemberBmFiltersAggregateArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  where?: InputMaybe<BookmarkFilterWhere>;
+};
+
+
+export type MemberBmFiltersConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<MemberBmFiltersConnectionSort>>;
+  where?: InputMaybe<MemberBmFiltersConnectionWhere>;
 };
 
 
@@ -2682,6 +3056,223 @@ export type MemberAggregateSelection = {
   __typename?: 'MemberAggregateSelection';
   count: Scalars['Int']['output'];
   id: IdAggregateSelectionNonNullable;
+};
+
+export type MemberBmFiltersAggregateInput = {
+  AND?: InputMaybe<Array<MemberBmFiltersAggregateInput>>;
+  NOT?: InputMaybe<MemberBmFiltersAggregateInput>;
+  OR?: InputMaybe<Array<MemberBmFiltersAggregateInput>>;
+  count?: InputMaybe<Scalars['Int']['input']>;
+  count_GT?: InputMaybe<Scalars['Int']['input']>;
+  count_GTE?: InputMaybe<Scalars['Int']['input']>;
+  count_LT?: InputMaybe<Scalars['Int']['input']>;
+  count_LTE?: InputMaybe<Scalars['Int']['input']>;
+  node?: InputMaybe<MemberBmFiltersNodeAggregationWhereInput>;
+};
+
+export type MemberBmFiltersConnectFieldInput = {
+  connect?: InputMaybe<Array<BookmarkFilterConnectInput>>;
+  /** Whether or not to overwrite any matching relationship with the new properties. */
+  overwrite?: Scalars['Boolean']['input'];
+  where?: InputMaybe<BookmarkFilterConnectWhere>;
+};
+
+export type MemberBmFiltersConnectOrCreateFieldInput = {
+  onCreate: MemberBmFiltersConnectOrCreateFieldInputOnCreate;
+  where: BookmarkFilterConnectOrCreateWhere;
+};
+
+export type MemberBmFiltersConnectOrCreateFieldInputOnCreate = {
+  node: BookmarkFilterOnCreateInput;
+};
+
+export type MemberBmFiltersConnection = {
+  __typename?: 'MemberBmFiltersConnection';
+  edges: Array<MemberBmFiltersRelationship>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type MemberBmFiltersConnectionSort = {
+  node?: InputMaybe<BookmarkFilterSort>;
+};
+
+export type MemberBmFiltersConnectionWhere = {
+  AND?: InputMaybe<Array<MemberBmFiltersConnectionWhere>>;
+  NOT?: InputMaybe<MemberBmFiltersConnectionWhere>;
+  OR?: InputMaybe<Array<MemberBmFiltersConnectionWhere>>;
+  node?: InputMaybe<BookmarkFilterWhere>;
+};
+
+export type MemberBmFiltersCreateFieldInput = {
+  node: BookmarkFilterCreateInput;
+};
+
+export type MemberBmFiltersDeleteFieldInput = {
+  delete?: InputMaybe<BookmarkFilterDeleteInput>;
+  where?: InputMaybe<MemberBmFiltersConnectionWhere>;
+};
+
+export type MemberBmFiltersDisconnectFieldInput = {
+  disconnect?: InputMaybe<BookmarkFilterDisconnectInput>;
+  where?: InputMaybe<MemberBmFiltersConnectionWhere>;
+};
+
+export type MemberBmFiltersFieldInput = {
+  connect?: InputMaybe<Array<MemberBmFiltersConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<Array<MemberBmFiltersConnectOrCreateFieldInput>>;
+  create?: InputMaybe<Array<MemberBmFiltersCreateFieldInput>>;
+};
+
+export type MemberBmFiltersNodeAggregationWhereInput = {
+  AND?: InputMaybe<Array<MemberBmFiltersNodeAggregationWhereInput>>;
+  NOT?: InputMaybe<MemberBmFiltersNodeAggregationWhereInput>;
+  OR?: InputMaybe<Array<MemberBmFiltersNodeAggregationWhereInput>>;
+  bmParentsTxt_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  bmParentsTxt_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  bmParentsTxt_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  bmParentsTxt_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  bmParentsTxt_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  bmParentsTxt_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  bmParentsTxt_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  bmParentsTxt_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  bmParentsTxt_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  bmParentsTxt_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  bmParentsTxt_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  bmParentsTxt_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  bmParentsTxt_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  bmParentsTxt_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  bmParentsTxt_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  bmTxt_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  bmTxt_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  bmTxt_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  bmTxt_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  bmTxt_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  bmTxt_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  bmTxt_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  bmTxt_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  bmTxt_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  bmTxt_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  bmTxt_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  bmTxt_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  bmTxt_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  bmTxt_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  bmTxt_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  bmUrl_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  bmUrl_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  bmUrl_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  bmUrl_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  bmUrl_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  bmUrl_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  bmUrl_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  bmUrl_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  bmUrl_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  bmUrl_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  bmUrl_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  bmUrl_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  bmUrl_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  bmUrl_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  bmUrl_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  createdAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  description_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  description_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  description_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  description_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  description_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  description_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  description_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  description_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  description_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  description_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  description_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  description_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  description_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  description_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  description_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  name_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  name_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  name_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  name_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  name_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  name_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  name_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  name_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  name_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  name_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  name_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  name_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  name_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  name_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  name_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  sortBy_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  sortBy_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  sortBy_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  sortBy_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  sortBy_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  sortBy_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  sortBy_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  sortBy_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  sortBy_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  sortBy_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  sortBy_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  sortBy_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  sortBy_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  sortBy_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  sortBy_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  sortDir_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  sortDir_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  sortDir_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  sortDir_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  sortDir_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  sortDir_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  sortDir_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  sortDir_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  sortDir_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  sortDir_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  sortDir_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  sortDir_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  sortDir_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  sortDir_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  sortDir_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  updatedAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+export type MemberBmFiltersRelationship = {
+  __typename?: 'MemberBmFiltersRelationship';
+  cursor: Scalars['String']['output'];
+  node: BookmarkFilter;
+};
+
+export type MemberBmFiltersUpdateConnectionInput = {
+  node?: InputMaybe<BookmarkFilterUpdateInput>;
+};
+
+export type MemberBmFiltersUpdateFieldInput = {
+  connect?: InputMaybe<Array<MemberBmFiltersConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<Array<MemberBmFiltersConnectOrCreateFieldInput>>;
+  create?: InputMaybe<Array<MemberBmFiltersCreateFieldInput>>;
+  delete?: InputMaybe<Array<MemberBmFiltersDeleteFieldInput>>;
+  disconnect?: InputMaybe<Array<MemberBmFiltersDisconnectFieldInput>>;
+  update?: InputMaybe<MemberBmFiltersUpdateConnectionInput>;
+  where?: InputMaybe<MemberBmFiltersConnectionWhere>;
 };
 
 export type MemberBmsContainerAggregateInput = {
@@ -2785,6 +3376,26 @@ export type MemberBmsContainerUpdateFieldInput = {
   disconnect?: InputMaybe<MemberBmsContainerDisconnectFieldInput>;
   update?: InputMaybe<MemberBmsContainerUpdateConnectionInput>;
   where?: InputMaybe<MemberBmsContainerConnectionWhere>;
+};
+
+export type MemberBookmarkFilterBmFiltersAggregationSelection = {
+  __typename?: 'MemberBookmarkFilterBmFiltersAggregationSelection';
+  count: Scalars['Int']['output'];
+  node?: Maybe<MemberBookmarkFilterBmFiltersNodeAggregateSelection>;
+};
+
+export type MemberBookmarkFilterBmFiltersNodeAggregateSelection = {
+  __typename?: 'MemberBookmarkFilterBmFiltersNodeAggregateSelection';
+  bmParentsTxt: StringAggregateSelectionNullable;
+  bmTxt: StringAggregateSelectionNullable;
+  bmUrl: StringAggregateSelectionNullable;
+  createdAt: DateTimeAggregateSelectionNullable;
+  description: StringAggregateSelectionNullable;
+  id: IdAggregateSelectionNonNullable;
+  name: StringAggregateSelectionNullable;
+  sortBy: StringAggregateSelectionNullable;
+  sortDir: StringAggregateSelectionNullable;
+  updatedAt: DateTimeAggregateSelectionNullable;
 };
 
 export type MemberCollectionCollectionsAggregationSelection = {
@@ -2929,12 +3540,14 @@ export type MemberCollectionsUpdateFieldInput = {
 };
 
 export type MemberConnectInput = {
+  bmFilters?: InputMaybe<Array<MemberBmFiltersConnectFieldInput>>;
   bmsContainer?: InputMaybe<MemberBmsContainerConnectFieldInput>;
   collections?: InputMaybe<Array<MemberCollectionsConnectFieldInput>>;
   memberMeta?: InputMaybe<MemberMemberMetaConnectFieldInput>;
 };
 
 export type MemberConnectOrCreateInput = {
+  bmFilters?: InputMaybe<Array<MemberBmFiltersConnectOrCreateFieldInput>>;
   bmsContainer?: InputMaybe<MemberBmsContainerConnectOrCreateFieldInput>;
   collections?: InputMaybe<Array<MemberCollectionsConnectOrCreateFieldInput>>;
   memberMeta?: InputMaybe<MemberMemberMetaConnectOrCreateFieldInput>;
@@ -2949,18 +3562,21 @@ export type MemberConnectWhere = {
 };
 
 export type MemberCreateInput = {
+  bmFilters?: InputMaybe<MemberBmFiltersFieldInput>;
   bmsContainer?: InputMaybe<MemberBmsContainerFieldInput>;
   collections?: InputMaybe<MemberCollectionsFieldInput>;
   memberMeta?: InputMaybe<MemberMemberMetaFieldInput>;
 };
 
 export type MemberDeleteInput = {
+  bmFilters?: InputMaybe<Array<MemberBmFiltersDeleteFieldInput>>;
   bmsContainer?: InputMaybe<MemberBmsContainerDeleteFieldInput>;
   collections?: InputMaybe<Array<MemberCollectionsDeleteFieldInput>>;
   memberMeta?: InputMaybe<MemberMemberMetaDeleteFieldInput>;
 };
 
 export type MemberDisconnectInput = {
+  bmFilters?: InputMaybe<Array<MemberBmFiltersDisconnectFieldInput>>;
   bmsContainer?: InputMaybe<MemberBmsContainerDisconnectFieldInput>;
   collections?: InputMaybe<Array<MemberCollectionsDisconnectFieldInput>>;
   memberMeta?: InputMaybe<MemberMemberMetaDisconnectFieldInput>;
@@ -3319,6 +3935,7 @@ export type MemberOptions = {
 };
 
 export type MemberRelationInput = {
+  bmFilters?: InputMaybe<Array<MemberBmFiltersCreateFieldInput>>;
   bmsContainer?: InputMaybe<MemberBmsContainerCreateFieldInput>;
   collections?: InputMaybe<Array<MemberCollectionsCreateFieldInput>>;
   memberMeta?: InputMaybe<MemberMemberMetaCreateFieldInput>;
@@ -3334,6 +3951,7 @@ export type MemberUniqueWhere = {
 };
 
 export type MemberUpdateInput = {
+  bmFilters?: InputMaybe<Array<MemberBmFiltersUpdateFieldInput>>;
   bmsContainer?: InputMaybe<MemberBmsContainerUpdateFieldInput>;
   collections?: InputMaybe<Array<MemberCollectionsUpdateFieldInput>>;
   memberMeta?: InputMaybe<MemberMemberMetaUpdateFieldInput>;
@@ -3343,6 +3961,23 @@ export type MemberWhere = {
   AND?: InputMaybe<Array<MemberWhere>>;
   NOT?: InputMaybe<MemberWhere>;
   OR?: InputMaybe<Array<MemberWhere>>;
+  bmFiltersAggregate?: InputMaybe<MemberBmFiltersAggregateInput>;
+  /** Return Members where all of the related MemberBmFiltersConnections match this filter */
+  bmFiltersConnection_ALL?: InputMaybe<MemberBmFiltersConnectionWhere>;
+  /** Return Members where none of the related MemberBmFiltersConnections match this filter */
+  bmFiltersConnection_NONE?: InputMaybe<MemberBmFiltersConnectionWhere>;
+  /** Return Members where one of the related MemberBmFiltersConnections match this filter */
+  bmFiltersConnection_SINGLE?: InputMaybe<MemberBmFiltersConnectionWhere>;
+  /** Return Members where some of the related MemberBmFiltersConnections match this filter */
+  bmFiltersConnection_SOME?: InputMaybe<MemberBmFiltersConnectionWhere>;
+  /** Return Members where all of the related BookmarkFilters match this filter */
+  bmFilters_ALL?: InputMaybe<BookmarkFilterWhere>;
+  /** Return Members where none of the related BookmarkFilters match this filter */
+  bmFilters_NONE?: InputMaybe<BookmarkFilterWhere>;
+  /** Return Members where one of the related BookmarkFilters match this filter */
+  bmFilters_SINGLE?: InputMaybe<BookmarkFilterWhere>;
+  /** Return Members where some of the related BookmarkFilters match this filter */
+  bmFilters_SOME?: InputMaybe<BookmarkFilterWhere>;
   bmsContainer?: InputMaybe<BmsContainerWhere>;
   bmsContainerAggregate?: InputMaybe<MemberBmsContainerAggregateInput>;
   bmsContainerConnection?: InputMaybe<MemberBmsContainerConnectionWhere>;
@@ -3389,6 +4024,7 @@ export type Mutation = {
   createBmsContainers: CreateBmsContainersMutationResponse;
   createBookmarkDl?: Maybe<Scalars['ID']['output']>;
   createBookmarkDls: CreateBookmarkDlsMutationResponse;
+  createBookmarkFilters: CreateBookmarkFiltersMutationResponse;
   createBookmarks: CreateBookmarksMutationResponse;
   createCollection?: Maybe<Scalars['ID']['output']>;
   createCollectionDs: CreateCollectionDsMutationResponse;
@@ -3405,6 +4041,7 @@ export type Mutation = {
   deleteBmsContainers: DeleteInfo;
   deleteBookmark: Scalars['Int']['output'];
   deleteBookmarkDls: DeleteInfo;
+  deleteBookmarkFilters: DeleteInfo;
   deleteBookmarks: DeleteInfo;
   deleteCascade?: Maybe<Scalars['Int']['output']>;
   deleteCollection: Scalars['Int']['output'];
@@ -3425,6 +4062,7 @@ export type Mutation = {
   moveManyNodes: Scalars['Boolean']['output'];
   updateBmsContainers: UpdateBmsContainersMutationResponse;
   updateBookmarkDls: UpdateBookmarkDlsMutationResponse;
+  updateBookmarkFilters: UpdateBookmarkFiltersMutationResponse;
   updateBookmarks: UpdateBookmarksMutationResponse;
   updateCollectionDs: UpdateCollectionDsMutationResponse;
   updateCollectionDsLists: UpdateCollectionDsListsMutationResponse;
@@ -3451,6 +4089,11 @@ export type MutationCreateBookmarkDlArgs = {
 
 export type MutationCreateBookmarkDlsArgs = {
   input: Array<BookmarkDlCreateInput>;
+};
+
+
+export type MutationCreateBookmarkFiltersArgs = {
+  input: Array<BookmarkFilterCreateInput>;
 };
 
 
@@ -3536,6 +4179,12 @@ export type MutationDeleteBookmarkArgs = {
 
 export type MutationDeleteBookmarkDlsArgs = {
   where?: InputMaybe<BookmarkDlWhere>;
+};
+
+
+export type MutationDeleteBookmarkFiltersArgs = {
+  delete?: InputMaybe<BookmarkFilterDeleteInput>;
+  where?: InputMaybe<BookmarkFilterWhere>;
 };
 
 
@@ -3657,6 +4306,17 @@ export type MutationUpdateBookmarkDlsArgs = {
 };
 
 
+export type MutationUpdateBookmarkFiltersArgs = {
+  connect?: InputMaybe<BookmarkFilterConnectInput>;
+  connectOrCreate?: InputMaybe<BookmarkFilterConnectOrCreateInput>;
+  create?: InputMaybe<BookmarkFilterRelationInput>;
+  delete?: InputMaybe<BookmarkFilterDeleteInput>;
+  disconnect?: InputMaybe<BookmarkFilterDisconnectInput>;
+  update?: InputMaybe<BookmarkFilterUpdateInput>;
+  where?: InputMaybe<BookmarkFilterWhere>;
+};
+
+
 export type MutationUpdateBookmarksArgs = {
   connect?: InputMaybe<BookmarkConnectInput>;
   connectOrCreate?: InputMaybe<BookmarkConnectOrCreateInput>;
@@ -3772,7 +4432,6 @@ export type PageInfo = {
 
 export type Parent = {
   id: Scalars['ID']['output'];
-  name?: Maybe<Scalars['String']['output']>;
 };
 
 export type ParentConnectInput = {
@@ -3784,7 +4443,7 @@ export type ParentConnectWhere = {
 };
 
 export type ParentCreateInput = {
-  Bookmark?: InputMaybe<BookmarkCreateInput>;
+  BmsContainer?: InputMaybe<BmsContainerCreateInput>;
   Collection?: InputMaybe<CollectionCreateInput>;
   Folder?: InputMaybe<FolderCreateInput>;
 };
@@ -3798,31 +4457,31 @@ export type ParentDisconnectInput = {
 };
 
 export type ParentImplementationsConnectInput = {
-  Bookmark?: InputMaybe<Array<BookmarkConnectInput>>;
+  BmsContainer?: InputMaybe<Array<BmsContainerConnectInput>>;
   Collection?: InputMaybe<Array<CollectionConnectInput>>;
   Folder?: InputMaybe<Array<FolderConnectInput>>;
 };
 
 export type ParentImplementationsDeleteInput = {
-  Bookmark?: InputMaybe<Array<BookmarkDeleteInput>>;
+  BmsContainer?: InputMaybe<Array<BmsContainerDeleteInput>>;
   Collection?: InputMaybe<Array<CollectionDeleteInput>>;
   Folder?: InputMaybe<Array<FolderDeleteInput>>;
 };
 
 export type ParentImplementationsDisconnectInput = {
-  Bookmark?: InputMaybe<Array<BookmarkDisconnectInput>>;
+  BmsContainer?: InputMaybe<Array<BmsContainerDisconnectInput>>;
   Collection?: InputMaybe<Array<CollectionDisconnectInput>>;
   Folder?: InputMaybe<Array<FolderDisconnectInput>>;
 };
 
 export type ParentImplementationsUpdateInput = {
-  Bookmark?: InputMaybe<BookmarkUpdateInput>;
+  BmsContainer?: InputMaybe<BmsContainerUpdateInput>;
   Collection?: InputMaybe<CollectionUpdateInput>;
   Folder?: InputMaybe<FolderUpdateInput>;
 };
 
 export type ParentImplementationsWhere = {
-  Bookmark?: InputMaybe<BookmarkWhere>;
+  BmsContainer?: InputMaybe<BmsContainerWhere>;
   Collection?: InputMaybe<CollectionWhere>;
   Folder?: InputMaybe<FolderWhere>;
 };
@@ -4012,12 +4671,10 @@ export type ParentOptions = {
 /** Fields to sort Parents by. The order in which sorts are applied is not guaranteed when specifying many fields in one ParentSort object. */
 export type ParentSort = {
   id?: InputMaybe<SortDirection>;
-  name?: InputMaybe<SortDirection>;
 };
 
 export type ParentUpdateInput = {
   _on?: InputMaybe<ParentImplementationsUpdateInput>;
-  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type ParentWhere = {
@@ -4027,11 +4684,6 @@ export type ParentWhere = {
   id_ENDS_WITH?: InputMaybe<Scalars['ID']['input']>;
   id_IN?: InputMaybe<Array<Scalars['ID']['input']>>;
   id_STARTS_WITH?: InputMaybe<Scalars['ID']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  name_CONTAINS?: InputMaybe<Scalars['String']['input']>;
-  name_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
-  name_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  name_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type ParentsChildren = {
@@ -4092,12 +4744,16 @@ export type ParentsChildrenWhere = {
 
 export type Query = {
   __typename?: 'Query';
+  bmsByFilter: Array<Bookmark>;
   bmsContainers: Array<BmsContainer>;
   bmsContainersAggregate: BmsContainerAggregateSelection;
   bmsContainersConnection: BmsContainersConnection;
   bookmarkDls: Array<BookmarkDl>;
   bookmarkDlsAggregate: BookmarkDlAggregateSelection;
   bookmarkDlsConnection: BookmarkDlsConnection;
+  bookmarkFilters: Array<BookmarkFilter>;
+  bookmarkFiltersAggregate: BookmarkFilterAggregateSelection;
+  bookmarkFiltersConnection: BookmarkFiltersConnection;
   bookmarks: Array<Bookmark>;
   bookmarksAggregate: BookmarkAggregateSelection;
   bookmarksConnection: BookmarksConnection;
@@ -4138,6 +4794,13 @@ export type Query = {
 };
 
 
+export type QueryBmsByFilterArgs = {
+  filter: BookmarkFilter_In;
+  limit: Scalars['Int']['input'];
+  offset: Scalars['Int']['input'];
+};
+
+
 export type QueryBmsContainersArgs = {
   options?: InputMaybe<BmsContainerOptions>;
   where?: InputMaybe<BmsContainerWhere>;
@@ -4173,6 +4836,25 @@ export type QueryBookmarkDlsConnectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<InputMaybe<BookmarkDlSort>>>;
   where?: InputMaybe<BookmarkDlWhere>;
+};
+
+
+export type QueryBookmarkFiltersArgs = {
+  options?: InputMaybe<BookmarkFilterOptions>;
+  where?: InputMaybe<BookmarkFilterWhere>;
+};
+
+
+export type QueryBookmarkFiltersAggregateArgs = {
+  where?: InputMaybe<BookmarkFilterWhere>;
+};
+
+
+export type QueryBookmarkFiltersConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<BookmarkFilterSort>>>;
+  where?: InputMaybe<BookmarkFilterWhere>;
 };
 
 
@@ -4848,6 +5530,12 @@ export type UpdateBookmarkDlsMutationResponse = {
   info: UpdateInfo;
 };
 
+export type UpdateBookmarkFiltersMutationResponse = {
+  __typename?: 'UpdateBookmarkFiltersMutationResponse';
+  bookmarkFilters: Array<BookmarkFilter>;
+  info: UpdateInfo;
+};
+
 export type UpdateBookmarksMutationResponse = {
   __typename?: 'UpdateBookmarksMutationResponse';
   bookmarks: Array<Bookmark>;
@@ -5000,7 +5688,7 @@ export type ResolversUnionTypes<RefType extends Record<string, unknown>> = {
 
 /** Mapping of interface types */
 export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> = {
-  Parent: ( Bookmark ) | ( Omit<Collection, 'children'> & { children: Array<RefType['Child']> } ) | ( Omit<Folder, 'children'> & { children: Array<RefType['Child']> } );
+  Parent: ( BmsContainer ) | ( Omit<Collection, 'children'> & { children: Array<RefType['Child']> } ) | ( Omit<Folder, 'children'> & { children: Array<RefType['Child']> } );
 };
 
 /** Mapping between all available schema types and the resolvers types */
@@ -5076,6 +5764,42 @@ export type ResolversTypes = {
   BookmarkDlWhere: BookmarkDlWhere;
   BookmarkDlsConnection: ResolverTypeWrapper<BookmarkDlsConnection>;
   BookmarkEdge: ResolverTypeWrapper<BookmarkEdge>;
+  BookmarkFilter: ResolverTypeWrapper<BookmarkFilter>;
+  BookmarkFilterAggregateSelection: ResolverTypeWrapper<BookmarkFilterAggregateSelection>;
+  BookmarkFilterConnectInput: BookmarkFilterConnectInput;
+  BookmarkFilterConnectOrCreateInput: BookmarkFilterConnectOrCreateInput;
+  BookmarkFilterConnectOrCreateWhere: BookmarkFilterConnectOrCreateWhere;
+  BookmarkFilterConnectWhere: BookmarkFilterConnectWhere;
+  BookmarkFilterCreateInput: BookmarkFilterCreateInput;
+  BookmarkFilterDeleteInput: BookmarkFilterDeleteInput;
+  BookmarkFilterDisconnectInput: BookmarkFilterDisconnectInput;
+  BookmarkFilterEdge: ResolverTypeWrapper<BookmarkFilterEdge>;
+  BookmarkFilterMemberAggregateInput: BookmarkFilterMemberAggregateInput;
+  BookmarkFilterMemberConnectFieldInput: BookmarkFilterMemberConnectFieldInput;
+  BookmarkFilterMemberConnectOrCreateFieldInput: BookmarkFilterMemberConnectOrCreateFieldInput;
+  BookmarkFilterMemberConnectOrCreateFieldInputOnCreate: BookmarkFilterMemberConnectOrCreateFieldInputOnCreate;
+  BookmarkFilterMemberConnection: ResolverTypeWrapper<BookmarkFilterMemberConnection>;
+  BookmarkFilterMemberConnectionSort: BookmarkFilterMemberConnectionSort;
+  BookmarkFilterMemberConnectionWhere: BookmarkFilterMemberConnectionWhere;
+  BookmarkFilterMemberCreateFieldInput: BookmarkFilterMemberCreateFieldInput;
+  BookmarkFilterMemberDeleteFieldInput: BookmarkFilterMemberDeleteFieldInput;
+  BookmarkFilterMemberDisconnectFieldInput: BookmarkFilterMemberDisconnectFieldInput;
+  BookmarkFilterMemberFieldInput: BookmarkFilterMemberFieldInput;
+  BookmarkFilterMemberMemberAggregationSelection: ResolverTypeWrapper<BookmarkFilterMemberMemberAggregationSelection>;
+  BookmarkFilterMemberMemberNodeAggregateSelection: ResolverTypeWrapper<BookmarkFilterMemberMemberNodeAggregateSelection>;
+  BookmarkFilterMemberNodeAggregationWhereInput: BookmarkFilterMemberNodeAggregationWhereInput;
+  BookmarkFilterMemberRelationship: ResolverTypeWrapper<BookmarkFilterMemberRelationship>;
+  BookmarkFilterMemberUpdateConnectionInput: BookmarkFilterMemberUpdateConnectionInput;
+  BookmarkFilterMemberUpdateFieldInput: BookmarkFilterMemberUpdateFieldInput;
+  BookmarkFilterOnCreateInput: BookmarkFilterOnCreateInput;
+  BookmarkFilterOptions: BookmarkFilterOptions;
+  BookmarkFilterRelationInput: BookmarkFilterRelationInput;
+  BookmarkFilterSort: BookmarkFilterSort;
+  BookmarkFilterUniqueWhere: BookmarkFilterUniqueWhere;
+  BookmarkFilterUpdateInput: BookmarkFilterUpdateInput;
+  BookmarkFilterWhere: BookmarkFilterWhere;
+  BookmarkFilter_In: BookmarkFilter_In;
+  BookmarkFiltersConnection: ResolverTypeWrapper<BookmarkFiltersConnection>;
   BookmarkOnCreateInput: BookmarkOnCreateInput;
   BookmarkOptions: BookmarkOptions;
   BookmarkParentConnectFieldInput: BookmarkParentConnectFieldInput;
@@ -5219,6 +5943,7 @@ export type ResolversTypes = {
   CreateBmsContainersMutationResponse: ResolverTypeWrapper<CreateBmsContainersMutationResponse>;
   CreateBookmarkDl: CreateBookmarkDl;
   CreateBookmarkDlsMutationResponse: ResolverTypeWrapper<CreateBookmarkDlsMutationResponse>;
+  CreateBookmarkFiltersMutationResponse: ResolverTypeWrapper<CreateBookmarkFiltersMutationResponse>;
   CreateBookmarksMutationResponse: ResolverTypeWrapper<CreateBookmarksMutationResponse>;
   CreateCollectionDsListsMutationResponse: ResolverTypeWrapper<CreateCollectionDsListsMutationResponse>;
   CreateCollectionDsMutationResponse: ResolverTypeWrapper<CreateCollectionDsMutationResponse>;
@@ -5327,6 +6052,21 @@ export type ResolversTypes = {
   IntAggregateSelectionNullable: ResolverTypeWrapper<IntAggregateSelectionNullable>;
   Member: ResolverTypeWrapper<Member>;
   MemberAggregateSelection: ResolverTypeWrapper<MemberAggregateSelection>;
+  MemberBmFiltersAggregateInput: MemberBmFiltersAggregateInput;
+  MemberBmFiltersConnectFieldInput: MemberBmFiltersConnectFieldInput;
+  MemberBmFiltersConnectOrCreateFieldInput: MemberBmFiltersConnectOrCreateFieldInput;
+  MemberBmFiltersConnectOrCreateFieldInputOnCreate: MemberBmFiltersConnectOrCreateFieldInputOnCreate;
+  MemberBmFiltersConnection: ResolverTypeWrapper<MemberBmFiltersConnection>;
+  MemberBmFiltersConnectionSort: MemberBmFiltersConnectionSort;
+  MemberBmFiltersConnectionWhere: MemberBmFiltersConnectionWhere;
+  MemberBmFiltersCreateFieldInput: MemberBmFiltersCreateFieldInput;
+  MemberBmFiltersDeleteFieldInput: MemberBmFiltersDeleteFieldInput;
+  MemberBmFiltersDisconnectFieldInput: MemberBmFiltersDisconnectFieldInput;
+  MemberBmFiltersFieldInput: MemberBmFiltersFieldInput;
+  MemberBmFiltersNodeAggregationWhereInput: MemberBmFiltersNodeAggregationWhereInput;
+  MemberBmFiltersRelationship: ResolverTypeWrapper<MemberBmFiltersRelationship>;
+  MemberBmFiltersUpdateConnectionInput: MemberBmFiltersUpdateConnectionInput;
+  MemberBmFiltersUpdateFieldInput: MemberBmFiltersUpdateFieldInput;
   MemberBmsContainerAggregateInput: MemberBmsContainerAggregateInput;
   MemberBmsContainerBmsContainerAggregationSelection: ResolverTypeWrapper<MemberBmsContainerBmsContainerAggregationSelection>;
   MemberBmsContainerBmsContainerNodeAggregateSelection: ResolverTypeWrapper<MemberBmsContainerBmsContainerNodeAggregateSelection>;
@@ -5344,6 +6084,8 @@ export type ResolversTypes = {
   MemberBmsContainerRelationship: ResolverTypeWrapper<MemberBmsContainerRelationship>;
   MemberBmsContainerUpdateConnectionInput: MemberBmsContainerUpdateConnectionInput;
   MemberBmsContainerUpdateFieldInput: MemberBmsContainerUpdateFieldInput;
+  MemberBookmarkFilterBmFiltersAggregationSelection: ResolverTypeWrapper<MemberBookmarkFilterBmFiltersAggregationSelection>;
+  MemberBookmarkFilterBmFiltersNodeAggregateSelection: ResolverTypeWrapper<MemberBookmarkFilterBmFiltersNodeAggregateSelection>;
   MemberCollectionCollectionsAggregationSelection: ResolverTypeWrapper<MemberCollectionCollectionsAggregationSelection>;
   MemberCollectionCollectionsNodeAggregateSelection: ResolverTypeWrapper<MemberCollectionCollectionsNodeAggregateSelection>;
   MemberCollectionsAggregateInput: MemberCollectionsAggregateInput;
@@ -5529,6 +6271,7 @@ export type ResolversTypes = {
   TagsConnection: ResolverTypeWrapper<TagsConnection>;
   UpdateBmsContainersMutationResponse: ResolverTypeWrapper<UpdateBmsContainersMutationResponse>;
   UpdateBookmarkDlsMutationResponse: ResolverTypeWrapper<UpdateBookmarkDlsMutationResponse>;
+  UpdateBookmarkFiltersMutationResponse: ResolverTypeWrapper<UpdateBookmarkFiltersMutationResponse>;
   UpdateBookmarksMutationResponse: ResolverTypeWrapper<UpdateBookmarksMutationResponse>;
   UpdateCollectionDsListsMutationResponse: ResolverTypeWrapper<UpdateCollectionDsListsMutationResponse>;
   UpdateCollectionDsMutationResponse: ResolverTypeWrapper<UpdateCollectionDsMutationResponse>;
@@ -5617,6 +6360,42 @@ export type ResolversParentTypes = {
   BookmarkDlWhere: BookmarkDlWhere;
   BookmarkDlsConnection: BookmarkDlsConnection;
   BookmarkEdge: BookmarkEdge;
+  BookmarkFilter: BookmarkFilter;
+  BookmarkFilterAggregateSelection: BookmarkFilterAggregateSelection;
+  BookmarkFilterConnectInput: BookmarkFilterConnectInput;
+  BookmarkFilterConnectOrCreateInput: BookmarkFilterConnectOrCreateInput;
+  BookmarkFilterConnectOrCreateWhere: BookmarkFilterConnectOrCreateWhere;
+  BookmarkFilterConnectWhere: BookmarkFilterConnectWhere;
+  BookmarkFilterCreateInput: BookmarkFilterCreateInput;
+  BookmarkFilterDeleteInput: BookmarkFilterDeleteInput;
+  BookmarkFilterDisconnectInput: BookmarkFilterDisconnectInput;
+  BookmarkFilterEdge: BookmarkFilterEdge;
+  BookmarkFilterMemberAggregateInput: BookmarkFilterMemberAggregateInput;
+  BookmarkFilterMemberConnectFieldInput: BookmarkFilterMemberConnectFieldInput;
+  BookmarkFilterMemberConnectOrCreateFieldInput: BookmarkFilterMemberConnectOrCreateFieldInput;
+  BookmarkFilterMemberConnectOrCreateFieldInputOnCreate: BookmarkFilterMemberConnectOrCreateFieldInputOnCreate;
+  BookmarkFilterMemberConnection: BookmarkFilterMemberConnection;
+  BookmarkFilterMemberConnectionSort: BookmarkFilterMemberConnectionSort;
+  BookmarkFilterMemberConnectionWhere: BookmarkFilterMemberConnectionWhere;
+  BookmarkFilterMemberCreateFieldInput: BookmarkFilterMemberCreateFieldInput;
+  BookmarkFilterMemberDeleteFieldInput: BookmarkFilterMemberDeleteFieldInput;
+  BookmarkFilterMemberDisconnectFieldInput: BookmarkFilterMemberDisconnectFieldInput;
+  BookmarkFilterMemberFieldInput: BookmarkFilterMemberFieldInput;
+  BookmarkFilterMemberMemberAggregationSelection: BookmarkFilterMemberMemberAggregationSelection;
+  BookmarkFilterMemberMemberNodeAggregateSelection: BookmarkFilterMemberMemberNodeAggregateSelection;
+  BookmarkFilterMemberNodeAggregationWhereInput: BookmarkFilterMemberNodeAggregationWhereInput;
+  BookmarkFilterMemberRelationship: BookmarkFilterMemberRelationship;
+  BookmarkFilterMemberUpdateConnectionInput: BookmarkFilterMemberUpdateConnectionInput;
+  BookmarkFilterMemberUpdateFieldInput: BookmarkFilterMemberUpdateFieldInput;
+  BookmarkFilterOnCreateInput: BookmarkFilterOnCreateInput;
+  BookmarkFilterOptions: BookmarkFilterOptions;
+  BookmarkFilterRelationInput: BookmarkFilterRelationInput;
+  BookmarkFilterSort: BookmarkFilterSort;
+  BookmarkFilterUniqueWhere: BookmarkFilterUniqueWhere;
+  BookmarkFilterUpdateInput: BookmarkFilterUpdateInput;
+  BookmarkFilterWhere: BookmarkFilterWhere;
+  BookmarkFilter_In: BookmarkFilter_In;
+  BookmarkFiltersConnection: BookmarkFiltersConnection;
   BookmarkOnCreateInput: BookmarkOnCreateInput;
   BookmarkOptions: BookmarkOptions;
   BookmarkParentConnectFieldInput: BookmarkParentConnectFieldInput;
@@ -5760,6 +6539,7 @@ export type ResolversParentTypes = {
   CreateBmsContainersMutationResponse: CreateBmsContainersMutationResponse;
   CreateBookmarkDl: CreateBookmarkDl;
   CreateBookmarkDlsMutationResponse: CreateBookmarkDlsMutationResponse;
+  CreateBookmarkFiltersMutationResponse: CreateBookmarkFiltersMutationResponse;
   CreateBookmarksMutationResponse: CreateBookmarksMutationResponse;
   CreateCollectionDsListsMutationResponse: CreateCollectionDsListsMutationResponse;
   CreateCollectionDsMutationResponse: CreateCollectionDsMutationResponse;
@@ -5868,6 +6648,21 @@ export type ResolversParentTypes = {
   IntAggregateSelectionNullable: IntAggregateSelectionNullable;
   Member: Member;
   MemberAggregateSelection: MemberAggregateSelection;
+  MemberBmFiltersAggregateInput: MemberBmFiltersAggregateInput;
+  MemberBmFiltersConnectFieldInput: MemberBmFiltersConnectFieldInput;
+  MemberBmFiltersConnectOrCreateFieldInput: MemberBmFiltersConnectOrCreateFieldInput;
+  MemberBmFiltersConnectOrCreateFieldInputOnCreate: MemberBmFiltersConnectOrCreateFieldInputOnCreate;
+  MemberBmFiltersConnection: MemberBmFiltersConnection;
+  MemberBmFiltersConnectionSort: MemberBmFiltersConnectionSort;
+  MemberBmFiltersConnectionWhere: MemberBmFiltersConnectionWhere;
+  MemberBmFiltersCreateFieldInput: MemberBmFiltersCreateFieldInput;
+  MemberBmFiltersDeleteFieldInput: MemberBmFiltersDeleteFieldInput;
+  MemberBmFiltersDisconnectFieldInput: MemberBmFiltersDisconnectFieldInput;
+  MemberBmFiltersFieldInput: MemberBmFiltersFieldInput;
+  MemberBmFiltersNodeAggregationWhereInput: MemberBmFiltersNodeAggregationWhereInput;
+  MemberBmFiltersRelationship: MemberBmFiltersRelationship;
+  MemberBmFiltersUpdateConnectionInput: MemberBmFiltersUpdateConnectionInput;
+  MemberBmFiltersUpdateFieldInput: MemberBmFiltersUpdateFieldInput;
   MemberBmsContainerAggregateInput: MemberBmsContainerAggregateInput;
   MemberBmsContainerBmsContainerAggregationSelection: MemberBmsContainerBmsContainerAggregationSelection;
   MemberBmsContainerBmsContainerNodeAggregateSelection: MemberBmsContainerBmsContainerNodeAggregateSelection;
@@ -5885,6 +6680,8 @@ export type ResolversParentTypes = {
   MemberBmsContainerRelationship: MemberBmsContainerRelationship;
   MemberBmsContainerUpdateConnectionInput: MemberBmsContainerUpdateConnectionInput;
   MemberBmsContainerUpdateFieldInput: MemberBmsContainerUpdateFieldInput;
+  MemberBookmarkFilterBmFiltersAggregationSelection: MemberBookmarkFilterBmFiltersAggregationSelection;
+  MemberBookmarkFilterBmFiltersNodeAggregateSelection: MemberBookmarkFilterBmFiltersNodeAggregateSelection;
   MemberCollectionCollectionsAggregationSelection: MemberCollectionCollectionsAggregationSelection;
   MemberCollectionCollectionsNodeAggregateSelection: MemberCollectionCollectionsNodeAggregateSelection;
   MemberCollectionsAggregateInput: MemberCollectionsAggregateInput;
@@ -6069,6 +6866,7 @@ export type ResolversParentTypes = {
   TagsConnection: TagsConnection;
   UpdateBmsContainersMutationResponse: UpdateBmsContainersMutationResponse;
   UpdateBookmarkDlsMutationResponse: UpdateBookmarkDlsMutationResponse;
+  UpdateBookmarkFiltersMutationResponse: UpdateBookmarkFiltersMutationResponse;
   UpdateBookmarksMutationResponse: UpdateBookmarksMutationResponse;
   UpdateCollectionDsListsMutationResponse: UpdateCollectionDsListsMutationResponse;
   UpdateCollectionDsMutationResponse: UpdateCollectionDsMutationResponse;
@@ -6243,6 +7041,77 @@ export type BookmarkDlsConnectionResolvers<ContextType = any, ParentType extends
 export type BookmarkEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['BookmarkEdge'] = ResolversParentTypes['BookmarkEdge']> = {
   cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   node?: Resolver<ResolversTypes['Bookmark'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type BookmarkFilterResolvers<ContextType = any, ParentType extends ResolversParentTypes['BookmarkFilter'] = ResolversParentTypes['BookmarkFilter']> = {
+  bmLoose?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  bmParentsTxt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  bmTags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  bmTxt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  bmUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  member?: Resolver<Maybe<ResolversTypes['Member']>, ParentType, ContextType, RequireFields<BookmarkFilterMemberArgs, 'directed'>>;
+  memberAggregate?: Resolver<Maybe<ResolversTypes['BookmarkFilterMemberMemberAggregationSelection']>, ParentType, ContextType, RequireFields<BookmarkFilterMemberAggregateArgs, 'directed'>>;
+  memberConnection?: Resolver<ResolversTypes['BookmarkFilterMemberConnection'], ParentType, ContextType, RequireFields<BookmarkFilterMemberConnectionArgs, 'directed'>>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  sortBy?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  sortDir?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type BookmarkFilterAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['BookmarkFilterAggregateSelection'] = ResolversParentTypes['BookmarkFilterAggregateSelection']> = {
+  bmParentsTxt?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  bmTxt?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  bmUrl?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNullable'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  sortBy?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  sortDir?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNullable'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type BookmarkFilterEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['BookmarkFilterEdge'] = ResolversParentTypes['BookmarkFilterEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['BookmarkFilter'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type BookmarkFilterMemberConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['BookmarkFilterMemberConnection'] = ResolversParentTypes['BookmarkFilterMemberConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['BookmarkFilterMemberRelationship']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type BookmarkFilterMemberMemberAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['BookmarkFilterMemberMemberAggregationSelection'] = ResolversParentTypes['BookmarkFilterMemberMemberAggregationSelection']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['BookmarkFilterMemberMemberNodeAggregateSelection']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type BookmarkFilterMemberMemberNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['BookmarkFilterMemberMemberNodeAggregateSelection'] = ResolversParentTypes['BookmarkFilterMemberMemberNodeAggregateSelection']> = {
+  id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type BookmarkFilterMemberRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['BookmarkFilterMemberRelationship'] = ResolversParentTypes['BookmarkFilterMemberRelationship']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Member'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type BookmarkFiltersConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['BookmarkFiltersConnection'] = ResolversParentTypes['BookmarkFiltersConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['BookmarkFilterEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -6462,6 +7331,12 @@ export type CreateBmsContainersMutationResponseResolvers<ContextType = any, Pare
 
 export type CreateBookmarkDlsMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateBookmarkDlsMutationResponse'] = ResolversParentTypes['CreateBookmarkDlsMutationResponse']> = {
   bookmarkDls?: Resolver<Array<ResolversTypes['BookmarkDl']>, ParentType, ContextType>;
+  info?: Resolver<ResolversTypes['CreateInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CreateBookmarkFiltersMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateBookmarkFiltersMutationResponse'] = ResolversParentTypes['CreateBookmarkFiltersMutationResponse']> = {
+  bookmarkFilters?: Resolver<Array<ResolversTypes['BookmarkFilter']>, ParentType, ContextType>;
   info?: Resolver<ResolversTypes['CreateInfo'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -6698,6 +7573,9 @@ export type IntAggregateSelectionNullableResolvers<ContextType = any, ParentType
 };
 
 export type MemberResolvers<ContextType = any, ParentType extends ResolversParentTypes['Member'] = ResolversParentTypes['Member']> = {
+  bmFilters?: Resolver<Array<ResolversTypes['BookmarkFilter']>, ParentType, ContextType, RequireFields<MemberBmFiltersArgs, 'directed'>>;
+  bmFiltersAggregate?: Resolver<Maybe<ResolversTypes['MemberBookmarkFilterBmFiltersAggregationSelection']>, ParentType, ContextType, RequireFields<MemberBmFiltersAggregateArgs, 'directed'>>;
+  bmFiltersConnection?: Resolver<ResolversTypes['MemberBmFiltersConnection'], ParentType, ContextType, RequireFields<MemberBmFiltersConnectionArgs, 'directed'>>;
   bmsContainer?: Resolver<Maybe<ResolversTypes['BmsContainer']>, ParentType, ContextType, RequireFields<MemberBmsContainerArgs, 'directed'>>;
   bmsContainerAggregate?: Resolver<Maybe<ResolversTypes['MemberBmsContainerBmsContainerAggregationSelection']>, ParentType, ContextType, RequireFields<MemberBmsContainerAggregateArgs, 'directed'>>;
   bmsContainerConnection?: Resolver<ResolversTypes['MemberBmsContainerConnection'], ParentType, ContextType, RequireFields<MemberBmsContainerConnectionArgs, 'directed'>>;
@@ -6714,6 +7592,19 @@ export type MemberResolvers<ContextType = any, ParentType extends ResolversParen
 export type MemberAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['MemberAggregateSelection'] = ResolversParentTypes['MemberAggregateSelection']> = {
   count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type MemberBmFiltersConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['MemberBmFiltersConnection'] = ResolversParentTypes['MemberBmFiltersConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['MemberBmFiltersRelationship']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type MemberBmFiltersRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['MemberBmFiltersRelationship'] = ResolversParentTypes['MemberBmFiltersRelationship']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['BookmarkFilter'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -6738,6 +7629,26 @@ export type MemberBmsContainerConnectionResolvers<ContextType = any, ParentType 
 export type MemberBmsContainerRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['MemberBmsContainerRelationship'] = ResolversParentTypes['MemberBmsContainerRelationship']> = {
   cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   node?: Resolver<ResolversTypes['BmsContainer'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type MemberBookmarkFilterBmFiltersAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['MemberBookmarkFilterBmFiltersAggregationSelection'] = ResolversParentTypes['MemberBookmarkFilterBmFiltersAggregationSelection']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['MemberBookmarkFilterBmFiltersNodeAggregateSelection']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type MemberBookmarkFilterBmFiltersNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['MemberBookmarkFilterBmFiltersNodeAggregateSelection'] = ResolversParentTypes['MemberBookmarkFilterBmFiltersNodeAggregateSelection']> = {
+  bmParentsTxt?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  bmTxt?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  bmUrl?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNullable'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  sortBy?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  sortDir?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNullable'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -6861,6 +7772,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createBmsContainers?: Resolver<ResolversTypes['CreateBmsContainersMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateBmsContainersArgs, 'input'>>;
   createBookmarkDl?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType, RequireFields<MutationCreateBookmarkDlArgs, 'data'>>;
   createBookmarkDls?: Resolver<ResolversTypes['CreateBookmarkDlsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateBookmarkDlsArgs, 'input'>>;
+  createBookmarkFilters?: Resolver<ResolversTypes['CreateBookmarkFiltersMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateBookmarkFiltersArgs, 'input'>>;
   createBookmarks?: Resolver<ResolversTypes['CreateBookmarksMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateBookmarksArgs, 'input'>>;
   createCollection?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType, RequireFields<MutationCreateCollectionArgs, 'memberId' | 'name'>>;
   createCollectionDs?: Resolver<ResolversTypes['CreateCollectionDsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateCollectionDsArgs, 'input'>>;
@@ -6877,6 +7789,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteBmsContainers?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteBmsContainersArgs>>;
   deleteBookmark?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationDeleteBookmarkArgs, 'id' | 'parentId'>>;
   deleteBookmarkDls?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteBookmarkDlsArgs>>;
+  deleteBookmarkFilters?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteBookmarkFiltersArgs>>;
   deleteBookmarks?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteBookmarksArgs>>;
   deleteCascade?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationDeleteCascadeArgs, 'id'>>;
   deleteCollection?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationDeleteCollectionArgs, 'id' | 'memberId'>>;
@@ -6897,6 +7810,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   moveManyNodes?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationMoveManyNodesArgs, 'nodes'>>;
   updateBmsContainers?: Resolver<ResolversTypes['UpdateBmsContainersMutationResponse'], ParentType, ContextType, Partial<MutationUpdateBmsContainersArgs>>;
   updateBookmarkDls?: Resolver<ResolversTypes['UpdateBookmarkDlsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateBookmarkDlsArgs>>;
+  updateBookmarkFilters?: Resolver<ResolversTypes['UpdateBookmarkFiltersMutationResponse'], ParentType, ContextType, Partial<MutationUpdateBookmarkFiltersArgs>>;
   updateBookmarks?: Resolver<ResolversTypes['UpdateBookmarksMutationResponse'], ParentType, ContextType, Partial<MutationUpdateBookmarksArgs>>;
   updateCollectionDs?: Resolver<ResolversTypes['UpdateCollectionDsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateCollectionDsArgs>>;
   updateCollectionDsLists?: Resolver<ResolversTypes['UpdateCollectionDsListsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateCollectionDsListsArgs>>;
@@ -6919,9 +7833,8 @@ export type PageInfoResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type ParentResolvers<ContextType = any, ParentType extends ResolversParentTypes['Parent'] = ResolversParentTypes['Parent']> = {
-  __resolveType: TypeResolveFn<'Bookmark' | 'Collection' | 'Folder', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'BmsContainer' | 'Collection' | 'Folder', ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
 };
 
 export type ParentMetaResolvers<ContextType = any, ParentType extends ResolversParentTypes['ParentMeta'] = ResolversParentTypes['ParentMeta']> = {
@@ -6990,12 +7903,16 @@ export type ParentsChildrenEdgeResolvers<ContextType = any, ParentType extends R
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  bmsByFilter?: Resolver<Array<ResolversTypes['Bookmark']>, ParentType, ContextType, RequireFields<QueryBmsByFilterArgs, 'filter' | 'limit' | 'offset'>>;
   bmsContainers?: Resolver<Array<ResolversTypes['BmsContainer']>, ParentType, ContextType, Partial<QueryBmsContainersArgs>>;
   bmsContainersAggregate?: Resolver<ResolversTypes['BmsContainerAggregateSelection'], ParentType, ContextType, Partial<QueryBmsContainersAggregateArgs>>;
   bmsContainersConnection?: Resolver<ResolversTypes['BmsContainersConnection'], ParentType, ContextType, Partial<QueryBmsContainersConnectionArgs>>;
   bookmarkDls?: Resolver<Array<ResolversTypes['BookmarkDl']>, ParentType, ContextType, Partial<QueryBookmarkDlsArgs>>;
   bookmarkDlsAggregate?: Resolver<ResolversTypes['BookmarkDlAggregateSelection'], ParentType, ContextType, Partial<QueryBookmarkDlsAggregateArgs>>;
   bookmarkDlsConnection?: Resolver<ResolversTypes['BookmarkDlsConnection'], ParentType, ContextType, Partial<QueryBookmarkDlsConnectionArgs>>;
+  bookmarkFilters?: Resolver<Array<ResolversTypes['BookmarkFilter']>, ParentType, ContextType, Partial<QueryBookmarkFiltersArgs>>;
+  bookmarkFiltersAggregate?: Resolver<ResolversTypes['BookmarkFilterAggregateSelection'], ParentType, ContextType, Partial<QueryBookmarkFiltersAggregateArgs>>;
+  bookmarkFiltersConnection?: Resolver<ResolversTypes['BookmarkFiltersConnection'], ParentType, ContextType, Partial<QueryBookmarkFiltersConnectionArgs>>;
   bookmarks?: Resolver<Array<ResolversTypes['Bookmark']>, ParentType, ContextType, Partial<QueryBookmarksArgs>>;
   bookmarksAggregate?: Resolver<ResolversTypes['BookmarkAggregateSelection'], ParentType, ContextType, Partial<QueryBookmarksAggregateArgs>>;
   bookmarksConnection?: Resolver<ResolversTypes['BookmarksConnection'], ParentType, ContextType, Partial<QueryBookmarksConnectionArgs>>;
@@ -7126,6 +8043,12 @@ export type UpdateBookmarkDlsMutationResponseResolvers<ContextType = any, Parent
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UpdateBookmarkFiltersMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateBookmarkFiltersMutationResponse'] = ResolversParentTypes['UpdateBookmarkFiltersMutationResponse']> = {
+  bookmarkFilters?: Resolver<Array<ResolversTypes['BookmarkFilter']>, ParentType, ContextType>;
+  info?: Resolver<ResolversTypes['UpdateInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UpdateBookmarksMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateBookmarksMutationResponse'] = ResolversParentTypes['UpdateBookmarksMutationResponse']> = {
   bookmarks?: Resolver<Array<ResolversTypes['Bookmark']>, ParentType, ContextType>;
   info?: Resolver<ResolversTypes['UpdateInfo'], ParentType, ContextType>;
@@ -7225,6 +8148,14 @@ export type Resolvers<ContextType = any> = {
   BookmarkDlEdge?: BookmarkDlEdgeResolvers<ContextType>;
   BookmarkDlsConnection?: BookmarkDlsConnectionResolvers<ContextType>;
   BookmarkEdge?: BookmarkEdgeResolvers<ContextType>;
+  BookmarkFilter?: BookmarkFilterResolvers<ContextType>;
+  BookmarkFilterAggregateSelection?: BookmarkFilterAggregateSelectionResolvers<ContextType>;
+  BookmarkFilterEdge?: BookmarkFilterEdgeResolvers<ContextType>;
+  BookmarkFilterMemberConnection?: BookmarkFilterMemberConnectionResolvers<ContextType>;
+  BookmarkFilterMemberMemberAggregationSelection?: BookmarkFilterMemberMemberAggregationSelectionResolvers<ContextType>;
+  BookmarkFilterMemberMemberNodeAggregateSelection?: BookmarkFilterMemberMemberNodeAggregateSelectionResolvers<ContextType>;
+  BookmarkFilterMemberRelationship?: BookmarkFilterMemberRelationshipResolvers<ContextType>;
+  BookmarkFiltersConnection?: BookmarkFiltersConnectionResolvers<ContextType>;
   BookmarkParentConnection?: BookmarkParentConnectionResolvers<ContextType>;
   BookmarkParentRelationship?: BookmarkParentRelationshipResolvers<ContextType>;
   BookmarkTagTagsAggregationSelection?: BookmarkTagTagsAggregationSelectionResolvers<ContextType>;
@@ -7258,6 +8189,7 @@ export type Resolvers<ContextType = any> = {
   CollectionsConnection?: CollectionsConnectionResolvers<ContextType>;
   CreateBmsContainersMutationResponse?: CreateBmsContainersMutationResponseResolvers<ContextType>;
   CreateBookmarkDlsMutationResponse?: CreateBookmarkDlsMutationResponseResolvers<ContextType>;
+  CreateBookmarkFiltersMutationResponse?: CreateBookmarkFiltersMutationResponseResolvers<ContextType>;
   CreateBookmarksMutationResponse?: CreateBookmarksMutationResponseResolvers<ContextType>;
   CreateCollectionDsListsMutationResponse?: CreateCollectionDsListsMutationResponseResolvers<ContextType>;
   CreateCollectionDsMutationResponse?: CreateCollectionDsMutationResponseResolvers<ContextType>;
@@ -7294,10 +8226,14 @@ export type Resolvers<ContextType = any> = {
   IntAggregateSelectionNullable?: IntAggregateSelectionNullableResolvers<ContextType>;
   Member?: MemberResolvers<ContextType>;
   MemberAggregateSelection?: MemberAggregateSelectionResolvers<ContextType>;
+  MemberBmFiltersConnection?: MemberBmFiltersConnectionResolvers<ContextType>;
+  MemberBmFiltersRelationship?: MemberBmFiltersRelationshipResolvers<ContextType>;
   MemberBmsContainerBmsContainerAggregationSelection?: MemberBmsContainerBmsContainerAggregationSelectionResolvers<ContextType>;
   MemberBmsContainerBmsContainerNodeAggregateSelection?: MemberBmsContainerBmsContainerNodeAggregateSelectionResolvers<ContextType>;
   MemberBmsContainerConnection?: MemberBmsContainerConnectionResolvers<ContextType>;
   MemberBmsContainerRelationship?: MemberBmsContainerRelationshipResolvers<ContextType>;
+  MemberBookmarkFilterBmFiltersAggregationSelection?: MemberBookmarkFilterBmFiltersAggregationSelectionResolvers<ContextType>;
+  MemberBookmarkFilterBmFiltersNodeAggregateSelection?: MemberBookmarkFilterBmFiltersNodeAggregateSelectionResolvers<ContextType>;
   MemberCollectionCollectionsAggregationSelection?: MemberCollectionCollectionsAggregationSelectionResolvers<ContextType>;
   MemberCollectionCollectionsNodeAggregateSelection?: MemberCollectionCollectionsNodeAggregateSelectionResolvers<ContextType>;
   MemberCollectionsConnection?: MemberCollectionsConnectionResolvers<ContextType>;
@@ -7342,6 +8278,7 @@ export type Resolvers<ContextType = any> = {
   TagsConnection?: TagsConnectionResolvers<ContextType>;
   UpdateBmsContainersMutationResponse?: UpdateBmsContainersMutationResponseResolvers<ContextType>;
   UpdateBookmarkDlsMutationResponse?: UpdateBookmarkDlsMutationResponseResolvers<ContextType>;
+  UpdateBookmarkFiltersMutationResponse?: UpdateBookmarkFiltersMutationResponseResolvers<ContextType>;
   UpdateBookmarksMutationResponse?: UpdateBookmarksMutationResponseResolvers<ContextType>;
   UpdateCollectionDsListsMutationResponse?: UpdateCollectionDsListsMutationResponseResolvers<ContextType>;
   UpdateCollectionDsMutationResponse?: UpdateCollectionDsMutationResponseResolvers<ContextType>;

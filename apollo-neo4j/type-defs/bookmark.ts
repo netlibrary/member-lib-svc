@@ -16,6 +16,38 @@ export const bookmark_typeDefs = gql`
         tags: [Tag!]! @relationship(type: "BELONGS_TO", direction: OUT)
     }
 
+    type BookmarkFilter @node(labels: ["BookmarkFilter"]) {
+        id: ID! @id @unique
+        createdAt: DateTime @timestamp(operations: [CREATE])
+        updatedAt: DateTime @timestamp(operations: [UPDATE])
+        description: String
+        name: String
+        
+        bmTxt: String
+        bmParentsTxt: String
+        bmUrl: String
+        bmTags: [String!]!
+        bmLoose: Boolean
+        
+        sortBy: String
+        sortDir: String
+        
+        member: Member @relationship(type: "OWNS", direction: IN)
+    }
+
+    input BookmarkFilter_In {
+        id: ID
+
+        bmTxt: String
+        bmParentsTxt: String
+        bmUrl: String
+        bmTags: [String!]!
+        bmLoose: Boolean
+
+        sortBy: String
+        sortDir: String
+    }
+
     type BmsContainer implements Parent @node(labels: ["BmsContainer", "Parent"]) {
         id: ID! @id @unique
         member: Member @relationship(type: "OWNS", direction: IN)
@@ -59,5 +91,6 @@ export const bookmark_typeDefs = gql`
             """
             columnName: "count"
         )
+        bmsByFilter(filter: BookmarkFilter_In!, limit: Int!, offset: Int!): [Bookmark!]!
     }
 `;

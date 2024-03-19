@@ -5,6 +5,7 @@ export const member_typeDefs = gql`
     id: ID! @id @unique
     collections: [Collection!]! @relationship(type: "OWNS", direction: OUT)
     bmsContainer: BmsContainer @relationship(type: "OWNS", direction: OUT)
+    bmFilters: [BookmarkFilter!]! @relationship(type: "OWNS", direction: OUT)
     
     memberMeta: MemberMeta @relationship(type: "HAS", direction: OUT)
   }
