@@ -514,11 +514,8 @@ export type BmsContainersConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
-export type Bookmark = {
+export type Bookmark = Parent & {
   __typename?: 'Bookmark';
-  container?: Maybe<BmsContainer>;
-  containerAggregate?: Maybe<BookmarkBmsContainerContainerAggregationSelection>;
-  containerConnection: BookmarkContainerConnection;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   description?: Maybe<Scalars['String']['output']>;
   domainName?: Maybe<Scalars['String']['output']>;
@@ -533,28 +530,6 @@ export type Bookmark = {
   tagsConnection: BookmarkTagsConnection;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   urlScheme?: Maybe<Scalars['String']['output']>;
-};
-
-
-export type BookmarkContainerArgs = {
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  options?: InputMaybe<BmsContainerOptions>;
-  where?: InputMaybe<BmsContainerWhere>;
-};
-
-
-export type BookmarkContainerAggregateArgs = {
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  where?: InputMaybe<BmsContainerWhere>;
-};
-
-
-export type BookmarkContainerConnectionArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<BookmarkContainerConnectionSort>>;
-  where?: InputMaybe<BookmarkContainerConnectionWhere>;
 };
 
 
@@ -609,25 +584,12 @@ export type BookmarkAggregateSelection = {
   urlScheme: StringAggregateSelectionNullable;
 };
 
-export type BookmarkBmsContainerContainerAggregationSelection = {
-  __typename?: 'BookmarkBmsContainerContainerAggregationSelection';
-  count: Scalars['Int']['output'];
-  node?: Maybe<BookmarkBmsContainerContainerNodeAggregateSelection>;
-};
-
-export type BookmarkBmsContainerContainerNodeAggregateSelection = {
-  __typename?: 'BookmarkBmsContainerContainerNodeAggregateSelection';
-  id: IdAggregateSelectionNonNullable;
-};
-
 export type BookmarkConnectInput = {
-  container?: InputMaybe<BookmarkContainerConnectFieldInput>;
   parent?: InputMaybe<BookmarkParentConnectFieldInput>;
   tags?: InputMaybe<Array<BookmarkTagsConnectFieldInput>>;
 };
 
 export type BookmarkConnectOrCreateInput = {
-  container?: InputMaybe<BookmarkContainerConnectOrCreateFieldInput>;
   tags?: InputMaybe<Array<BookmarkTagsConnectOrCreateFieldInput>>;
 };
 
@@ -639,100 +601,7 @@ export type BookmarkConnectWhere = {
   node: BookmarkWhere;
 };
 
-export type BookmarkContainerAggregateInput = {
-  AND?: InputMaybe<Array<BookmarkContainerAggregateInput>>;
-  NOT?: InputMaybe<BookmarkContainerAggregateInput>;
-  OR?: InputMaybe<Array<BookmarkContainerAggregateInput>>;
-  count?: InputMaybe<Scalars['Int']['input']>;
-  count_GT?: InputMaybe<Scalars['Int']['input']>;
-  count_GTE?: InputMaybe<Scalars['Int']['input']>;
-  count_LT?: InputMaybe<Scalars['Int']['input']>;
-  count_LTE?: InputMaybe<Scalars['Int']['input']>;
-  node?: InputMaybe<BookmarkContainerNodeAggregationWhereInput>;
-};
-
-export type BookmarkContainerConnectFieldInput = {
-  connect?: InputMaybe<BmsContainerConnectInput>;
-  /** Whether or not to overwrite any matching relationship with the new properties. */
-  overwrite?: Scalars['Boolean']['input'];
-  where?: InputMaybe<BmsContainerConnectWhere>;
-};
-
-export type BookmarkContainerConnectOrCreateFieldInput = {
-  onCreate: BookmarkContainerConnectOrCreateFieldInputOnCreate;
-  where: BmsContainerConnectOrCreateWhere;
-};
-
-export type BookmarkContainerConnectOrCreateFieldInputOnCreate = {
-  node: BmsContainerOnCreateInput;
-};
-
-export type BookmarkContainerConnection = {
-  __typename?: 'BookmarkContainerConnection';
-  edges: Array<BookmarkContainerRelationship>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int']['output'];
-};
-
-export type BookmarkContainerConnectionSort = {
-  node?: InputMaybe<BmsContainerSort>;
-};
-
-export type BookmarkContainerConnectionWhere = {
-  AND?: InputMaybe<Array<BookmarkContainerConnectionWhere>>;
-  NOT?: InputMaybe<BookmarkContainerConnectionWhere>;
-  OR?: InputMaybe<Array<BookmarkContainerConnectionWhere>>;
-  node?: InputMaybe<BmsContainerWhere>;
-};
-
-export type BookmarkContainerCreateFieldInput = {
-  node: BmsContainerCreateInput;
-};
-
-export type BookmarkContainerDeleteFieldInput = {
-  delete?: InputMaybe<BmsContainerDeleteInput>;
-  where?: InputMaybe<BookmarkContainerConnectionWhere>;
-};
-
-export type BookmarkContainerDisconnectFieldInput = {
-  disconnect?: InputMaybe<BmsContainerDisconnectInput>;
-  where?: InputMaybe<BookmarkContainerConnectionWhere>;
-};
-
-export type BookmarkContainerFieldInput = {
-  connect?: InputMaybe<BookmarkContainerConnectFieldInput>;
-  connectOrCreate?: InputMaybe<BookmarkContainerConnectOrCreateFieldInput>;
-  create?: InputMaybe<BookmarkContainerCreateFieldInput>;
-};
-
-export type BookmarkContainerNodeAggregationWhereInput = {
-  AND?: InputMaybe<Array<BookmarkContainerNodeAggregationWhereInput>>;
-  NOT?: InputMaybe<BookmarkContainerNodeAggregationWhereInput>;
-  OR?: InputMaybe<Array<BookmarkContainerNodeAggregationWhereInput>>;
-};
-
-export type BookmarkContainerRelationship = {
-  __typename?: 'BookmarkContainerRelationship';
-  cursor: Scalars['String']['output'];
-  node: BmsContainer;
-};
-
-export type BookmarkContainerUpdateConnectionInput = {
-  node?: InputMaybe<BmsContainerUpdateInput>;
-};
-
-export type BookmarkContainerUpdateFieldInput = {
-  connect?: InputMaybe<BookmarkContainerConnectFieldInput>;
-  connectOrCreate?: InputMaybe<BookmarkContainerConnectOrCreateFieldInput>;
-  create?: InputMaybe<BookmarkContainerCreateFieldInput>;
-  delete?: InputMaybe<BookmarkContainerDeleteFieldInput>;
-  disconnect?: InputMaybe<BookmarkContainerDisconnectFieldInput>;
-  update?: InputMaybe<BookmarkContainerUpdateConnectionInput>;
-  where?: InputMaybe<BookmarkContainerConnectionWhere>;
-};
-
 export type BookmarkCreateInput = {
-  container?: InputMaybe<BookmarkContainerFieldInput>;
   description?: InputMaybe<Scalars['String']['input']>;
   domainName?: InputMaybe<Scalars['String']['input']>;
   iconUri?: InputMaybe<Scalars['String']['input']>;
@@ -744,13 +613,11 @@ export type BookmarkCreateInput = {
 };
 
 export type BookmarkDeleteInput = {
-  container?: InputMaybe<BookmarkContainerDeleteFieldInput>;
   parent?: InputMaybe<BookmarkParentDeleteFieldInput>;
   tags?: InputMaybe<Array<BookmarkTagsDeleteFieldInput>>;
 };
 
 export type BookmarkDisconnectInput = {
-  container?: InputMaybe<BookmarkContainerDisconnectFieldInput>;
   parent?: InputMaybe<BookmarkParentDisconnectFieldInput>;
   tags?: InputMaybe<Array<BookmarkTagsDisconnectFieldInput>>;
 };
@@ -964,7 +831,6 @@ export type BookmarkParentUpdateFieldInput = {
 };
 
 export type BookmarkRelationInput = {
-  container?: InputMaybe<BookmarkContainerCreateFieldInput>;
   parent?: InputMaybe<BookmarkParentCreateFieldInput>;
   tags?: InputMaybe<Array<BookmarkTagsCreateFieldInput>>;
 };
@@ -1144,7 +1010,6 @@ export type BookmarkUniqueWhere = {
 };
 
 export type BookmarkUpdateInput = {
-  container?: InputMaybe<BookmarkContainerUpdateFieldInput>;
   description?: InputMaybe<Scalars['String']['input']>;
   domainName?: InputMaybe<Scalars['String']['input']>;
   iconUri?: InputMaybe<Scalars['String']['input']>;
@@ -1159,11 +1024,6 @@ export type BookmarkWhere = {
   AND?: InputMaybe<Array<BookmarkWhere>>;
   NOT?: InputMaybe<BookmarkWhere>;
   OR?: InputMaybe<Array<BookmarkWhere>>;
-  container?: InputMaybe<BmsContainerWhere>;
-  containerAggregate?: InputMaybe<BookmarkContainerAggregateInput>;
-  containerConnection?: InputMaybe<BookmarkContainerConnectionWhere>;
-  containerConnection_NOT?: InputMaybe<BookmarkContainerConnectionWhere>;
-  container_NOT?: InputMaybe<BmsContainerWhere>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   createdAt_GT?: InputMaybe<Scalars['DateTime']['input']>;
   createdAt_GTE?: InputMaybe<Scalars['DateTime']['input']>;
@@ -1256,7 +1116,7 @@ export type ChildsToMove = {
 export type Collection = Parent & {
   __typename?: 'Collection';
   children: Array<Child>;
-  childrenConnection: ParentChildrenConnection;
+  childrenConnection: CollectionChildrenConnection;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   id: Scalars['ID']['output'];
   member?: Maybe<Member>;
@@ -1265,7 +1125,7 @@ export type Collection = Parent & {
   name?: Maybe<Scalars['String']['output']>;
   parentMeta?: Maybe<ParentMeta>;
   parentMetaAggregate?: Maybe<CollectionParentMetaParentMetaAggregationSelection>;
-  parentMetaConnection: ParentParentMetaConnection;
+  parentMetaConnection: CollectionParentMetaConnection;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
@@ -1281,7 +1141,7 @@ export type CollectionChildrenConnectionArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   directed?: InputMaybe<Scalars['Boolean']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
-  where?: InputMaybe<ParentChildrenConnectionWhere>;
+  where?: InputMaybe<CollectionChildrenConnectionWhere>;
 };
 
 
@@ -1324,8 +1184,8 @@ export type CollectionParentMetaConnectionArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   directed?: InputMaybe<Scalars['Boolean']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<ParentParentMetaConnectionSort>>;
-  where?: InputMaybe<ParentParentMetaConnectionWhere>;
+  sort?: InputMaybe<Array<CollectionParentMetaConnectionSort>>;
+  where?: InputMaybe<CollectionParentMetaConnectionWhere>;
 };
 
 export type CollectionAggregateSelection = {
@@ -1337,46 +1197,179 @@ export type CollectionAggregateSelection = {
   updatedAt: DateTimeAggregateSelectionNullable;
 };
 
+export type CollectionChildrenBookmarkConnectFieldInput = {
+  connect?: InputMaybe<Array<BookmarkConnectInput>>;
+  where?: InputMaybe<BookmarkConnectWhere>;
+};
+
+export type CollectionChildrenBookmarkConnectOrCreateFieldInput = {
+  onCreate: CollectionChildrenBookmarkConnectOrCreateFieldInputOnCreate;
+  where: BookmarkConnectOrCreateWhere;
+};
+
+export type CollectionChildrenBookmarkConnectOrCreateFieldInputOnCreate = {
+  node: BookmarkOnCreateInput;
+};
+
+export type CollectionChildrenBookmarkConnectionWhere = {
+  AND?: InputMaybe<Array<CollectionChildrenBookmarkConnectionWhere>>;
+  NOT?: InputMaybe<CollectionChildrenBookmarkConnectionWhere>;
+  OR?: InputMaybe<Array<CollectionChildrenBookmarkConnectionWhere>>;
+  node?: InputMaybe<BookmarkWhere>;
+};
+
+export type CollectionChildrenBookmarkCreateFieldInput = {
+  node: BookmarkCreateInput;
+};
+
+export type CollectionChildrenBookmarkDeleteFieldInput = {
+  delete?: InputMaybe<BookmarkDeleteInput>;
+  where?: InputMaybe<CollectionChildrenBookmarkConnectionWhere>;
+};
+
+export type CollectionChildrenBookmarkDisconnectFieldInput = {
+  disconnect?: InputMaybe<BookmarkDisconnectInput>;
+  where?: InputMaybe<CollectionChildrenBookmarkConnectionWhere>;
+};
+
+export type CollectionChildrenBookmarkFieldInput = {
+  connect?: InputMaybe<Array<CollectionChildrenBookmarkConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<Array<CollectionChildrenBookmarkConnectOrCreateFieldInput>>;
+  create?: InputMaybe<Array<CollectionChildrenBookmarkCreateFieldInput>>;
+};
+
+export type CollectionChildrenBookmarkUpdateConnectionInput = {
+  node?: InputMaybe<BookmarkUpdateInput>;
+};
+
+export type CollectionChildrenBookmarkUpdateFieldInput = {
+  connect?: InputMaybe<Array<CollectionChildrenBookmarkConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<Array<CollectionChildrenBookmarkConnectOrCreateFieldInput>>;
+  create?: InputMaybe<Array<CollectionChildrenBookmarkCreateFieldInput>>;
+  delete?: InputMaybe<Array<CollectionChildrenBookmarkDeleteFieldInput>>;
+  disconnect?: InputMaybe<Array<CollectionChildrenBookmarkDisconnectFieldInput>>;
+  update?: InputMaybe<CollectionChildrenBookmarkUpdateConnectionInput>;
+  where?: InputMaybe<CollectionChildrenBookmarkConnectionWhere>;
+};
+
 export type CollectionChildrenConnectInput = {
-  Bookmark?: InputMaybe<Array<ParentChildrenBookmarkConnectFieldInput>>;
-  Folder?: InputMaybe<Array<ParentChildrenFolderConnectFieldInput>>;
+  Bookmark?: InputMaybe<Array<CollectionChildrenBookmarkConnectFieldInput>>;
+  Folder?: InputMaybe<Array<CollectionChildrenFolderConnectFieldInput>>;
+};
+
+export type CollectionChildrenConnectOrCreateInput = {
+  Bookmark?: InputMaybe<Array<CollectionChildrenBookmarkConnectOrCreateFieldInput>>;
+  Folder?: InputMaybe<Array<CollectionChildrenFolderConnectOrCreateFieldInput>>;
+};
+
+export type CollectionChildrenConnection = {
+  __typename?: 'CollectionChildrenConnection';
+  edges: Array<CollectionChildrenRelationship>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type CollectionChildrenConnectionWhere = {
+  Bookmark?: InputMaybe<CollectionChildrenBookmarkConnectionWhere>;
+  Folder?: InputMaybe<CollectionChildrenFolderConnectionWhere>;
 };
 
 export type CollectionChildrenCreateFieldInput = {
-  Bookmark?: InputMaybe<Array<ParentChildrenBookmarkCreateFieldInput>>;
-  Folder?: InputMaybe<Array<ParentChildrenFolderCreateFieldInput>>;
+  Bookmark?: InputMaybe<Array<CollectionChildrenBookmarkCreateFieldInput>>;
+  Folder?: InputMaybe<Array<CollectionChildrenFolderCreateFieldInput>>;
 };
 
 export type CollectionChildrenCreateInput = {
-  Bookmark?: InputMaybe<ParentChildrenBookmarkFieldInput>;
-  Folder?: InputMaybe<ParentChildrenFolderFieldInput>;
+  Bookmark?: InputMaybe<CollectionChildrenBookmarkFieldInput>;
+  Folder?: InputMaybe<CollectionChildrenFolderFieldInput>;
 };
 
 export type CollectionChildrenDeleteInput = {
-  Bookmark?: InputMaybe<Array<ParentChildrenBookmarkDeleteFieldInput>>;
-  Folder?: InputMaybe<Array<ParentChildrenFolderDeleteFieldInput>>;
+  Bookmark?: InputMaybe<Array<CollectionChildrenBookmarkDeleteFieldInput>>;
+  Folder?: InputMaybe<Array<CollectionChildrenFolderDeleteFieldInput>>;
 };
 
 export type CollectionChildrenDisconnectInput = {
-  Bookmark?: InputMaybe<Array<ParentChildrenBookmarkDisconnectFieldInput>>;
-  Folder?: InputMaybe<Array<ParentChildrenFolderDisconnectFieldInput>>;
+  Bookmark?: InputMaybe<Array<CollectionChildrenBookmarkDisconnectFieldInput>>;
+  Folder?: InputMaybe<Array<CollectionChildrenFolderDisconnectFieldInput>>;
+};
+
+export type CollectionChildrenFolderConnectFieldInput = {
+  connect?: InputMaybe<Array<FolderConnectInput>>;
+  where?: InputMaybe<FolderConnectWhere>;
+};
+
+export type CollectionChildrenFolderConnectOrCreateFieldInput = {
+  onCreate: CollectionChildrenFolderConnectOrCreateFieldInputOnCreate;
+  where: FolderConnectOrCreateWhere;
+};
+
+export type CollectionChildrenFolderConnectOrCreateFieldInputOnCreate = {
+  node: FolderOnCreateInput;
+};
+
+export type CollectionChildrenFolderConnectionWhere = {
+  AND?: InputMaybe<Array<CollectionChildrenFolderConnectionWhere>>;
+  NOT?: InputMaybe<CollectionChildrenFolderConnectionWhere>;
+  OR?: InputMaybe<Array<CollectionChildrenFolderConnectionWhere>>;
+  node?: InputMaybe<FolderWhere>;
+};
+
+export type CollectionChildrenFolderCreateFieldInput = {
+  node: FolderCreateInput;
+};
+
+export type CollectionChildrenFolderDeleteFieldInput = {
+  delete?: InputMaybe<FolderDeleteInput>;
+  where?: InputMaybe<CollectionChildrenFolderConnectionWhere>;
+};
+
+export type CollectionChildrenFolderDisconnectFieldInput = {
+  disconnect?: InputMaybe<FolderDisconnectInput>;
+  where?: InputMaybe<CollectionChildrenFolderConnectionWhere>;
+};
+
+export type CollectionChildrenFolderFieldInput = {
+  connect?: InputMaybe<Array<CollectionChildrenFolderConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<Array<CollectionChildrenFolderConnectOrCreateFieldInput>>;
+  create?: InputMaybe<Array<CollectionChildrenFolderCreateFieldInput>>;
+};
+
+export type CollectionChildrenFolderUpdateConnectionInput = {
+  node?: InputMaybe<FolderUpdateInput>;
+};
+
+export type CollectionChildrenFolderUpdateFieldInput = {
+  connect?: InputMaybe<Array<CollectionChildrenFolderConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<Array<CollectionChildrenFolderConnectOrCreateFieldInput>>;
+  create?: InputMaybe<Array<CollectionChildrenFolderCreateFieldInput>>;
+  delete?: InputMaybe<Array<CollectionChildrenFolderDeleteFieldInput>>;
+  disconnect?: InputMaybe<Array<CollectionChildrenFolderDisconnectFieldInput>>;
+  update?: InputMaybe<CollectionChildrenFolderUpdateConnectionInput>;
+  where?: InputMaybe<CollectionChildrenFolderConnectionWhere>;
+};
+
+export type CollectionChildrenRelationship = {
+  __typename?: 'CollectionChildrenRelationship';
+  cursor: Scalars['String']['output'];
+  node: Child;
 };
 
 export type CollectionChildrenUpdateInput = {
-  Bookmark?: InputMaybe<Array<ParentChildrenBookmarkUpdateFieldInput>>;
-  Folder?: InputMaybe<Array<ParentChildrenFolderUpdateFieldInput>>;
+  Bookmark?: InputMaybe<Array<CollectionChildrenBookmarkUpdateFieldInput>>;
+  Folder?: InputMaybe<Array<CollectionChildrenFolderUpdateFieldInput>>;
 };
 
 export type CollectionConnectInput = {
   children?: InputMaybe<CollectionChildrenConnectInput>;
   member?: InputMaybe<CollectionMemberConnectFieldInput>;
-  parentMeta?: InputMaybe<ParentParentMetaConnectFieldInput>;
+  parentMeta?: InputMaybe<CollectionParentMetaConnectFieldInput>;
 };
 
 export type CollectionConnectOrCreateInput = {
-  children?: InputMaybe<ParentChildrenConnectOrCreateInput>;
+  children?: InputMaybe<CollectionChildrenConnectOrCreateInput>;
   member?: InputMaybe<CollectionMemberConnectOrCreateFieldInput>;
-  parentMeta?: InputMaybe<ParentParentMetaConnectOrCreateFieldInput>;
+  parentMeta?: InputMaybe<CollectionParentMetaConnectOrCreateFieldInput>;
 };
 
 export type CollectionConnectOrCreateWhere = {
@@ -1391,19 +1384,19 @@ export type CollectionCreateInput = {
   children?: InputMaybe<CollectionChildrenCreateInput>;
   member?: InputMaybe<CollectionMemberFieldInput>;
   name?: InputMaybe<Scalars['String']['input']>;
-  parentMeta?: InputMaybe<ParentParentMetaFieldInput>;
+  parentMeta?: InputMaybe<CollectionParentMetaFieldInput>;
 };
 
 export type CollectionDeleteInput = {
   children?: InputMaybe<CollectionChildrenDeleteInput>;
   member?: InputMaybe<CollectionMemberDeleteFieldInput>;
-  parentMeta?: InputMaybe<ParentParentMetaDeleteFieldInput>;
+  parentMeta?: InputMaybe<CollectionParentMetaDeleteFieldInput>;
 };
 
 export type CollectionDisconnectInput = {
   children?: InputMaybe<CollectionChildrenDisconnectInput>;
   member?: InputMaybe<CollectionMemberDisconnectFieldInput>;
-  parentMeta?: InputMaybe<ParentParentMetaDisconnectFieldInput>;
+  parentMeta?: InputMaybe<CollectionParentMetaDisconnectFieldInput>;
 };
 
 export type CollectionDs = {
@@ -1673,6 +1666,60 @@ export type CollectionParentMetaAggregateInput = {
   node?: InputMaybe<CollectionParentMetaNodeAggregationWhereInput>;
 };
 
+export type CollectionParentMetaConnectFieldInput = {
+  connect?: InputMaybe<ParentMetaConnectInput>;
+  /** Whether or not to overwrite any matching relationship with the new properties. */
+  overwrite?: Scalars['Boolean']['input'];
+  where?: InputMaybe<ParentMetaConnectWhere>;
+};
+
+export type CollectionParentMetaConnectOrCreateFieldInput = {
+  onCreate: CollectionParentMetaConnectOrCreateFieldInputOnCreate;
+  where: ParentMetaConnectOrCreateWhere;
+};
+
+export type CollectionParentMetaConnectOrCreateFieldInputOnCreate = {
+  node: ParentMetaOnCreateInput;
+};
+
+export type CollectionParentMetaConnection = {
+  __typename?: 'CollectionParentMetaConnection';
+  edges: Array<CollectionParentMetaRelationship>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type CollectionParentMetaConnectionSort = {
+  node?: InputMaybe<ParentMetaSort>;
+};
+
+export type CollectionParentMetaConnectionWhere = {
+  AND?: InputMaybe<Array<CollectionParentMetaConnectionWhere>>;
+  NOT?: InputMaybe<CollectionParentMetaConnectionWhere>;
+  OR?: InputMaybe<Array<CollectionParentMetaConnectionWhere>>;
+  node?: InputMaybe<ParentMetaWhere>;
+};
+
+export type CollectionParentMetaCreateFieldInput = {
+  node: ParentMetaCreateInput;
+};
+
+export type CollectionParentMetaDeleteFieldInput = {
+  delete?: InputMaybe<ParentMetaDeleteInput>;
+  where?: InputMaybe<CollectionParentMetaConnectionWhere>;
+};
+
+export type CollectionParentMetaDisconnectFieldInput = {
+  disconnect?: InputMaybe<ParentMetaDisconnectInput>;
+  where?: InputMaybe<CollectionParentMetaConnectionWhere>;
+};
+
+export type CollectionParentMetaFieldInput = {
+  connect?: InputMaybe<CollectionParentMetaConnectFieldInput>;
+  connectOrCreate?: InputMaybe<CollectionParentMetaConnectOrCreateFieldInput>;
+  create?: InputMaybe<CollectionParentMetaCreateFieldInput>;
+};
+
 export type CollectionParentMetaNodeAggregationWhereInput = {
   AND?: InputMaybe<Array<CollectionParentMetaNodeAggregationWhereInput>>;
   NOT?: InputMaybe<CollectionParentMetaNodeAggregationWhereInput>;
@@ -1690,10 +1737,30 @@ export type CollectionParentMetaParentMetaNodeAggregateSelection = {
   id: IdAggregateSelectionNonNullable;
 };
 
+export type CollectionParentMetaRelationship = {
+  __typename?: 'CollectionParentMetaRelationship';
+  cursor: Scalars['String']['output'];
+  node: ParentMeta;
+};
+
+export type CollectionParentMetaUpdateConnectionInput = {
+  node?: InputMaybe<ParentMetaUpdateInput>;
+};
+
+export type CollectionParentMetaUpdateFieldInput = {
+  connect?: InputMaybe<CollectionParentMetaConnectFieldInput>;
+  connectOrCreate?: InputMaybe<CollectionParentMetaConnectOrCreateFieldInput>;
+  create?: InputMaybe<CollectionParentMetaCreateFieldInput>;
+  delete?: InputMaybe<CollectionParentMetaDeleteFieldInput>;
+  disconnect?: InputMaybe<CollectionParentMetaDisconnectFieldInput>;
+  update?: InputMaybe<CollectionParentMetaUpdateConnectionInput>;
+  where?: InputMaybe<CollectionParentMetaConnectionWhere>;
+};
+
 export type CollectionRelationInput = {
   children?: InputMaybe<CollectionChildrenCreateFieldInput>;
   member?: InputMaybe<CollectionMemberCreateFieldInput>;
-  parentMeta?: InputMaybe<ParentParentMetaCreateFieldInput>;
+  parentMeta?: InputMaybe<CollectionParentMetaCreateFieldInput>;
 };
 
 /** Fields to sort Collections by. The order in which sorts are applied is not guaranteed when specifying many fields in one CollectionSort object. */
@@ -1712,21 +1779,21 @@ export type CollectionUpdateInput = {
   children?: InputMaybe<CollectionChildrenUpdateInput>;
   member?: InputMaybe<CollectionMemberUpdateFieldInput>;
   name?: InputMaybe<Scalars['String']['input']>;
-  parentMeta?: InputMaybe<ParentParentMetaUpdateFieldInput>;
+  parentMeta?: InputMaybe<CollectionParentMetaUpdateFieldInput>;
 };
 
 export type CollectionWhere = {
   AND?: InputMaybe<Array<CollectionWhere>>;
   NOT?: InputMaybe<CollectionWhere>;
   OR?: InputMaybe<Array<CollectionWhere>>;
-  /** Return Collections where all of the related ParentChildrenConnections match this filter */
-  childrenConnection_ALL?: InputMaybe<ParentChildrenConnectionWhere>;
-  /** Return Collections where none of the related ParentChildrenConnections match this filter */
-  childrenConnection_NONE?: InputMaybe<ParentChildrenConnectionWhere>;
-  /** Return Collections where one of the related ParentChildrenConnections match this filter */
-  childrenConnection_SINGLE?: InputMaybe<ParentChildrenConnectionWhere>;
-  /** Return Collections where some of the related ParentChildrenConnections match this filter */
-  childrenConnection_SOME?: InputMaybe<ParentChildrenConnectionWhere>;
+  /** Return Collections where all of the related CollectionChildrenConnections match this filter */
+  childrenConnection_ALL?: InputMaybe<CollectionChildrenConnectionWhere>;
+  /** Return Collections where none of the related CollectionChildrenConnections match this filter */
+  childrenConnection_NONE?: InputMaybe<CollectionChildrenConnectionWhere>;
+  /** Return Collections where one of the related CollectionChildrenConnections match this filter */
+  childrenConnection_SINGLE?: InputMaybe<CollectionChildrenConnectionWhere>;
+  /** Return Collections where some of the related CollectionChildrenConnections match this filter */
+  childrenConnection_SOME?: InputMaybe<CollectionChildrenConnectionWhere>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   createdAt_GT?: InputMaybe<Scalars['DateTime']['input']>;
   createdAt_GTE?: InputMaybe<Scalars['DateTime']['input']>;
@@ -1750,8 +1817,8 @@ export type CollectionWhere = {
   name_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
   parentMeta?: InputMaybe<ParentMetaWhere>;
   parentMetaAggregate?: InputMaybe<CollectionParentMetaAggregateInput>;
-  parentMetaConnection?: InputMaybe<ParentParentMetaConnectionWhere>;
-  parentMetaConnection_NOT?: InputMaybe<ParentParentMetaConnectionWhere>;
+  parentMetaConnection?: InputMaybe<CollectionParentMetaConnectionWhere>;
+  parentMetaConnection_NOT?: InputMaybe<CollectionParentMetaConnectionWhere>;
   parentMeta_NOT?: InputMaybe<ParentMetaWhere>;
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   updatedAt_GT?: InputMaybe<Scalars['DateTime']['input']>;
@@ -1884,7 +1951,7 @@ export type DeleteInfo = {
 export type Folder = Parent & {
   __typename?: 'Folder';
   children: Array<Child>;
-  childrenConnection: ParentChildrenConnection;
+  childrenConnection: FolderChildrenConnection;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   id: Scalars['ID']['output'];
   name?: Maybe<Scalars['String']['output']>;
@@ -1892,7 +1959,7 @@ export type Folder = Parent & {
   parentConnection: FolderParentConnection;
   parentMeta?: Maybe<ParentMeta>;
   parentMetaAggregate?: Maybe<FolderParentMetaParentMetaAggregationSelection>;
-  parentMetaConnection: ParentParentMetaConnection;
+  parentMetaConnection: FolderParentMetaConnection;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
@@ -1908,7 +1975,7 @@ export type FolderChildrenConnectionArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   directed?: InputMaybe<Scalars['Boolean']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
-  where?: InputMaybe<ParentChildrenConnectionWhere>;
+  where?: InputMaybe<FolderChildrenConnectionWhere>;
 };
 
 
@@ -1945,8 +2012,8 @@ export type FolderParentMetaConnectionArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   directed?: InputMaybe<Scalars['Boolean']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<ParentParentMetaConnectionSort>>;
-  where?: InputMaybe<ParentParentMetaConnectionWhere>;
+  sort?: InputMaybe<Array<FolderParentMetaConnectionSort>>;
+  where?: InputMaybe<FolderParentMetaConnectionWhere>;
 };
 
 export type FolderAggregateSelection = {
@@ -1958,45 +2025,178 @@ export type FolderAggregateSelection = {
   updatedAt: DateTimeAggregateSelectionNullable;
 };
 
+export type FolderChildrenBookmarkConnectFieldInput = {
+  connect?: InputMaybe<Array<BookmarkConnectInput>>;
+  where?: InputMaybe<BookmarkConnectWhere>;
+};
+
+export type FolderChildrenBookmarkConnectOrCreateFieldInput = {
+  onCreate: FolderChildrenBookmarkConnectOrCreateFieldInputOnCreate;
+  where: BookmarkConnectOrCreateWhere;
+};
+
+export type FolderChildrenBookmarkConnectOrCreateFieldInputOnCreate = {
+  node: BookmarkOnCreateInput;
+};
+
+export type FolderChildrenBookmarkConnectionWhere = {
+  AND?: InputMaybe<Array<FolderChildrenBookmarkConnectionWhere>>;
+  NOT?: InputMaybe<FolderChildrenBookmarkConnectionWhere>;
+  OR?: InputMaybe<Array<FolderChildrenBookmarkConnectionWhere>>;
+  node?: InputMaybe<BookmarkWhere>;
+};
+
+export type FolderChildrenBookmarkCreateFieldInput = {
+  node: BookmarkCreateInput;
+};
+
+export type FolderChildrenBookmarkDeleteFieldInput = {
+  delete?: InputMaybe<BookmarkDeleteInput>;
+  where?: InputMaybe<FolderChildrenBookmarkConnectionWhere>;
+};
+
+export type FolderChildrenBookmarkDisconnectFieldInput = {
+  disconnect?: InputMaybe<BookmarkDisconnectInput>;
+  where?: InputMaybe<FolderChildrenBookmarkConnectionWhere>;
+};
+
+export type FolderChildrenBookmarkFieldInput = {
+  connect?: InputMaybe<Array<FolderChildrenBookmarkConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<Array<FolderChildrenBookmarkConnectOrCreateFieldInput>>;
+  create?: InputMaybe<Array<FolderChildrenBookmarkCreateFieldInput>>;
+};
+
+export type FolderChildrenBookmarkUpdateConnectionInput = {
+  node?: InputMaybe<BookmarkUpdateInput>;
+};
+
+export type FolderChildrenBookmarkUpdateFieldInput = {
+  connect?: InputMaybe<Array<FolderChildrenBookmarkConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<Array<FolderChildrenBookmarkConnectOrCreateFieldInput>>;
+  create?: InputMaybe<Array<FolderChildrenBookmarkCreateFieldInput>>;
+  delete?: InputMaybe<Array<FolderChildrenBookmarkDeleteFieldInput>>;
+  disconnect?: InputMaybe<Array<FolderChildrenBookmarkDisconnectFieldInput>>;
+  update?: InputMaybe<FolderChildrenBookmarkUpdateConnectionInput>;
+  where?: InputMaybe<FolderChildrenBookmarkConnectionWhere>;
+};
+
 export type FolderChildrenConnectInput = {
-  Bookmark?: InputMaybe<Array<ParentChildrenBookmarkConnectFieldInput>>;
-  Folder?: InputMaybe<Array<ParentChildrenFolderConnectFieldInput>>;
+  Bookmark?: InputMaybe<Array<FolderChildrenBookmarkConnectFieldInput>>;
+  Folder?: InputMaybe<Array<FolderChildrenFolderConnectFieldInput>>;
+};
+
+export type FolderChildrenConnectOrCreateInput = {
+  Bookmark?: InputMaybe<Array<FolderChildrenBookmarkConnectOrCreateFieldInput>>;
+  Folder?: InputMaybe<Array<FolderChildrenFolderConnectOrCreateFieldInput>>;
+};
+
+export type FolderChildrenConnection = {
+  __typename?: 'FolderChildrenConnection';
+  edges: Array<FolderChildrenRelationship>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type FolderChildrenConnectionWhere = {
+  Bookmark?: InputMaybe<FolderChildrenBookmarkConnectionWhere>;
+  Folder?: InputMaybe<FolderChildrenFolderConnectionWhere>;
 };
 
 export type FolderChildrenCreateFieldInput = {
-  Bookmark?: InputMaybe<Array<ParentChildrenBookmarkCreateFieldInput>>;
-  Folder?: InputMaybe<Array<ParentChildrenFolderCreateFieldInput>>;
+  Bookmark?: InputMaybe<Array<FolderChildrenBookmarkCreateFieldInput>>;
+  Folder?: InputMaybe<Array<FolderChildrenFolderCreateFieldInput>>;
 };
 
 export type FolderChildrenCreateInput = {
-  Bookmark?: InputMaybe<ParentChildrenBookmarkFieldInput>;
-  Folder?: InputMaybe<ParentChildrenFolderFieldInput>;
+  Bookmark?: InputMaybe<FolderChildrenBookmarkFieldInput>;
+  Folder?: InputMaybe<FolderChildrenFolderFieldInput>;
 };
 
 export type FolderChildrenDeleteInput = {
-  Bookmark?: InputMaybe<Array<ParentChildrenBookmarkDeleteFieldInput>>;
-  Folder?: InputMaybe<Array<ParentChildrenFolderDeleteFieldInput>>;
+  Bookmark?: InputMaybe<Array<FolderChildrenBookmarkDeleteFieldInput>>;
+  Folder?: InputMaybe<Array<FolderChildrenFolderDeleteFieldInput>>;
 };
 
 export type FolderChildrenDisconnectInput = {
-  Bookmark?: InputMaybe<Array<ParentChildrenBookmarkDisconnectFieldInput>>;
-  Folder?: InputMaybe<Array<ParentChildrenFolderDisconnectFieldInput>>;
+  Bookmark?: InputMaybe<Array<FolderChildrenBookmarkDisconnectFieldInput>>;
+  Folder?: InputMaybe<Array<FolderChildrenFolderDisconnectFieldInput>>;
+};
+
+export type FolderChildrenFolderConnectFieldInput = {
+  connect?: InputMaybe<Array<FolderConnectInput>>;
+  where?: InputMaybe<FolderConnectWhere>;
+};
+
+export type FolderChildrenFolderConnectOrCreateFieldInput = {
+  onCreate: FolderChildrenFolderConnectOrCreateFieldInputOnCreate;
+  where: FolderConnectOrCreateWhere;
+};
+
+export type FolderChildrenFolderConnectOrCreateFieldInputOnCreate = {
+  node: FolderOnCreateInput;
+};
+
+export type FolderChildrenFolderConnectionWhere = {
+  AND?: InputMaybe<Array<FolderChildrenFolderConnectionWhere>>;
+  NOT?: InputMaybe<FolderChildrenFolderConnectionWhere>;
+  OR?: InputMaybe<Array<FolderChildrenFolderConnectionWhere>>;
+  node?: InputMaybe<FolderWhere>;
+};
+
+export type FolderChildrenFolderCreateFieldInput = {
+  node: FolderCreateInput;
+};
+
+export type FolderChildrenFolderDeleteFieldInput = {
+  delete?: InputMaybe<FolderDeleteInput>;
+  where?: InputMaybe<FolderChildrenFolderConnectionWhere>;
+};
+
+export type FolderChildrenFolderDisconnectFieldInput = {
+  disconnect?: InputMaybe<FolderDisconnectInput>;
+  where?: InputMaybe<FolderChildrenFolderConnectionWhere>;
+};
+
+export type FolderChildrenFolderFieldInput = {
+  connect?: InputMaybe<Array<FolderChildrenFolderConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<Array<FolderChildrenFolderConnectOrCreateFieldInput>>;
+  create?: InputMaybe<Array<FolderChildrenFolderCreateFieldInput>>;
+};
+
+export type FolderChildrenFolderUpdateConnectionInput = {
+  node?: InputMaybe<FolderUpdateInput>;
+};
+
+export type FolderChildrenFolderUpdateFieldInput = {
+  connect?: InputMaybe<Array<FolderChildrenFolderConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<Array<FolderChildrenFolderConnectOrCreateFieldInput>>;
+  create?: InputMaybe<Array<FolderChildrenFolderCreateFieldInput>>;
+  delete?: InputMaybe<Array<FolderChildrenFolderDeleteFieldInput>>;
+  disconnect?: InputMaybe<Array<FolderChildrenFolderDisconnectFieldInput>>;
+  update?: InputMaybe<FolderChildrenFolderUpdateConnectionInput>;
+  where?: InputMaybe<FolderChildrenFolderConnectionWhere>;
+};
+
+export type FolderChildrenRelationship = {
+  __typename?: 'FolderChildrenRelationship';
+  cursor: Scalars['String']['output'];
+  node: Child;
 };
 
 export type FolderChildrenUpdateInput = {
-  Bookmark?: InputMaybe<Array<ParentChildrenBookmarkUpdateFieldInput>>;
-  Folder?: InputMaybe<Array<ParentChildrenFolderUpdateFieldInput>>;
+  Bookmark?: InputMaybe<Array<FolderChildrenBookmarkUpdateFieldInput>>;
+  Folder?: InputMaybe<Array<FolderChildrenFolderUpdateFieldInput>>;
 };
 
 export type FolderConnectInput = {
   children?: InputMaybe<FolderChildrenConnectInput>;
   parent?: InputMaybe<FolderParentConnectFieldInput>;
-  parentMeta?: InputMaybe<ParentParentMetaConnectFieldInput>;
+  parentMeta?: InputMaybe<FolderParentMetaConnectFieldInput>;
 };
 
 export type FolderConnectOrCreateInput = {
-  children?: InputMaybe<ParentChildrenConnectOrCreateInput>;
-  parentMeta?: InputMaybe<ParentParentMetaConnectOrCreateFieldInput>;
+  children?: InputMaybe<FolderChildrenConnectOrCreateInput>;
+  parentMeta?: InputMaybe<FolderParentMetaConnectOrCreateFieldInput>;
 };
 
 export type FolderConnectOrCreateWhere = {
@@ -2011,19 +2211,19 @@ export type FolderCreateInput = {
   children?: InputMaybe<FolderChildrenCreateInput>;
   name?: InputMaybe<Scalars['String']['input']>;
   parent?: InputMaybe<FolderParentFieldInput>;
-  parentMeta?: InputMaybe<ParentParentMetaFieldInput>;
+  parentMeta?: InputMaybe<FolderParentMetaFieldInput>;
 };
 
 export type FolderDeleteInput = {
   children?: InputMaybe<FolderChildrenDeleteInput>;
   parent?: InputMaybe<FolderParentDeleteFieldInput>;
-  parentMeta?: InputMaybe<ParentParentMetaDeleteFieldInput>;
+  parentMeta?: InputMaybe<FolderParentMetaDeleteFieldInput>;
 };
 
 export type FolderDisconnectInput = {
   children?: InputMaybe<FolderChildrenDisconnectInput>;
   parent?: InputMaybe<FolderParentDisconnectFieldInput>;
-  parentMeta?: InputMaybe<ParentParentMetaDisconnectFieldInput>;
+  parentMeta?: InputMaybe<FolderParentMetaDisconnectFieldInput>;
 };
 
 export type FolderDl = {
@@ -2191,6 +2391,60 @@ export type FolderParentMetaAggregateInput = {
   node?: InputMaybe<FolderParentMetaNodeAggregationWhereInput>;
 };
 
+export type FolderParentMetaConnectFieldInput = {
+  connect?: InputMaybe<ParentMetaConnectInput>;
+  /** Whether or not to overwrite any matching relationship with the new properties. */
+  overwrite?: Scalars['Boolean']['input'];
+  where?: InputMaybe<ParentMetaConnectWhere>;
+};
+
+export type FolderParentMetaConnectOrCreateFieldInput = {
+  onCreate: FolderParentMetaConnectOrCreateFieldInputOnCreate;
+  where: ParentMetaConnectOrCreateWhere;
+};
+
+export type FolderParentMetaConnectOrCreateFieldInputOnCreate = {
+  node: ParentMetaOnCreateInput;
+};
+
+export type FolderParentMetaConnection = {
+  __typename?: 'FolderParentMetaConnection';
+  edges: Array<FolderParentMetaRelationship>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type FolderParentMetaConnectionSort = {
+  node?: InputMaybe<ParentMetaSort>;
+};
+
+export type FolderParentMetaConnectionWhere = {
+  AND?: InputMaybe<Array<FolderParentMetaConnectionWhere>>;
+  NOT?: InputMaybe<FolderParentMetaConnectionWhere>;
+  OR?: InputMaybe<Array<FolderParentMetaConnectionWhere>>;
+  node?: InputMaybe<ParentMetaWhere>;
+};
+
+export type FolderParentMetaCreateFieldInput = {
+  node: ParentMetaCreateInput;
+};
+
+export type FolderParentMetaDeleteFieldInput = {
+  delete?: InputMaybe<ParentMetaDeleteInput>;
+  where?: InputMaybe<FolderParentMetaConnectionWhere>;
+};
+
+export type FolderParentMetaDisconnectFieldInput = {
+  disconnect?: InputMaybe<ParentMetaDisconnectInput>;
+  where?: InputMaybe<FolderParentMetaConnectionWhere>;
+};
+
+export type FolderParentMetaFieldInput = {
+  connect?: InputMaybe<FolderParentMetaConnectFieldInput>;
+  connectOrCreate?: InputMaybe<FolderParentMetaConnectOrCreateFieldInput>;
+  create?: InputMaybe<FolderParentMetaCreateFieldInput>;
+};
+
 export type FolderParentMetaNodeAggregationWhereInput = {
   AND?: InputMaybe<Array<FolderParentMetaNodeAggregationWhereInput>>;
   NOT?: InputMaybe<FolderParentMetaNodeAggregationWhereInput>;
@@ -2206,6 +2460,26 @@ export type FolderParentMetaParentMetaAggregationSelection = {
 export type FolderParentMetaParentMetaNodeAggregateSelection = {
   __typename?: 'FolderParentMetaParentMetaNodeAggregateSelection';
   id: IdAggregateSelectionNonNullable;
+};
+
+export type FolderParentMetaRelationship = {
+  __typename?: 'FolderParentMetaRelationship';
+  cursor: Scalars['String']['output'];
+  node: ParentMeta;
+};
+
+export type FolderParentMetaUpdateConnectionInput = {
+  node?: InputMaybe<ParentMetaUpdateInput>;
+};
+
+export type FolderParentMetaUpdateFieldInput = {
+  connect?: InputMaybe<FolderParentMetaConnectFieldInput>;
+  connectOrCreate?: InputMaybe<FolderParentMetaConnectOrCreateFieldInput>;
+  create?: InputMaybe<FolderParentMetaCreateFieldInput>;
+  delete?: InputMaybe<FolderParentMetaDeleteFieldInput>;
+  disconnect?: InputMaybe<FolderParentMetaDisconnectFieldInput>;
+  update?: InputMaybe<FolderParentMetaUpdateConnectionInput>;
+  where?: InputMaybe<FolderParentMetaConnectionWhere>;
 };
 
 export type FolderParentRelationship = {
@@ -2230,7 +2504,7 @@ export type FolderParentUpdateFieldInput = {
 export type FolderRelationInput = {
   children?: InputMaybe<FolderChildrenCreateFieldInput>;
   parent?: InputMaybe<FolderParentCreateFieldInput>;
-  parentMeta?: InputMaybe<ParentParentMetaCreateFieldInput>;
+  parentMeta?: InputMaybe<FolderParentMetaCreateFieldInput>;
 };
 
 /** Fields to sort Folders by. The order in which sorts are applied is not guaranteed when specifying many fields in one FolderSort object. */
@@ -2249,21 +2523,21 @@ export type FolderUpdateInput = {
   children?: InputMaybe<FolderChildrenUpdateInput>;
   name?: InputMaybe<Scalars['String']['input']>;
   parent?: InputMaybe<FolderParentUpdateFieldInput>;
-  parentMeta?: InputMaybe<ParentParentMetaUpdateFieldInput>;
+  parentMeta?: InputMaybe<FolderParentMetaUpdateFieldInput>;
 };
 
 export type FolderWhere = {
   AND?: InputMaybe<Array<FolderWhere>>;
   NOT?: InputMaybe<FolderWhere>;
   OR?: InputMaybe<Array<FolderWhere>>;
-  /** Return Folders where all of the related ParentChildrenConnections match this filter */
-  childrenConnection_ALL?: InputMaybe<ParentChildrenConnectionWhere>;
-  /** Return Folders where none of the related ParentChildrenConnections match this filter */
-  childrenConnection_NONE?: InputMaybe<ParentChildrenConnectionWhere>;
-  /** Return Folders where one of the related ParentChildrenConnections match this filter */
-  childrenConnection_SINGLE?: InputMaybe<ParentChildrenConnectionWhere>;
-  /** Return Folders where some of the related ParentChildrenConnections match this filter */
-  childrenConnection_SOME?: InputMaybe<ParentChildrenConnectionWhere>;
+  /** Return Folders where all of the related FolderChildrenConnections match this filter */
+  childrenConnection_ALL?: InputMaybe<FolderChildrenConnectionWhere>;
+  /** Return Folders where none of the related FolderChildrenConnections match this filter */
+  childrenConnection_NONE?: InputMaybe<FolderChildrenConnectionWhere>;
+  /** Return Folders where one of the related FolderChildrenConnections match this filter */
+  childrenConnection_SINGLE?: InputMaybe<FolderChildrenConnectionWhere>;
+  /** Return Folders where some of the related FolderChildrenConnections match this filter */
+  childrenConnection_SOME?: InputMaybe<FolderChildrenConnectionWhere>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   createdAt_GT?: InputMaybe<Scalars['DateTime']['input']>;
   createdAt_GTE?: InputMaybe<Scalars['DateTime']['input']>;
@@ -2284,8 +2558,8 @@ export type FolderWhere = {
   parentConnection_NOT?: InputMaybe<FolderParentConnectionWhere>;
   parentMeta?: InputMaybe<ParentMetaWhere>;
   parentMetaAggregate?: InputMaybe<FolderParentMetaAggregateInput>;
-  parentMetaConnection?: InputMaybe<ParentParentMetaConnectionWhere>;
-  parentMetaConnection_NOT?: InputMaybe<ParentParentMetaConnectionWhere>;
+  parentMetaConnection?: InputMaybe<FolderParentMetaConnectionWhere>;
+  parentMetaConnection_NOT?: InputMaybe<FolderParentMetaConnectionWhere>;
   parentMeta_NOT?: InputMaybe<ParentMetaWhere>;
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   updatedAt_GT?: InputMaybe<Scalars['DateTime']['input']>;
@@ -3497,204 +3771,12 @@ export type PageInfo = {
 };
 
 export type Parent = {
-  children: Array<Child>;
-  childrenConnection: ParentChildrenConnection;
-  createdAt?: Maybe<Scalars['DateTime']['output']>;
   id: Scalars['ID']['output'];
   name?: Maybe<Scalars['String']['output']>;
-  parentMeta?: Maybe<ParentMeta>;
-  parentMetaConnection: ParentParentMetaConnection;
-  updatedAt?: Maybe<Scalars['DateTime']['output']>;
-};
-
-
-export type ParentChildrenArgs = {
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  options?: InputMaybe<QueryOptions>;
-  where?: InputMaybe<ChildWhere>;
-};
-
-
-export type ParentChildrenConnectionArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  where?: InputMaybe<ParentChildrenConnectionWhere>;
-};
-
-
-export type ParentParentMetaArgs = {
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  options?: InputMaybe<ParentMetaOptions>;
-  where?: InputMaybe<ParentMetaWhere>;
-};
-
-
-export type ParentParentMetaConnectionArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<ParentParentMetaConnectionSort>>;
-  where?: InputMaybe<ParentParentMetaConnectionWhere>;
-};
-
-export type ParentChildrenBookmarkConnectFieldInput = {
-  connect?: InputMaybe<Array<BookmarkConnectInput>>;
-  where?: InputMaybe<BookmarkConnectWhere>;
-};
-
-export type ParentChildrenBookmarkConnectOrCreateFieldInput = {
-  onCreate: ParentChildrenBookmarkConnectOrCreateFieldInputOnCreate;
-  where: BookmarkConnectOrCreateWhere;
-};
-
-export type ParentChildrenBookmarkConnectOrCreateFieldInputOnCreate = {
-  node: BookmarkOnCreateInput;
-};
-
-export type ParentChildrenBookmarkConnectionWhere = {
-  AND?: InputMaybe<Array<ParentChildrenBookmarkConnectionWhere>>;
-  NOT?: InputMaybe<ParentChildrenBookmarkConnectionWhere>;
-  OR?: InputMaybe<Array<ParentChildrenBookmarkConnectionWhere>>;
-  node?: InputMaybe<BookmarkWhere>;
-};
-
-export type ParentChildrenBookmarkCreateFieldInput = {
-  node: BookmarkCreateInput;
-};
-
-export type ParentChildrenBookmarkDeleteFieldInput = {
-  delete?: InputMaybe<BookmarkDeleteInput>;
-  where?: InputMaybe<ParentChildrenBookmarkConnectionWhere>;
-};
-
-export type ParentChildrenBookmarkDisconnectFieldInput = {
-  disconnect?: InputMaybe<BookmarkDisconnectInput>;
-  where?: InputMaybe<ParentChildrenBookmarkConnectionWhere>;
-};
-
-export type ParentChildrenBookmarkFieldInput = {
-  connect?: InputMaybe<Array<ParentChildrenBookmarkConnectFieldInput>>;
-  connectOrCreate?: InputMaybe<Array<ParentChildrenBookmarkConnectOrCreateFieldInput>>;
-  create?: InputMaybe<Array<ParentChildrenBookmarkCreateFieldInput>>;
-};
-
-export type ParentChildrenBookmarkUpdateConnectionInput = {
-  node?: InputMaybe<BookmarkUpdateInput>;
-};
-
-export type ParentChildrenBookmarkUpdateFieldInput = {
-  connect?: InputMaybe<Array<ParentChildrenBookmarkConnectFieldInput>>;
-  connectOrCreate?: InputMaybe<Array<ParentChildrenBookmarkConnectOrCreateFieldInput>>;
-  create?: InputMaybe<Array<ParentChildrenBookmarkCreateFieldInput>>;
-  delete?: InputMaybe<Array<ParentChildrenBookmarkDeleteFieldInput>>;
-  disconnect?: InputMaybe<Array<ParentChildrenBookmarkDisconnectFieldInput>>;
-  update?: InputMaybe<ParentChildrenBookmarkUpdateConnectionInput>;
-  where?: InputMaybe<ParentChildrenBookmarkConnectionWhere>;
-};
-
-export type ParentChildrenConnectInput = {
-  Bookmark?: InputMaybe<Array<ParentChildrenBookmarkConnectFieldInput>>;
-  Folder?: InputMaybe<Array<ParentChildrenFolderConnectFieldInput>>;
-};
-
-export type ParentChildrenConnectOrCreateInput = {
-  Bookmark?: InputMaybe<Array<ParentChildrenBookmarkConnectOrCreateFieldInput>>;
-  Folder?: InputMaybe<Array<ParentChildrenFolderConnectOrCreateFieldInput>>;
-};
-
-export type ParentChildrenConnection = {
-  __typename?: 'ParentChildrenConnection';
-  edges: Array<ParentChildrenRelationship>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int']['output'];
-};
-
-export type ParentChildrenConnectionWhere = {
-  Bookmark?: InputMaybe<ParentChildrenBookmarkConnectionWhere>;
-  Folder?: InputMaybe<ParentChildrenFolderConnectionWhere>;
-};
-
-export type ParentChildrenDeleteInput = {
-  Bookmark?: InputMaybe<Array<ParentChildrenBookmarkDeleteFieldInput>>;
-  Folder?: InputMaybe<Array<ParentChildrenFolderDeleteFieldInput>>;
-};
-
-export type ParentChildrenDisconnectInput = {
-  Bookmark?: InputMaybe<Array<ParentChildrenBookmarkDisconnectFieldInput>>;
-  Folder?: InputMaybe<Array<ParentChildrenFolderDisconnectFieldInput>>;
-};
-
-export type ParentChildrenFolderConnectFieldInput = {
-  connect?: InputMaybe<Array<FolderConnectInput>>;
-  where?: InputMaybe<FolderConnectWhere>;
-};
-
-export type ParentChildrenFolderConnectOrCreateFieldInput = {
-  onCreate: ParentChildrenFolderConnectOrCreateFieldInputOnCreate;
-  where: FolderConnectOrCreateWhere;
-};
-
-export type ParentChildrenFolderConnectOrCreateFieldInputOnCreate = {
-  node: FolderOnCreateInput;
-};
-
-export type ParentChildrenFolderConnectionWhere = {
-  AND?: InputMaybe<Array<ParentChildrenFolderConnectionWhere>>;
-  NOT?: InputMaybe<ParentChildrenFolderConnectionWhere>;
-  OR?: InputMaybe<Array<ParentChildrenFolderConnectionWhere>>;
-  node?: InputMaybe<FolderWhere>;
-};
-
-export type ParentChildrenFolderCreateFieldInput = {
-  node: FolderCreateInput;
-};
-
-export type ParentChildrenFolderDeleteFieldInput = {
-  delete?: InputMaybe<FolderDeleteInput>;
-  where?: InputMaybe<ParentChildrenFolderConnectionWhere>;
-};
-
-export type ParentChildrenFolderDisconnectFieldInput = {
-  disconnect?: InputMaybe<FolderDisconnectInput>;
-  where?: InputMaybe<ParentChildrenFolderConnectionWhere>;
-};
-
-export type ParentChildrenFolderFieldInput = {
-  connect?: InputMaybe<Array<ParentChildrenFolderConnectFieldInput>>;
-  connectOrCreate?: InputMaybe<Array<ParentChildrenFolderConnectOrCreateFieldInput>>;
-  create?: InputMaybe<Array<ParentChildrenFolderCreateFieldInput>>;
-};
-
-export type ParentChildrenFolderUpdateConnectionInput = {
-  node?: InputMaybe<FolderUpdateInput>;
-};
-
-export type ParentChildrenFolderUpdateFieldInput = {
-  connect?: InputMaybe<Array<ParentChildrenFolderConnectFieldInput>>;
-  connectOrCreate?: InputMaybe<Array<ParentChildrenFolderConnectOrCreateFieldInput>>;
-  create?: InputMaybe<Array<ParentChildrenFolderCreateFieldInput>>;
-  delete?: InputMaybe<Array<ParentChildrenFolderDeleteFieldInput>>;
-  disconnect?: InputMaybe<Array<ParentChildrenFolderDisconnectFieldInput>>;
-  update?: InputMaybe<ParentChildrenFolderUpdateConnectionInput>;
-  where?: InputMaybe<ParentChildrenFolderConnectionWhere>;
-};
-
-export type ParentChildrenRelationship = {
-  __typename?: 'ParentChildrenRelationship';
-  cursor: Scalars['String']['output'];
-  node: Child;
-};
-
-export type ParentChildrenUpdateInput = {
-  Bookmark?: InputMaybe<Array<ParentChildrenBookmarkUpdateFieldInput>>;
-  Folder?: InputMaybe<Array<ParentChildrenFolderUpdateFieldInput>>;
 };
 
 export type ParentConnectInput = {
   _on?: InputMaybe<ParentImplementationsConnectInput>;
-  children?: InputMaybe<ParentChildrenConnectInput>;
-  parentMeta?: InputMaybe<ParentParentMetaConnectFieldInput>;
 };
 
 export type ParentConnectWhere = {
@@ -3702,43 +3784,45 @@ export type ParentConnectWhere = {
 };
 
 export type ParentCreateInput = {
+  Bookmark?: InputMaybe<BookmarkCreateInput>;
   Collection?: InputMaybe<CollectionCreateInput>;
   Folder?: InputMaybe<FolderCreateInput>;
 };
 
 export type ParentDeleteInput = {
   _on?: InputMaybe<ParentImplementationsDeleteInput>;
-  children?: InputMaybe<ParentChildrenDeleteInput>;
-  parentMeta?: InputMaybe<ParentParentMetaDeleteFieldInput>;
 };
 
 export type ParentDisconnectInput = {
   _on?: InputMaybe<ParentImplementationsDisconnectInput>;
-  children?: InputMaybe<ParentChildrenDisconnectInput>;
-  parentMeta?: InputMaybe<ParentParentMetaDisconnectFieldInput>;
 };
 
 export type ParentImplementationsConnectInput = {
+  Bookmark?: InputMaybe<Array<BookmarkConnectInput>>;
   Collection?: InputMaybe<Array<CollectionConnectInput>>;
   Folder?: InputMaybe<Array<FolderConnectInput>>;
 };
 
 export type ParentImplementationsDeleteInput = {
+  Bookmark?: InputMaybe<Array<BookmarkDeleteInput>>;
   Collection?: InputMaybe<Array<CollectionDeleteInput>>;
   Folder?: InputMaybe<Array<FolderDeleteInput>>;
 };
 
 export type ParentImplementationsDisconnectInput = {
+  Bookmark?: InputMaybe<Array<BookmarkDisconnectInput>>;
   Collection?: InputMaybe<Array<CollectionDisconnectInput>>;
   Folder?: InputMaybe<Array<FolderDisconnectInput>>;
 };
 
 export type ParentImplementationsUpdateInput = {
+  Bookmark?: InputMaybe<BookmarkUpdateInput>;
   Collection?: InputMaybe<CollectionUpdateInput>;
   Folder?: InputMaybe<FolderUpdateInput>;
 };
 
 export type ParentImplementationsWhere = {
+  Bookmark?: InputMaybe<BookmarkWhere>;
   Collection?: InputMaybe<CollectionWhere>;
   Folder?: InputMaybe<FolderWhere>;
 };
@@ -3925,129 +4009,19 @@ export type ParentOptions = {
   sort?: InputMaybe<Array<InputMaybe<ParentSort>>>;
 };
 
-export type ParentParentMetaAggregateInput = {
-  AND?: InputMaybe<Array<ParentParentMetaAggregateInput>>;
-  NOT?: InputMaybe<ParentParentMetaAggregateInput>;
-  OR?: InputMaybe<Array<ParentParentMetaAggregateInput>>;
-  count?: InputMaybe<Scalars['Int']['input']>;
-  count_GT?: InputMaybe<Scalars['Int']['input']>;
-  count_GTE?: InputMaybe<Scalars['Int']['input']>;
-  count_LT?: InputMaybe<Scalars['Int']['input']>;
-  count_LTE?: InputMaybe<Scalars['Int']['input']>;
-  node?: InputMaybe<ParentParentMetaNodeAggregationWhereInput>;
-};
-
-export type ParentParentMetaConnectFieldInput = {
-  connect?: InputMaybe<ParentMetaConnectInput>;
-  /** Whether or not to overwrite any matching relationship with the new properties. */
-  overwrite?: Scalars['Boolean']['input'];
-  where?: InputMaybe<ParentMetaConnectWhere>;
-};
-
-export type ParentParentMetaConnectOrCreateFieldInput = {
-  onCreate: ParentParentMetaConnectOrCreateFieldInputOnCreate;
-  where: ParentMetaConnectOrCreateWhere;
-};
-
-export type ParentParentMetaConnectOrCreateFieldInputOnCreate = {
-  node: ParentMetaOnCreateInput;
-};
-
-export type ParentParentMetaConnection = {
-  __typename?: 'ParentParentMetaConnection';
-  edges: Array<ParentParentMetaRelationship>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int']['output'];
-};
-
-export type ParentParentMetaConnectionSort = {
-  node?: InputMaybe<ParentMetaSort>;
-};
-
-export type ParentParentMetaConnectionWhere = {
-  AND?: InputMaybe<Array<ParentParentMetaConnectionWhere>>;
-  NOT?: InputMaybe<ParentParentMetaConnectionWhere>;
-  OR?: InputMaybe<Array<ParentParentMetaConnectionWhere>>;
-  node?: InputMaybe<ParentMetaWhere>;
-};
-
-export type ParentParentMetaCreateFieldInput = {
-  node: ParentMetaCreateInput;
-};
-
-export type ParentParentMetaDeleteFieldInput = {
-  delete?: InputMaybe<ParentMetaDeleteInput>;
-  where?: InputMaybe<ParentParentMetaConnectionWhere>;
-};
-
-export type ParentParentMetaDisconnectFieldInput = {
-  disconnect?: InputMaybe<ParentMetaDisconnectInput>;
-  where?: InputMaybe<ParentParentMetaConnectionWhere>;
-};
-
-export type ParentParentMetaFieldInput = {
-  connect?: InputMaybe<ParentParentMetaConnectFieldInput>;
-  connectOrCreate?: InputMaybe<ParentParentMetaConnectOrCreateFieldInput>;
-  create?: InputMaybe<ParentParentMetaCreateFieldInput>;
-};
-
-export type ParentParentMetaNodeAggregationWhereInput = {
-  AND?: InputMaybe<Array<ParentParentMetaNodeAggregationWhereInput>>;
-  NOT?: InputMaybe<ParentParentMetaNodeAggregationWhereInput>;
-  OR?: InputMaybe<Array<ParentParentMetaNodeAggregationWhereInput>>;
-};
-
-export type ParentParentMetaRelationship = {
-  __typename?: 'ParentParentMetaRelationship';
-  cursor: Scalars['String']['output'];
-  node: ParentMeta;
-};
-
-export type ParentParentMetaUpdateConnectionInput = {
-  node?: InputMaybe<ParentMetaUpdateInput>;
-};
-
-export type ParentParentMetaUpdateFieldInput = {
-  connect?: InputMaybe<ParentParentMetaConnectFieldInput>;
-  connectOrCreate?: InputMaybe<ParentParentMetaConnectOrCreateFieldInput>;
-  create?: InputMaybe<ParentParentMetaCreateFieldInput>;
-  delete?: InputMaybe<ParentParentMetaDeleteFieldInput>;
-  disconnect?: InputMaybe<ParentParentMetaDisconnectFieldInput>;
-  update?: InputMaybe<ParentParentMetaUpdateConnectionInput>;
-  where?: InputMaybe<ParentParentMetaConnectionWhere>;
-};
-
 /** Fields to sort Parents by. The order in which sorts are applied is not guaranteed when specifying many fields in one ParentSort object. */
 export type ParentSort = {
-  createdAt?: InputMaybe<SortDirection>;
   id?: InputMaybe<SortDirection>;
   name?: InputMaybe<SortDirection>;
-  updatedAt?: InputMaybe<SortDirection>;
 };
 
 export type ParentUpdateInput = {
   _on?: InputMaybe<ParentImplementationsUpdateInput>;
-  children?: InputMaybe<ParentChildrenUpdateInput>;
   name?: InputMaybe<Scalars['String']['input']>;
-  parentMeta?: InputMaybe<ParentParentMetaUpdateFieldInput>;
 };
 
 export type ParentWhere = {
   _on?: InputMaybe<ParentImplementationsWhere>;
-  /** Return Parents where all of the related ParentChildrenConnections match this filter */
-  childrenConnection_ALL?: InputMaybe<ParentChildrenConnectionWhere>;
-  /** Return Parents where none of the related ParentChildrenConnections match this filter */
-  childrenConnection_NONE?: InputMaybe<ParentChildrenConnectionWhere>;
-  /** Return Parents where one of the related ParentChildrenConnections match this filter */
-  childrenConnection_SINGLE?: InputMaybe<ParentChildrenConnectionWhere>;
-  /** Return Parents where some of the related ParentChildrenConnections match this filter */
-  childrenConnection_SOME?: InputMaybe<ParentChildrenConnectionWhere>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_GT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_GTE?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_IN?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
-  createdAt_LT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_LTE?: InputMaybe<Scalars['DateTime']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   id_CONTAINS?: InputMaybe<Scalars['ID']['input']>;
   id_ENDS_WITH?: InputMaybe<Scalars['ID']['input']>;
@@ -4058,17 +4032,6 @@ export type ParentWhere = {
   name_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
   name_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   name_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
-  parentMeta?: InputMaybe<ParentMetaWhere>;
-  parentMetaAggregate?: InputMaybe<ParentParentMetaAggregateInput>;
-  parentMetaConnection?: InputMaybe<ParentParentMetaConnectionWhere>;
-  parentMetaConnection_NOT?: InputMaybe<ParentParentMetaConnectionWhere>;
-  parentMeta_NOT?: InputMaybe<ParentMetaWhere>;
-  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_GT?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_GTE?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_IN?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
-  updatedAt_LT?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_LTE?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 export type ParentsChildren = {
@@ -4807,6 +4770,7 @@ export type TagSort = {
 
 export type TagUniqueWhere = {
   id?: InputMaybe<Scalars['ID']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type TagUpdateInput = {
@@ -5036,7 +5000,7 @@ export type ResolversUnionTypes<RefType extends Record<string, unknown>> = {
 
 /** Mapping of interface types */
 export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> = {
-  Parent: ( Omit<Collection, 'children'> & { children: Array<RefType['Child']> } ) | ( Omit<Folder, 'children'> & { children: Array<RefType['Child']> } );
+  Parent: ( Bookmark ) | ( Omit<Collection, 'children'> & { children: Array<RefType['Child']> } ) | ( Omit<Folder, 'children'> & { children: Array<RefType['Child']> } );
 };
 
 /** Mapping between all available schema types and the resolvers types */
@@ -5095,27 +5059,10 @@ export type ResolversTypes = {
   BmsContainersConnection: ResolverTypeWrapper<BmsContainersConnection>;
   Bookmark: ResolverTypeWrapper<Bookmark>;
   BookmarkAggregateSelection: ResolverTypeWrapper<BookmarkAggregateSelection>;
-  BookmarkBmsContainerContainerAggregationSelection: ResolverTypeWrapper<BookmarkBmsContainerContainerAggregationSelection>;
-  BookmarkBmsContainerContainerNodeAggregateSelection: ResolverTypeWrapper<BookmarkBmsContainerContainerNodeAggregateSelection>;
   BookmarkConnectInput: BookmarkConnectInput;
   BookmarkConnectOrCreateInput: BookmarkConnectOrCreateInput;
   BookmarkConnectOrCreateWhere: BookmarkConnectOrCreateWhere;
   BookmarkConnectWhere: BookmarkConnectWhere;
-  BookmarkContainerAggregateInput: BookmarkContainerAggregateInput;
-  BookmarkContainerConnectFieldInput: BookmarkContainerConnectFieldInput;
-  BookmarkContainerConnectOrCreateFieldInput: BookmarkContainerConnectOrCreateFieldInput;
-  BookmarkContainerConnectOrCreateFieldInputOnCreate: BookmarkContainerConnectOrCreateFieldInputOnCreate;
-  BookmarkContainerConnection: ResolverTypeWrapper<BookmarkContainerConnection>;
-  BookmarkContainerConnectionSort: BookmarkContainerConnectionSort;
-  BookmarkContainerConnectionWhere: BookmarkContainerConnectionWhere;
-  BookmarkContainerCreateFieldInput: BookmarkContainerCreateFieldInput;
-  BookmarkContainerDeleteFieldInput: BookmarkContainerDeleteFieldInput;
-  BookmarkContainerDisconnectFieldInput: BookmarkContainerDisconnectFieldInput;
-  BookmarkContainerFieldInput: BookmarkContainerFieldInput;
-  BookmarkContainerNodeAggregationWhereInput: BookmarkContainerNodeAggregationWhereInput;
-  BookmarkContainerRelationship: ResolverTypeWrapper<BookmarkContainerRelationship>;
-  BookmarkContainerUpdateConnectionInput: BookmarkContainerUpdateConnectionInput;
-  BookmarkContainerUpdateFieldInput: BookmarkContainerUpdateFieldInput;
   BookmarkCreateInput: BookmarkCreateInput;
   BookmarkDeleteInput: BookmarkDeleteInput;
   BookmarkDisconnectInput: BookmarkDisconnectInput;
@@ -5172,11 +5119,35 @@ export type ResolversTypes = {
   ChildsToMove: ChildsToMove;
   Collection: ResolverTypeWrapper<Omit<Collection, 'children'> & { children: Array<ResolversTypes['Child']> }>;
   CollectionAggregateSelection: ResolverTypeWrapper<CollectionAggregateSelection>;
+  CollectionChildrenBookmarkConnectFieldInput: CollectionChildrenBookmarkConnectFieldInput;
+  CollectionChildrenBookmarkConnectOrCreateFieldInput: CollectionChildrenBookmarkConnectOrCreateFieldInput;
+  CollectionChildrenBookmarkConnectOrCreateFieldInputOnCreate: CollectionChildrenBookmarkConnectOrCreateFieldInputOnCreate;
+  CollectionChildrenBookmarkConnectionWhere: CollectionChildrenBookmarkConnectionWhere;
+  CollectionChildrenBookmarkCreateFieldInput: CollectionChildrenBookmarkCreateFieldInput;
+  CollectionChildrenBookmarkDeleteFieldInput: CollectionChildrenBookmarkDeleteFieldInput;
+  CollectionChildrenBookmarkDisconnectFieldInput: CollectionChildrenBookmarkDisconnectFieldInput;
+  CollectionChildrenBookmarkFieldInput: CollectionChildrenBookmarkFieldInput;
+  CollectionChildrenBookmarkUpdateConnectionInput: CollectionChildrenBookmarkUpdateConnectionInput;
+  CollectionChildrenBookmarkUpdateFieldInput: CollectionChildrenBookmarkUpdateFieldInput;
   CollectionChildrenConnectInput: CollectionChildrenConnectInput;
+  CollectionChildrenConnectOrCreateInput: CollectionChildrenConnectOrCreateInput;
+  CollectionChildrenConnection: ResolverTypeWrapper<CollectionChildrenConnection>;
+  CollectionChildrenConnectionWhere: CollectionChildrenConnectionWhere;
   CollectionChildrenCreateFieldInput: CollectionChildrenCreateFieldInput;
   CollectionChildrenCreateInput: CollectionChildrenCreateInput;
   CollectionChildrenDeleteInput: CollectionChildrenDeleteInput;
   CollectionChildrenDisconnectInput: CollectionChildrenDisconnectInput;
+  CollectionChildrenFolderConnectFieldInput: CollectionChildrenFolderConnectFieldInput;
+  CollectionChildrenFolderConnectOrCreateFieldInput: CollectionChildrenFolderConnectOrCreateFieldInput;
+  CollectionChildrenFolderConnectOrCreateFieldInputOnCreate: CollectionChildrenFolderConnectOrCreateFieldInputOnCreate;
+  CollectionChildrenFolderConnectionWhere: CollectionChildrenFolderConnectionWhere;
+  CollectionChildrenFolderCreateFieldInput: CollectionChildrenFolderCreateFieldInput;
+  CollectionChildrenFolderDeleteFieldInput: CollectionChildrenFolderDeleteFieldInput;
+  CollectionChildrenFolderDisconnectFieldInput: CollectionChildrenFolderDisconnectFieldInput;
+  CollectionChildrenFolderFieldInput: CollectionChildrenFolderFieldInput;
+  CollectionChildrenFolderUpdateConnectionInput: CollectionChildrenFolderUpdateConnectionInput;
+  CollectionChildrenFolderUpdateFieldInput: CollectionChildrenFolderUpdateFieldInput;
+  CollectionChildrenRelationship: ResolverTypeWrapper<Omit<CollectionChildrenRelationship, 'node'> & { node: ResolversTypes['Child'] }>;
   CollectionChildrenUpdateInput: CollectionChildrenUpdateInput;
   CollectionConnectInput: CollectionConnectInput;
   CollectionConnectOrCreateInput: CollectionConnectOrCreateInput;
@@ -5223,9 +5194,22 @@ export type ResolversTypes = {
   CollectionOnCreateInput: CollectionOnCreateInput;
   CollectionOptions: CollectionOptions;
   CollectionParentMetaAggregateInput: CollectionParentMetaAggregateInput;
+  CollectionParentMetaConnectFieldInput: CollectionParentMetaConnectFieldInput;
+  CollectionParentMetaConnectOrCreateFieldInput: CollectionParentMetaConnectOrCreateFieldInput;
+  CollectionParentMetaConnectOrCreateFieldInputOnCreate: CollectionParentMetaConnectOrCreateFieldInputOnCreate;
+  CollectionParentMetaConnection: ResolverTypeWrapper<CollectionParentMetaConnection>;
+  CollectionParentMetaConnectionSort: CollectionParentMetaConnectionSort;
+  CollectionParentMetaConnectionWhere: CollectionParentMetaConnectionWhere;
+  CollectionParentMetaCreateFieldInput: CollectionParentMetaCreateFieldInput;
+  CollectionParentMetaDeleteFieldInput: CollectionParentMetaDeleteFieldInput;
+  CollectionParentMetaDisconnectFieldInput: CollectionParentMetaDisconnectFieldInput;
+  CollectionParentMetaFieldInput: CollectionParentMetaFieldInput;
   CollectionParentMetaNodeAggregationWhereInput: CollectionParentMetaNodeAggregationWhereInput;
   CollectionParentMetaParentMetaAggregationSelection: ResolverTypeWrapper<CollectionParentMetaParentMetaAggregationSelection>;
   CollectionParentMetaParentMetaNodeAggregateSelection: ResolverTypeWrapper<CollectionParentMetaParentMetaNodeAggregateSelection>;
+  CollectionParentMetaRelationship: ResolverTypeWrapper<CollectionParentMetaRelationship>;
+  CollectionParentMetaUpdateConnectionInput: CollectionParentMetaUpdateConnectionInput;
+  CollectionParentMetaUpdateFieldInput: CollectionParentMetaUpdateFieldInput;
   CollectionRelationInput: CollectionRelationInput;
   CollectionSort: CollectionSort;
   CollectionUniqueWhere: CollectionUniqueWhere;
@@ -5253,11 +5237,35 @@ export type ResolversTypes = {
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   Folder: ResolverTypeWrapper<Omit<Folder, 'children'> & { children: Array<ResolversTypes['Child']> }>;
   FolderAggregateSelection: ResolverTypeWrapper<FolderAggregateSelection>;
+  FolderChildrenBookmarkConnectFieldInput: FolderChildrenBookmarkConnectFieldInput;
+  FolderChildrenBookmarkConnectOrCreateFieldInput: FolderChildrenBookmarkConnectOrCreateFieldInput;
+  FolderChildrenBookmarkConnectOrCreateFieldInputOnCreate: FolderChildrenBookmarkConnectOrCreateFieldInputOnCreate;
+  FolderChildrenBookmarkConnectionWhere: FolderChildrenBookmarkConnectionWhere;
+  FolderChildrenBookmarkCreateFieldInput: FolderChildrenBookmarkCreateFieldInput;
+  FolderChildrenBookmarkDeleteFieldInput: FolderChildrenBookmarkDeleteFieldInput;
+  FolderChildrenBookmarkDisconnectFieldInput: FolderChildrenBookmarkDisconnectFieldInput;
+  FolderChildrenBookmarkFieldInput: FolderChildrenBookmarkFieldInput;
+  FolderChildrenBookmarkUpdateConnectionInput: FolderChildrenBookmarkUpdateConnectionInput;
+  FolderChildrenBookmarkUpdateFieldInput: FolderChildrenBookmarkUpdateFieldInput;
   FolderChildrenConnectInput: FolderChildrenConnectInput;
+  FolderChildrenConnectOrCreateInput: FolderChildrenConnectOrCreateInput;
+  FolderChildrenConnection: ResolverTypeWrapper<FolderChildrenConnection>;
+  FolderChildrenConnectionWhere: FolderChildrenConnectionWhere;
   FolderChildrenCreateFieldInput: FolderChildrenCreateFieldInput;
   FolderChildrenCreateInput: FolderChildrenCreateInput;
   FolderChildrenDeleteInput: FolderChildrenDeleteInput;
   FolderChildrenDisconnectInput: FolderChildrenDisconnectInput;
+  FolderChildrenFolderConnectFieldInput: FolderChildrenFolderConnectFieldInput;
+  FolderChildrenFolderConnectOrCreateFieldInput: FolderChildrenFolderConnectOrCreateFieldInput;
+  FolderChildrenFolderConnectOrCreateFieldInputOnCreate: FolderChildrenFolderConnectOrCreateFieldInputOnCreate;
+  FolderChildrenFolderConnectionWhere: FolderChildrenFolderConnectionWhere;
+  FolderChildrenFolderCreateFieldInput: FolderChildrenFolderCreateFieldInput;
+  FolderChildrenFolderDeleteFieldInput: FolderChildrenFolderDeleteFieldInput;
+  FolderChildrenFolderDisconnectFieldInput: FolderChildrenFolderDisconnectFieldInput;
+  FolderChildrenFolderFieldInput: FolderChildrenFolderFieldInput;
+  FolderChildrenFolderUpdateConnectionInput: FolderChildrenFolderUpdateConnectionInput;
+  FolderChildrenFolderUpdateFieldInput: FolderChildrenFolderUpdateFieldInput;
+  FolderChildrenRelationship: ResolverTypeWrapper<Omit<FolderChildrenRelationship, 'node'> & { node: ResolversTypes['Child'] }>;
   FolderChildrenUpdateInput: FolderChildrenUpdateInput;
   FolderConnectInput: FolderConnectInput;
   FolderConnectOrCreateInput: FolderConnectOrCreateInput;
@@ -5287,9 +5295,22 @@ export type ResolversTypes = {
   FolderParentDisconnectFieldInput: FolderParentDisconnectFieldInput;
   FolderParentFieldInput: FolderParentFieldInput;
   FolderParentMetaAggregateInput: FolderParentMetaAggregateInput;
+  FolderParentMetaConnectFieldInput: FolderParentMetaConnectFieldInput;
+  FolderParentMetaConnectOrCreateFieldInput: FolderParentMetaConnectOrCreateFieldInput;
+  FolderParentMetaConnectOrCreateFieldInputOnCreate: FolderParentMetaConnectOrCreateFieldInputOnCreate;
+  FolderParentMetaConnection: ResolverTypeWrapper<FolderParentMetaConnection>;
+  FolderParentMetaConnectionSort: FolderParentMetaConnectionSort;
+  FolderParentMetaConnectionWhere: FolderParentMetaConnectionWhere;
+  FolderParentMetaCreateFieldInput: FolderParentMetaCreateFieldInput;
+  FolderParentMetaDeleteFieldInput: FolderParentMetaDeleteFieldInput;
+  FolderParentMetaDisconnectFieldInput: FolderParentMetaDisconnectFieldInput;
+  FolderParentMetaFieldInput: FolderParentMetaFieldInput;
   FolderParentMetaNodeAggregationWhereInput: FolderParentMetaNodeAggregationWhereInput;
   FolderParentMetaParentMetaAggregationSelection: ResolverTypeWrapper<FolderParentMetaParentMetaAggregationSelection>;
   FolderParentMetaParentMetaNodeAggregateSelection: ResolverTypeWrapper<FolderParentMetaParentMetaNodeAggregateSelection>;
+  FolderParentMetaRelationship: ResolverTypeWrapper<FolderParentMetaRelationship>;
+  FolderParentMetaUpdateConnectionInput: FolderParentMetaUpdateConnectionInput;
+  FolderParentMetaUpdateFieldInput: FolderParentMetaUpdateFieldInput;
   FolderParentRelationship: ResolverTypeWrapper<FolderParentRelationship>;
   FolderParentUpdateConnectionInput: FolderParentUpdateConnectionInput;
   FolderParentUpdateFieldInput: FolderParentUpdateFieldInput;
@@ -5412,34 +5433,6 @@ export type ResolversTypes = {
   NodesToMove: NodesToMove;
   PageInfo: ResolverTypeWrapper<PageInfo>;
   Parent: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Parent']>;
-  ParentChildrenBookmarkConnectFieldInput: ParentChildrenBookmarkConnectFieldInput;
-  ParentChildrenBookmarkConnectOrCreateFieldInput: ParentChildrenBookmarkConnectOrCreateFieldInput;
-  ParentChildrenBookmarkConnectOrCreateFieldInputOnCreate: ParentChildrenBookmarkConnectOrCreateFieldInputOnCreate;
-  ParentChildrenBookmarkConnectionWhere: ParentChildrenBookmarkConnectionWhere;
-  ParentChildrenBookmarkCreateFieldInput: ParentChildrenBookmarkCreateFieldInput;
-  ParentChildrenBookmarkDeleteFieldInput: ParentChildrenBookmarkDeleteFieldInput;
-  ParentChildrenBookmarkDisconnectFieldInput: ParentChildrenBookmarkDisconnectFieldInput;
-  ParentChildrenBookmarkFieldInput: ParentChildrenBookmarkFieldInput;
-  ParentChildrenBookmarkUpdateConnectionInput: ParentChildrenBookmarkUpdateConnectionInput;
-  ParentChildrenBookmarkUpdateFieldInput: ParentChildrenBookmarkUpdateFieldInput;
-  ParentChildrenConnectInput: ParentChildrenConnectInput;
-  ParentChildrenConnectOrCreateInput: ParentChildrenConnectOrCreateInput;
-  ParentChildrenConnection: ResolverTypeWrapper<ParentChildrenConnection>;
-  ParentChildrenConnectionWhere: ParentChildrenConnectionWhere;
-  ParentChildrenDeleteInput: ParentChildrenDeleteInput;
-  ParentChildrenDisconnectInput: ParentChildrenDisconnectInput;
-  ParentChildrenFolderConnectFieldInput: ParentChildrenFolderConnectFieldInput;
-  ParentChildrenFolderConnectOrCreateFieldInput: ParentChildrenFolderConnectOrCreateFieldInput;
-  ParentChildrenFolderConnectOrCreateFieldInputOnCreate: ParentChildrenFolderConnectOrCreateFieldInputOnCreate;
-  ParentChildrenFolderConnectionWhere: ParentChildrenFolderConnectionWhere;
-  ParentChildrenFolderCreateFieldInput: ParentChildrenFolderCreateFieldInput;
-  ParentChildrenFolderDeleteFieldInput: ParentChildrenFolderDeleteFieldInput;
-  ParentChildrenFolderDisconnectFieldInput: ParentChildrenFolderDisconnectFieldInput;
-  ParentChildrenFolderFieldInput: ParentChildrenFolderFieldInput;
-  ParentChildrenFolderUpdateConnectionInput: ParentChildrenFolderUpdateConnectionInput;
-  ParentChildrenFolderUpdateFieldInput: ParentChildrenFolderUpdateFieldInput;
-  ParentChildrenRelationship: ResolverTypeWrapper<Omit<ParentChildrenRelationship, 'node'> & { node: ResolversTypes['Child'] }>;
-  ParentChildrenUpdateInput: ParentChildrenUpdateInput;
   ParentConnectInput: ParentConnectInput;
   ParentConnectWhere: ParentConnectWhere;
   ParentCreateInput: ParentCreateInput;
@@ -5479,21 +5472,6 @@ export type ResolversTypes = {
   ParentMetaWhere: ParentMetaWhere;
   ParentMetasConnection: ResolverTypeWrapper<ParentMetasConnection>;
   ParentOptions: ParentOptions;
-  ParentParentMetaAggregateInput: ParentParentMetaAggregateInput;
-  ParentParentMetaConnectFieldInput: ParentParentMetaConnectFieldInput;
-  ParentParentMetaConnectOrCreateFieldInput: ParentParentMetaConnectOrCreateFieldInput;
-  ParentParentMetaConnectOrCreateFieldInputOnCreate: ParentParentMetaConnectOrCreateFieldInputOnCreate;
-  ParentParentMetaConnection: ResolverTypeWrapper<ParentParentMetaConnection>;
-  ParentParentMetaConnectionSort: ParentParentMetaConnectionSort;
-  ParentParentMetaConnectionWhere: ParentParentMetaConnectionWhere;
-  ParentParentMetaCreateFieldInput: ParentParentMetaCreateFieldInput;
-  ParentParentMetaDeleteFieldInput: ParentParentMetaDeleteFieldInput;
-  ParentParentMetaDisconnectFieldInput: ParentParentMetaDisconnectFieldInput;
-  ParentParentMetaFieldInput: ParentParentMetaFieldInput;
-  ParentParentMetaNodeAggregationWhereInput: ParentParentMetaNodeAggregationWhereInput;
-  ParentParentMetaRelationship: ResolverTypeWrapper<ParentParentMetaRelationship>;
-  ParentParentMetaUpdateConnectionInput: ParentParentMetaUpdateConnectionInput;
-  ParentParentMetaUpdateFieldInput: ParentParentMetaUpdateFieldInput;
   ParentSort: ParentSort;
   ParentUpdateInput: ParentUpdateInput;
   ParentWhere: ParentWhere;
@@ -5622,27 +5600,10 @@ export type ResolversParentTypes = {
   BmsContainersConnection: BmsContainersConnection;
   Bookmark: Bookmark;
   BookmarkAggregateSelection: BookmarkAggregateSelection;
-  BookmarkBmsContainerContainerAggregationSelection: BookmarkBmsContainerContainerAggregationSelection;
-  BookmarkBmsContainerContainerNodeAggregateSelection: BookmarkBmsContainerContainerNodeAggregateSelection;
   BookmarkConnectInput: BookmarkConnectInput;
   BookmarkConnectOrCreateInput: BookmarkConnectOrCreateInput;
   BookmarkConnectOrCreateWhere: BookmarkConnectOrCreateWhere;
   BookmarkConnectWhere: BookmarkConnectWhere;
-  BookmarkContainerAggregateInput: BookmarkContainerAggregateInput;
-  BookmarkContainerConnectFieldInput: BookmarkContainerConnectFieldInput;
-  BookmarkContainerConnectOrCreateFieldInput: BookmarkContainerConnectOrCreateFieldInput;
-  BookmarkContainerConnectOrCreateFieldInputOnCreate: BookmarkContainerConnectOrCreateFieldInputOnCreate;
-  BookmarkContainerConnection: BookmarkContainerConnection;
-  BookmarkContainerConnectionSort: BookmarkContainerConnectionSort;
-  BookmarkContainerConnectionWhere: BookmarkContainerConnectionWhere;
-  BookmarkContainerCreateFieldInput: BookmarkContainerCreateFieldInput;
-  BookmarkContainerDeleteFieldInput: BookmarkContainerDeleteFieldInput;
-  BookmarkContainerDisconnectFieldInput: BookmarkContainerDisconnectFieldInput;
-  BookmarkContainerFieldInput: BookmarkContainerFieldInput;
-  BookmarkContainerNodeAggregationWhereInput: BookmarkContainerNodeAggregationWhereInput;
-  BookmarkContainerRelationship: BookmarkContainerRelationship;
-  BookmarkContainerUpdateConnectionInput: BookmarkContainerUpdateConnectionInput;
-  BookmarkContainerUpdateFieldInput: BookmarkContainerUpdateFieldInput;
   BookmarkCreateInput: BookmarkCreateInput;
   BookmarkDeleteInput: BookmarkDeleteInput;
   BookmarkDisconnectInput: BookmarkDisconnectInput;
@@ -5699,11 +5660,35 @@ export type ResolversParentTypes = {
   ChildsToMove: ChildsToMove;
   Collection: Omit<Collection, 'children'> & { children: Array<ResolversParentTypes['Child']> };
   CollectionAggregateSelection: CollectionAggregateSelection;
+  CollectionChildrenBookmarkConnectFieldInput: CollectionChildrenBookmarkConnectFieldInput;
+  CollectionChildrenBookmarkConnectOrCreateFieldInput: CollectionChildrenBookmarkConnectOrCreateFieldInput;
+  CollectionChildrenBookmarkConnectOrCreateFieldInputOnCreate: CollectionChildrenBookmarkConnectOrCreateFieldInputOnCreate;
+  CollectionChildrenBookmarkConnectionWhere: CollectionChildrenBookmarkConnectionWhere;
+  CollectionChildrenBookmarkCreateFieldInput: CollectionChildrenBookmarkCreateFieldInput;
+  CollectionChildrenBookmarkDeleteFieldInput: CollectionChildrenBookmarkDeleteFieldInput;
+  CollectionChildrenBookmarkDisconnectFieldInput: CollectionChildrenBookmarkDisconnectFieldInput;
+  CollectionChildrenBookmarkFieldInput: CollectionChildrenBookmarkFieldInput;
+  CollectionChildrenBookmarkUpdateConnectionInput: CollectionChildrenBookmarkUpdateConnectionInput;
+  CollectionChildrenBookmarkUpdateFieldInput: CollectionChildrenBookmarkUpdateFieldInput;
   CollectionChildrenConnectInput: CollectionChildrenConnectInput;
+  CollectionChildrenConnectOrCreateInput: CollectionChildrenConnectOrCreateInput;
+  CollectionChildrenConnection: CollectionChildrenConnection;
+  CollectionChildrenConnectionWhere: CollectionChildrenConnectionWhere;
   CollectionChildrenCreateFieldInput: CollectionChildrenCreateFieldInput;
   CollectionChildrenCreateInput: CollectionChildrenCreateInput;
   CollectionChildrenDeleteInput: CollectionChildrenDeleteInput;
   CollectionChildrenDisconnectInput: CollectionChildrenDisconnectInput;
+  CollectionChildrenFolderConnectFieldInput: CollectionChildrenFolderConnectFieldInput;
+  CollectionChildrenFolderConnectOrCreateFieldInput: CollectionChildrenFolderConnectOrCreateFieldInput;
+  CollectionChildrenFolderConnectOrCreateFieldInputOnCreate: CollectionChildrenFolderConnectOrCreateFieldInputOnCreate;
+  CollectionChildrenFolderConnectionWhere: CollectionChildrenFolderConnectionWhere;
+  CollectionChildrenFolderCreateFieldInput: CollectionChildrenFolderCreateFieldInput;
+  CollectionChildrenFolderDeleteFieldInput: CollectionChildrenFolderDeleteFieldInput;
+  CollectionChildrenFolderDisconnectFieldInput: CollectionChildrenFolderDisconnectFieldInput;
+  CollectionChildrenFolderFieldInput: CollectionChildrenFolderFieldInput;
+  CollectionChildrenFolderUpdateConnectionInput: CollectionChildrenFolderUpdateConnectionInput;
+  CollectionChildrenFolderUpdateFieldInput: CollectionChildrenFolderUpdateFieldInput;
+  CollectionChildrenRelationship: Omit<CollectionChildrenRelationship, 'node'> & { node: ResolversParentTypes['Child'] };
   CollectionChildrenUpdateInput: CollectionChildrenUpdateInput;
   CollectionConnectInput: CollectionConnectInput;
   CollectionConnectOrCreateInput: CollectionConnectOrCreateInput;
@@ -5750,9 +5735,22 @@ export type ResolversParentTypes = {
   CollectionOnCreateInput: CollectionOnCreateInput;
   CollectionOptions: CollectionOptions;
   CollectionParentMetaAggregateInput: CollectionParentMetaAggregateInput;
+  CollectionParentMetaConnectFieldInput: CollectionParentMetaConnectFieldInput;
+  CollectionParentMetaConnectOrCreateFieldInput: CollectionParentMetaConnectOrCreateFieldInput;
+  CollectionParentMetaConnectOrCreateFieldInputOnCreate: CollectionParentMetaConnectOrCreateFieldInputOnCreate;
+  CollectionParentMetaConnection: CollectionParentMetaConnection;
+  CollectionParentMetaConnectionSort: CollectionParentMetaConnectionSort;
+  CollectionParentMetaConnectionWhere: CollectionParentMetaConnectionWhere;
+  CollectionParentMetaCreateFieldInput: CollectionParentMetaCreateFieldInput;
+  CollectionParentMetaDeleteFieldInput: CollectionParentMetaDeleteFieldInput;
+  CollectionParentMetaDisconnectFieldInput: CollectionParentMetaDisconnectFieldInput;
+  CollectionParentMetaFieldInput: CollectionParentMetaFieldInput;
   CollectionParentMetaNodeAggregationWhereInput: CollectionParentMetaNodeAggregationWhereInput;
   CollectionParentMetaParentMetaAggregationSelection: CollectionParentMetaParentMetaAggregationSelection;
   CollectionParentMetaParentMetaNodeAggregateSelection: CollectionParentMetaParentMetaNodeAggregateSelection;
+  CollectionParentMetaRelationship: CollectionParentMetaRelationship;
+  CollectionParentMetaUpdateConnectionInput: CollectionParentMetaUpdateConnectionInput;
+  CollectionParentMetaUpdateFieldInput: CollectionParentMetaUpdateFieldInput;
   CollectionRelationInput: CollectionRelationInput;
   CollectionSort: CollectionSort;
   CollectionUniqueWhere: CollectionUniqueWhere;
@@ -5780,11 +5778,35 @@ export type ResolversParentTypes = {
   Float: Scalars['Float']['output'];
   Folder: Omit<Folder, 'children'> & { children: Array<ResolversParentTypes['Child']> };
   FolderAggregateSelection: FolderAggregateSelection;
+  FolderChildrenBookmarkConnectFieldInput: FolderChildrenBookmarkConnectFieldInput;
+  FolderChildrenBookmarkConnectOrCreateFieldInput: FolderChildrenBookmarkConnectOrCreateFieldInput;
+  FolderChildrenBookmarkConnectOrCreateFieldInputOnCreate: FolderChildrenBookmarkConnectOrCreateFieldInputOnCreate;
+  FolderChildrenBookmarkConnectionWhere: FolderChildrenBookmarkConnectionWhere;
+  FolderChildrenBookmarkCreateFieldInput: FolderChildrenBookmarkCreateFieldInput;
+  FolderChildrenBookmarkDeleteFieldInput: FolderChildrenBookmarkDeleteFieldInput;
+  FolderChildrenBookmarkDisconnectFieldInput: FolderChildrenBookmarkDisconnectFieldInput;
+  FolderChildrenBookmarkFieldInput: FolderChildrenBookmarkFieldInput;
+  FolderChildrenBookmarkUpdateConnectionInput: FolderChildrenBookmarkUpdateConnectionInput;
+  FolderChildrenBookmarkUpdateFieldInput: FolderChildrenBookmarkUpdateFieldInput;
   FolderChildrenConnectInput: FolderChildrenConnectInput;
+  FolderChildrenConnectOrCreateInput: FolderChildrenConnectOrCreateInput;
+  FolderChildrenConnection: FolderChildrenConnection;
+  FolderChildrenConnectionWhere: FolderChildrenConnectionWhere;
   FolderChildrenCreateFieldInput: FolderChildrenCreateFieldInput;
   FolderChildrenCreateInput: FolderChildrenCreateInput;
   FolderChildrenDeleteInput: FolderChildrenDeleteInput;
   FolderChildrenDisconnectInput: FolderChildrenDisconnectInput;
+  FolderChildrenFolderConnectFieldInput: FolderChildrenFolderConnectFieldInput;
+  FolderChildrenFolderConnectOrCreateFieldInput: FolderChildrenFolderConnectOrCreateFieldInput;
+  FolderChildrenFolderConnectOrCreateFieldInputOnCreate: FolderChildrenFolderConnectOrCreateFieldInputOnCreate;
+  FolderChildrenFolderConnectionWhere: FolderChildrenFolderConnectionWhere;
+  FolderChildrenFolderCreateFieldInput: FolderChildrenFolderCreateFieldInput;
+  FolderChildrenFolderDeleteFieldInput: FolderChildrenFolderDeleteFieldInput;
+  FolderChildrenFolderDisconnectFieldInput: FolderChildrenFolderDisconnectFieldInput;
+  FolderChildrenFolderFieldInput: FolderChildrenFolderFieldInput;
+  FolderChildrenFolderUpdateConnectionInput: FolderChildrenFolderUpdateConnectionInput;
+  FolderChildrenFolderUpdateFieldInput: FolderChildrenFolderUpdateFieldInput;
+  FolderChildrenRelationship: Omit<FolderChildrenRelationship, 'node'> & { node: ResolversParentTypes['Child'] };
   FolderChildrenUpdateInput: FolderChildrenUpdateInput;
   FolderConnectInput: FolderConnectInput;
   FolderConnectOrCreateInput: FolderConnectOrCreateInput;
@@ -5814,9 +5836,22 @@ export type ResolversParentTypes = {
   FolderParentDisconnectFieldInput: FolderParentDisconnectFieldInput;
   FolderParentFieldInput: FolderParentFieldInput;
   FolderParentMetaAggregateInput: FolderParentMetaAggregateInput;
+  FolderParentMetaConnectFieldInput: FolderParentMetaConnectFieldInput;
+  FolderParentMetaConnectOrCreateFieldInput: FolderParentMetaConnectOrCreateFieldInput;
+  FolderParentMetaConnectOrCreateFieldInputOnCreate: FolderParentMetaConnectOrCreateFieldInputOnCreate;
+  FolderParentMetaConnection: FolderParentMetaConnection;
+  FolderParentMetaConnectionSort: FolderParentMetaConnectionSort;
+  FolderParentMetaConnectionWhere: FolderParentMetaConnectionWhere;
+  FolderParentMetaCreateFieldInput: FolderParentMetaCreateFieldInput;
+  FolderParentMetaDeleteFieldInput: FolderParentMetaDeleteFieldInput;
+  FolderParentMetaDisconnectFieldInput: FolderParentMetaDisconnectFieldInput;
+  FolderParentMetaFieldInput: FolderParentMetaFieldInput;
   FolderParentMetaNodeAggregationWhereInput: FolderParentMetaNodeAggregationWhereInput;
   FolderParentMetaParentMetaAggregationSelection: FolderParentMetaParentMetaAggregationSelection;
   FolderParentMetaParentMetaNodeAggregateSelection: FolderParentMetaParentMetaNodeAggregateSelection;
+  FolderParentMetaRelationship: FolderParentMetaRelationship;
+  FolderParentMetaUpdateConnectionInput: FolderParentMetaUpdateConnectionInput;
+  FolderParentMetaUpdateFieldInput: FolderParentMetaUpdateFieldInput;
   FolderParentRelationship: FolderParentRelationship;
   FolderParentUpdateConnectionInput: FolderParentUpdateConnectionInput;
   FolderParentUpdateFieldInput: FolderParentUpdateFieldInput;
@@ -5939,34 +5974,6 @@ export type ResolversParentTypes = {
   NodesToMove: NodesToMove;
   PageInfo: PageInfo;
   Parent: ResolversInterfaceTypes<ResolversParentTypes>['Parent'];
-  ParentChildrenBookmarkConnectFieldInput: ParentChildrenBookmarkConnectFieldInput;
-  ParentChildrenBookmarkConnectOrCreateFieldInput: ParentChildrenBookmarkConnectOrCreateFieldInput;
-  ParentChildrenBookmarkConnectOrCreateFieldInputOnCreate: ParentChildrenBookmarkConnectOrCreateFieldInputOnCreate;
-  ParentChildrenBookmarkConnectionWhere: ParentChildrenBookmarkConnectionWhere;
-  ParentChildrenBookmarkCreateFieldInput: ParentChildrenBookmarkCreateFieldInput;
-  ParentChildrenBookmarkDeleteFieldInput: ParentChildrenBookmarkDeleteFieldInput;
-  ParentChildrenBookmarkDisconnectFieldInput: ParentChildrenBookmarkDisconnectFieldInput;
-  ParentChildrenBookmarkFieldInput: ParentChildrenBookmarkFieldInput;
-  ParentChildrenBookmarkUpdateConnectionInput: ParentChildrenBookmarkUpdateConnectionInput;
-  ParentChildrenBookmarkUpdateFieldInput: ParentChildrenBookmarkUpdateFieldInput;
-  ParentChildrenConnectInput: ParentChildrenConnectInput;
-  ParentChildrenConnectOrCreateInput: ParentChildrenConnectOrCreateInput;
-  ParentChildrenConnection: ParentChildrenConnection;
-  ParentChildrenConnectionWhere: ParentChildrenConnectionWhere;
-  ParentChildrenDeleteInput: ParentChildrenDeleteInput;
-  ParentChildrenDisconnectInput: ParentChildrenDisconnectInput;
-  ParentChildrenFolderConnectFieldInput: ParentChildrenFolderConnectFieldInput;
-  ParentChildrenFolderConnectOrCreateFieldInput: ParentChildrenFolderConnectOrCreateFieldInput;
-  ParentChildrenFolderConnectOrCreateFieldInputOnCreate: ParentChildrenFolderConnectOrCreateFieldInputOnCreate;
-  ParentChildrenFolderConnectionWhere: ParentChildrenFolderConnectionWhere;
-  ParentChildrenFolderCreateFieldInput: ParentChildrenFolderCreateFieldInput;
-  ParentChildrenFolderDeleteFieldInput: ParentChildrenFolderDeleteFieldInput;
-  ParentChildrenFolderDisconnectFieldInput: ParentChildrenFolderDisconnectFieldInput;
-  ParentChildrenFolderFieldInput: ParentChildrenFolderFieldInput;
-  ParentChildrenFolderUpdateConnectionInput: ParentChildrenFolderUpdateConnectionInput;
-  ParentChildrenFolderUpdateFieldInput: ParentChildrenFolderUpdateFieldInput;
-  ParentChildrenRelationship: Omit<ParentChildrenRelationship, 'node'> & { node: ResolversParentTypes['Child'] };
-  ParentChildrenUpdateInput: ParentChildrenUpdateInput;
   ParentConnectInput: ParentConnectInput;
   ParentConnectWhere: ParentConnectWhere;
   ParentCreateInput: ParentCreateInput;
@@ -6006,21 +6013,6 @@ export type ResolversParentTypes = {
   ParentMetaWhere: ParentMetaWhere;
   ParentMetasConnection: ParentMetasConnection;
   ParentOptions: ParentOptions;
-  ParentParentMetaAggregateInput: ParentParentMetaAggregateInput;
-  ParentParentMetaConnectFieldInput: ParentParentMetaConnectFieldInput;
-  ParentParentMetaConnectOrCreateFieldInput: ParentParentMetaConnectOrCreateFieldInput;
-  ParentParentMetaConnectOrCreateFieldInputOnCreate: ParentParentMetaConnectOrCreateFieldInputOnCreate;
-  ParentParentMetaConnection: ParentParentMetaConnection;
-  ParentParentMetaConnectionSort: ParentParentMetaConnectionSort;
-  ParentParentMetaConnectionWhere: ParentParentMetaConnectionWhere;
-  ParentParentMetaCreateFieldInput: ParentParentMetaCreateFieldInput;
-  ParentParentMetaDeleteFieldInput: ParentParentMetaDeleteFieldInput;
-  ParentParentMetaDisconnectFieldInput: ParentParentMetaDisconnectFieldInput;
-  ParentParentMetaFieldInput: ParentParentMetaFieldInput;
-  ParentParentMetaNodeAggregationWhereInput: ParentParentMetaNodeAggregationWhereInput;
-  ParentParentMetaRelationship: ParentParentMetaRelationship;
-  ParentParentMetaUpdateConnectionInput: ParentParentMetaUpdateConnectionInput;
-  ParentParentMetaUpdateFieldInput: ParentParentMetaUpdateFieldInput;
   ParentSort: ParentSort;
   ParentUpdateInput: ParentUpdateInput;
   ParentWhere: ParentWhere;
@@ -6179,9 +6171,6 @@ export type BmsContainersConnectionResolvers<ContextType = any, ParentType exten
 };
 
 export type BookmarkResolvers<ContextType = any, ParentType extends ResolversParentTypes['Bookmark'] = ResolversParentTypes['Bookmark']> = {
-  container?: Resolver<Maybe<ResolversTypes['BmsContainer']>, ParentType, ContextType, RequireFields<BookmarkContainerArgs, 'directed'>>;
-  containerAggregate?: Resolver<Maybe<ResolversTypes['BookmarkBmsContainerContainerAggregationSelection']>, ParentType, ContextType, RequireFields<BookmarkContainerAggregateArgs, 'directed'>>;
-  containerConnection?: Resolver<ResolversTypes['BookmarkContainerConnection'], ParentType, ContextType, RequireFields<BookmarkContainerConnectionArgs, 'directed'>>;
   createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   domainName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -6210,30 +6199,6 @@ export type BookmarkAggregateSelectionResolvers<ContextType = any, ParentType ex
   name?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNullable'], ParentType, ContextType>;
   urlScheme?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type BookmarkBmsContainerContainerAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['BookmarkBmsContainerContainerAggregationSelection'] = ResolversParentTypes['BookmarkBmsContainerContainerAggregationSelection']> = {
-  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  node?: Resolver<Maybe<ResolversTypes['BookmarkBmsContainerContainerNodeAggregateSelection']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type BookmarkBmsContainerContainerNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['BookmarkBmsContainerContainerNodeAggregateSelection'] = ResolversParentTypes['BookmarkBmsContainerContainerNodeAggregateSelection']> = {
-  id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type BookmarkContainerConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['BookmarkContainerConnection'] = ResolversParentTypes['BookmarkContainerConnection']> = {
-  edges?: Resolver<Array<ResolversTypes['BookmarkContainerRelationship']>, ParentType, ContextType>;
-  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
-  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type BookmarkContainerRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['BookmarkContainerRelationship'] = ResolversParentTypes['BookmarkContainerRelationship']> = {
-  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  node?: Resolver<ResolversTypes['BmsContainer'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -6339,7 +6304,7 @@ export type ChildDlResolvers<ContextType = any, ParentType extends ResolversPare
 
 export type CollectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Collection'] = ResolversParentTypes['Collection']> = {
   children?: Resolver<Array<ResolversTypes['Child']>, ParentType, ContextType, RequireFields<CollectionChildrenArgs, 'directed'>>;
-  childrenConnection?: Resolver<ResolversTypes['ParentChildrenConnection'], ParentType, ContextType, RequireFields<CollectionChildrenConnectionArgs, 'directed'>>;
+  childrenConnection?: Resolver<ResolversTypes['CollectionChildrenConnection'], ParentType, ContextType, RequireFields<CollectionChildrenConnectionArgs, 'directed'>>;
   createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   member?: Resolver<Maybe<ResolversTypes['Member']>, ParentType, ContextType, RequireFields<CollectionMemberArgs, 'directed'>>;
@@ -6348,7 +6313,7 @@ export type CollectionResolvers<ContextType = any, ParentType extends ResolversP
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   parentMeta?: Resolver<Maybe<ResolversTypes['ParentMeta']>, ParentType, ContextType, RequireFields<CollectionParentMetaArgs, 'directed'>>;
   parentMetaAggregate?: Resolver<Maybe<ResolversTypes['CollectionParentMetaParentMetaAggregationSelection']>, ParentType, ContextType, RequireFields<CollectionParentMetaAggregateArgs, 'directed'>>;
-  parentMetaConnection?: Resolver<ResolversTypes['ParentParentMetaConnection'], ParentType, ContextType, RequireFields<CollectionParentMetaConnectionArgs, 'directed'>>;
+  parentMetaConnection?: Resolver<ResolversTypes['CollectionParentMetaConnection'], ParentType, ContextType, RequireFields<CollectionParentMetaConnectionArgs, 'directed'>>;
   updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -6359,6 +6324,19 @@ export type CollectionAggregateSelectionResolvers<ContextType = any, ParentType 
   id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNullable'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CollectionChildrenConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['CollectionChildrenConnection'] = ResolversParentTypes['CollectionChildrenConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['CollectionChildrenRelationship']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CollectionChildrenRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['CollectionChildrenRelationship'] = ResolversParentTypes['CollectionChildrenRelationship']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Child'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -6445,6 +6423,13 @@ export type CollectionMemberRelationshipResolvers<ContextType = any, ParentType 
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type CollectionParentMetaConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['CollectionParentMetaConnection'] = ResolversParentTypes['CollectionParentMetaConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['CollectionParentMetaRelationship']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type CollectionParentMetaParentMetaAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['CollectionParentMetaParentMetaAggregationSelection'] = ResolversParentTypes['CollectionParentMetaParentMetaAggregationSelection']> = {
   count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   node?: Resolver<Maybe<ResolversTypes['CollectionParentMetaParentMetaNodeAggregateSelection']>, ParentType, ContextType>;
@@ -6453,6 +6438,12 @@ export type CollectionParentMetaParentMetaAggregationSelectionResolvers<ContextT
 
 export type CollectionParentMetaParentMetaNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['CollectionParentMetaParentMetaNodeAggregateSelection'] = ResolversParentTypes['CollectionParentMetaParentMetaNodeAggregateSelection']> = {
   id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CollectionParentMetaRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['CollectionParentMetaRelationship'] = ResolversParentTypes['CollectionParentMetaRelationship']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['ParentMeta'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -6567,7 +6558,7 @@ export type DeleteInfoResolvers<ContextType = any, ParentType extends ResolversP
 
 export type FolderResolvers<ContextType = any, ParentType extends ResolversParentTypes['Folder'] = ResolversParentTypes['Folder']> = {
   children?: Resolver<Array<ResolversTypes['Child']>, ParentType, ContextType, RequireFields<FolderChildrenArgs, 'directed'>>;
-  childrenConnection?: Resolver<ResolversTypes['ParentChildrenConnection'], ParentType, ContextType, RequireFields<FolderChildrenConnectionArgs, 'directed'>>;
+  childrenConnection?: Resolver<ResolversTypes['FolderChildrenConnection'], ParentType, ContextType, RequireFields<FolderChildrenConnectionArgs, 'directed'>>;
   createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -6575,7 +6566,7 @@ export type FolderResolvers<ContextType = any, ParentType extends ResolversParen
   parentConnection?: Resolver<ResolversTypes['FolderParentConnection'], ParentType, ContextType, RequireFields<FolderParentConnectionArgs, 'directed'>>;
   parentMeta?: Resolver<Maybe<ResolversTypes['ParentMeta']>, ParentType, ContextType, RequireFields<FolderParentMetaArgs, 'directed'>>;
   parentMetaAggregate?: Resolver<Maybe<ResolversTypes['FolderParentMetaParentMetaAggregationSelection']>, ParentType, ContextType, RequireFields<FolderParentMetaAggregateArgs, 'directed'>>;
-  parentMetaConnection?: Resolver<ResolversTypes['ParentParentMetaConnection'], ParentType, ContextType, RequireFields<FolderParentMetaConnectionArgs, 'directed'>>;
+  parentMetaConnection?: Resolver<ResolversTypes['FolderParentMetaConnection'], ParentType, ContextType, RequireFields<FolderParentMetaConnectionArgs, 'directed'>>;
   updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -6586,6 +6577,19 @@ export type FolderAggregateSelectionResolvers<ContextType = any, ParentType exte
   id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNullable'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type FolderChildrenConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['FolderChildrenConnection'] = ResolversParentTypes['FolderChildrenConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['FolderChildrenRelationship']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type FolderChildrenRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['FolderChildrenRelationship'] = ResolversParentTypes['FolderChildrenRelationship']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Child'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -6634,6 +6638,13 @@ export type FolderParentConnectionResolvers<ContextType = any, ParentType extend
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type FolderParentMetaConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['FolderParentMetaConnection'] = ResolversParentTypes['FolderParentMetaConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['FolderParentMetaRelationship']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type FolderParentMetaParentMetaAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['FolderParentMetaParentMetaAggregationSelection'] = ResolversParentTypes['FolderParentMetaParentMetaAggregationSelection']> = {
   count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   node?: Resolver<Maybe<ResolversTypes['FolderParentMetaParentMetaNodeAggregateSelection']>, ParentType, ContextType>;
@@ -6642,6 +6653,12 @@ export type FolderParentMetaParentMetaAggregationSelectionResolvers<ContextType 
 
 export type FolderParentMetaParentMetaNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['FolderParentMetaParentMetaNodeAggregateSelection'] = ResolversParentTypes['FolderParentMetaParentMetaNodeAggregateSelection']> = {
   id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type FolderParentMetaRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['FolderParentMetaRelationship'] = ResolversParentTypes['FolderParentMetaRelationship']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['ParentMeta'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -6902,28 +6919,9 @@ export type PageInfoResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type ParentResolvers<ContextType = any, ParentType extends ResolversParentTypes['Parent'] = ResolversParentTypes['Parent']> = {
-  __resolveType: TypeResolveFn<'Collection' | 'Folder', ParentType, ContextType>;
-  children?: Resolver<Array<ResolversTypes['Child']>, ParentType, ContextType, RequireFields<ParentChildrenArgs, 'directed'>>;
-  childrenConnection?: Resolver<ResolversTypes['ParentChildrenConnection'], ParentType, ContextType, RequireFields<ParentChildrenConnectionArgs, 'directed'>>;
-  createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'Bookmark' | 'Collection' | 'Folder', ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  parentMeta?: Resolver<Maybe<ResolversTypes['ParentMeta']>, ParentType, ContextType, RequireFields<ParentParentMetaArgs, 'directed'>>;
-  parentMetaConnection?: Resolver<ResolversTypes['ParentParentMetaConnection'], ParentType, ContextType, RequireFields<ParentParentMetaConnectionArgs, 'directed'>>;
-  updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
-};
-
-export type ParentChildrenConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ParentChildrenConnection'] = ResolversParentTypes['ParentChildrenConnection']> = {
-  edges?: Resolver<Array<ResolversTypes['ParentChildrenRelationship']>, ParentType, ContextType>;
-  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
-  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ParentChildrenRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['ParentChildrenRelationship'] = ResolversParentTypes['ParentChildrenRelationship']> = {
-  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  node?: Resolver<ResolversTypes['Child'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type ParentMetaResolvers<ContextType = any, ParentType extends ResolversParentTypes['ParentMeta'] = ResolversParentTypes['ParentMeta']> = {
@@ -6963,19 +6961,6 @@ export type ParentMetasConnectionResolvers<ContextType = any, ParentType extends
   edges?: Resolver<Array<ResolversTypes['ParentMetaEdge']>, ParentType, ContextType>;
   pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
   totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ParentParentMetaConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ParentParentMetaConnection'] = ResolversParentTypes['ParentParentMetaConnection']> = {
-  edges?: Resolver<Array<ResolversTypes['ParentParentMetaRelationship']>, ParentType, ContextType>;
-  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
-  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ParentParentMetaRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['ParentParentMetaRelationship'] = ResolversParentTypes['ParentParentMetaRelationship']> = {
-  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  node?: Resolver<ResolversTypes['ParentMeta'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -7235,10 +7220,6 @@ export type Resolvers<ContextType = any> = {
   BmsContainersConnection?: BmsContainersConnectionResolvers<ContextType>;
   Bookmark?: BookmarkResolvers<ContextType>;
   BookmarkAggregateSelection?: BookmarkAggregateSelectionResolvers<ContextType>;
-  BookmarkBmsContainerContainerAggregationSelection?: BookmarkBmsContainerContainerAggregationSelectionResolvers<ContextType>;
-  BookmarkBmsContainerContainerNodeAggregateSelection?: BookmarkBmsContainerContainerNodeAggregateSelectionResolvers<ContextType>;
-  BookmarkContainerConnection?: BookmarkContainerConnectionResolvers<ContextType>;
-  BookmarkContainerRelationship?: BookmarkContainerRelationshipResolvers<ContextType>;
   BookmarkDl?: BookmarkDlResolvers<ContextType>;
   BookmarkDlAggregateSelection?: BookmarkDlAggregateSelectionResolvers<ContextType>;
   BookmarkDlEdge?: BookmarkDlEdgeResolvers<ContextType>;
@@ -7255,6 +7236,8 @@ export type Resolvers<ContextType = any> = {
   ChildDl?: ChildDlResolvers<ContextType>;
   Collection?: CollectionResolvers<ContextType>;
   CollectionAggregateSelection?: CollectionAggregateSelectionResolvers<ContextType>;
+  CollectionChildrenConnection?: CollectionChildrenConnectionResolvers<ContextType>;
+  CollectionChildrenRelationship?: CollectionChildrenRelationshipResolvers<ContextType>;
   CollectionDs?: CollectionDsResolvers<ContextType>;
   CollectionDsAggregateSelection?: CollectionDsAggregateSelectionResolvers<ContextType>;
   CollectionDsConnection?: CollectionDsConnectionResolvers<ContextType>;
@@ -7268,8 +7251,10 @@ export type Resolvers<ContextType = any> = {
   CollectionMemberMemberAggregationSelection?: CollectionMemberMemberAggregationSelectionResolvers<ContextType>;
   CollectionMemberMemberNodeAggregateSelection?: CollectionMemberMemberNodeAggregateSelectionResolvers<ContextType>;
   CollectionMemberRelationship?: CollectionMemberRelationshipResolvers<ContextType>;
+  CollectionParentMetaConnection?: CollectionParentMetaConnectionResolvers<ContextType>;
   CollectionParentMetaParentMetaAggregationSelection?: CollectionParentMetaParentMetaAggregationSelectionResolvers<ContextType>;
   CollectionParentMetaParentMetaNodeAggregateSelection?: CollectionParentMetaParentMetaNodeAggregateSelectionResolvers<ContextType>;
+  CollectionParentMetaRelationship?: CollectionParentMetaRelationshipResolvers<ContextType>;
   CollectionsConnection?: CollectionsConnectionResolvers<ContextType>;
   CreateBmsContainersMutationResponse?: CreateBmsContainersMutationResponseResolvers<ContextType>;
   CreateBookmarkDlsMutationResponse?: CreateBookmarkDlsMutationResponseResolvers<ContextType>;
@@ -7290,14 +7275,18 @@ export type Resolvers<ContextType = any> = {
   DeleteInfo?: DeleteInfoResolvers<ContextType>;
   Folder?: FolderResolvers<ContextType>;
   FolderAggregateSelection?: FolderAggregateSelectionResolvers<ContextType>;
+  FolderChildrenConnection?: FolderChildrenConnectionResolvers<ContextType>;
+  FolderChildrenRelationship?: FolderChildrenRelationshipResolvers<ContextType>;
   FolderDl?: FolderDlResolvers<ContextType>;
   FolderDlAggregateSelection?: FolderDlAggregateSelectionResolvers<ContextType>;
   FolderDlEdge?: FolderDlEdgeResolvers<ContextType>;
   FolderDlsConnection?: FolderDlsConnectionResolvers<ContextType>;
   FolderEdge?: FolderEdgeResolvers<ContextType>;
   FolderParentConnection?: FolderParentConnectionResolvers<ContextType>;
+  FolderParentMetaConnection?: FolderParentMetaConnectionResolvers<ContextType>;
   FolderParentMetaParentMetaAggregationSelection?: FolderParentMetaParentMetaAggregationSelectionResolvers<ContextType>;
   FolderParentMetaParentMetaNodeAggregateSelection?: FolderParentMetaParentMetaNodeAggregateSelectionResolvers<ContextType>;
+  FolderParentMetaRelationship?: FolderParentMetaRelationshipResolvers<ContextType>;
   FolderParentRelationship?: FolderParentRelationshipResolvers<ContextType>;
   FoldersConnection?: FoldersConnectionResolvers<ContextType>;
   IDAggregateSelectionNonNullable?: IdAggregateSelectionNonNullableResolvers<ContextType>;
@@ -7330,16 +7319,12 @@ export type Resolvers<ContextType = any> = {
   Mutation?: MutationResolvers<ContextType>;
   PageInfo?: PageInfoResolvers<ContextType>;
   Parent?: ParentResolvers<ContextType>;
-  ParentChildrenConnection?: ParentChildrenConnectionResolvers<ContextType>;
-  ParentChildrenRelationship?: ParentChildrenRelationshipResolvers<ContextType>;
   ParentMeta?: ParentMetaResolvers<ContextType>;
   ParentMetaAggregateSelection?: ParentMetaAggregateSelectionResolvers<ContextType>;
   ParentMetaEdge?: ParentMetaEdgeResolvers<ContextType>;
   ParentMetaParentConnection?: ParentMetaParentConnectionResolvers<ContextType>;
   ParentMetaParentRelationship?: ParentMetaParentRelationshipResolvers<ContextType>;
   ParentMetasConnection?: ParentMetasConnectionResolvers<ContextType>;
-  ParentParentMetaConnection?: ParentParentMetaConnectionResolvers<ContextType>;
-  ParentParentMetaRelationship?: ParentParentMetaRelationshipResolvers<ContextType>;
   ParentsChildren?: ParentsChildrenResolvers<ContextType>;
   ParentsChildrenAggregateSelection?: ParentsChildrenAggregateSelectionResolvers<ContextType>;
   ParentsChildrenConnection?: ParentsChildrenConnectionResolvers<ContextType>;

@@ -14,10 +14,9 @@ export const bookmark_typeDefs = gql`
 
         parent: Parent @relationship(type: "CONTAINS", direction: IN)
         tags: [Tag!]! @relationship(type: "BELONGS_TO", direction: OUT)
-        container: BmsContainer @relationship(type: "CONTAINS", direction: IN)
     }
 
-    type BmsContainer @node(labels: ["BmsContainer"]) {
+    type BmsContainer implements Parent @node(labels: ["BmsContainer", "Parent"]) {
         id: ID! @id @unique
         member: Member @relationship(type: "OWNS", direction: IN)
         bookmarks: [Bookmark!]! @relationship(type: "CONTAINS", direction: OUT)
