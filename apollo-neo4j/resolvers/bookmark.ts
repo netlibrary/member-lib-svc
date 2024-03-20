@@ -1,8 +1,9 @@
 import {ogm} from "../ogm";
-import {Driver} from 'neo4j-driver';
+import {Driver, Session, Transaction} from 'neo4j-driver';
 import {ogm_Collection} from "./collection";
-import {BookmarkCreateInput} from "../gen/types";
+import {BookmarkCreateInput, BookmarkFilter_In, ParentsChildren} from "../gen/types";
 import {ParentMetaSvc} from "../services/parent_meta";
+import {memberIds} from "../../db_seeder/member";
 
 export const ogm_Bookmark = ogm.model("Bookmark");
 
@@ -93,4 +94,76 @@ export const bookmarkResolvers = {
             }
         },
     },
+    Query: {
+        bmsByFilter: async (_, {filter, limit, offset}: {
+            filter: BookmarkFilter_In,
+            limit: number,
+            offset: number
+        }, {driver}) => {
+            const tx: Transaction = await driver.session().beginTransaction();
+            try {
+                let queryParts: any = [];
+                // Determine path based on bmLoose
+                if (filter.bmLoose === true) {
+                    // Path specifically for BmsContainer as parent
+                    queryParts.push('MATCH (member:Member {id: $memberId})-[:OWNS]->(container:BmsContainer)-[:CONTAINS*]->(bookmark:Bookmark)');
+                } else if (filter.bmLoose === false) {
+                    // Path specifically for Collection as root
+                    queryParts.push('MATCH (member:Member {id: $memberId})-[:OWNS]->(collection:Collection)-[:CONTAINS*]->(bookmark:Bookmark)');
+                } else {
+                    // General path for all bookmarks
+                    queryParts.push('MATCH (member:Member {id: $memberId})-[:OWNS|CONTAINS*]->(bookmark:Bookmark)');
+                }
+                let queryParams: any = {memberId: memberIds[0]};
+
+                // Handle bmUrl filter
+                if (filter.bmUrl) {
+                    queryParts.push('WHERE bookmark.urlScheme = $urlScheme AND bookmark.linkPath = $linkPath');
+                    // queryParams.urlScheme = extractUrlScheme(filter.bmUrl); // Assume a function to extract URL scheme
+                    // queryParams.linkPath = extractLinkPath(filter.bmUrl); // Assume a function to extract link path
+                }
+
+                // Handle bmTxt filter
+                if (filter.bmTxt) {
+                    const txtCondition = 'bookmark.description CONTAINS $bmTxt OR bookmark.name CONTAINS $bmTxt';
+                    queryParts.push(filter.bmUrl ? `AND (${txtCondition})` : `WHERE ${txtCondition}`);
+                    queryParams.bmTxt = filter.bmTxt;
+                }
+
+                // Handle bmTags filter
+                if (filter.bmTags && filter.bmTags.length > 0) {
+                    queryParts.push('WITH bookmark', 'MATCH (bookmark)-[:BELONGS_TO]->(tag:Tag)');
+                    queryParts.push(`WHERE tag.name IN $bmTags`);
+                    queryParams.bmTags = filter.bmTags;
+                }
+
+                // Handle bmParentsTxt filter, considering bmLoose
+                if (filter.bmParentsTxt && !filter.bmLoose) {
+                    queryParts.push('MATCH (bookmark)<-[:CONTAINS]-(parent:Parent {name: $bmParentsTxt})');
+                    queryParams.bmParentsTxt = filter.bmParentsTxt;
+                }
+
+                // Sorting (optional)
+                if (filter.sortBy) {
+                    const sortDir = filter.sortDir === 'DESC' ? 'DESC' : 'ASC'; // Default to ASC if not specified
+                    queryParts.push(`ORDER BY bookmark.${filter.sortBy} ${sortDir}`);
+                }
+
+                // Pagination
+                queryParts.push('RETURN bookmark', 'SKIP $offset', 'LIMIT $limit');
+                queryParams.offset = offset;
+                queryParams.limit = limit;
+
+                const queryString = queryParts.join(' ');
+                const res = await tx.run(queryString, queryParams);
+                return res;
+            } catch (error) {
+                await tx.rollback()
+                throw error;
+            } finally {
+                await tx.close();
+            }
+
+        }
+    }
 };

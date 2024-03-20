@@ -6,3 +6,4 @@ export const ogm = new OGM({ typeDefs, driver });
 
 export const ogm_MemberMeta = ogm.model("MemberMeta");
 export const ogm_ParentMeta = ogm.model("ParentMeta");
+export const ogm_Bookmark = ogm.model("Bookmark");
