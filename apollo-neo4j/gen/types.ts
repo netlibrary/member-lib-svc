@@ -514,6 +514,65 @@ export type BmsContainersConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
+export type BmsPaged = {
+  __typename?: 'BmsPaged';
+  bookmarks: Array<Bookmark>;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type BmsPagedAggregateSelection = {
+  __typename?: 'BmsPagedAggregateSelection';
+  count: Scalars['Int']['output'];
+  totalCount: IntAggregateSelectionNonNullable;
+};
+
+export type BmsPagedCreateInput = {
+  totalCount: Scalars['Int']['input'];
+};
+
+export type BmsPagedEdge = {
+  __typename?: 'BmsPagedEdge';
+  cursor: Scalars['String']['output'];
+  node: BmsPaged;
+};
+
+export type BmsPagedOptions = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  /** Specify one or more BmsPagedSort objects to sort BmsPageds by. The sorts will be applied in the order in which they are arranged in the array. */
+  sort?: InputMaybe<Array<BmsPagedSort>>;
+};
+
+/** Fields to sort BmsPageds by. The order in which sorts are applied is not guaranteed when specifying many fields in one BmsPagedSort object. */
+export type BmsPagedSort = {
+  totalCount?: InputMaybe<SortDirection>;
+};
+
+export type BmsPagedUpdateInput = {
+  totalCount?: InputMaybe<Scalars['Int']['input']>;
+  totalCount_DECREMENT?: InputMaybe<Scalars['Int']['input']>;
+  totalCount_INCREMENT?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type BmsPagedWhere = {
+  AND?: InputMaybe<Array<BmsPagedWhere>>;
+  NOT?: InputMaybe<BmsPagedWhere>;
+  OR?: InputMaybe<Array<BmsPagedWhere>>;
+  totalCount?: InputMaybe<Scalars['Int']['input']>;
+  totalCount_GT?: InputMaybe<Scalars['Int']['input']>;
+  totalCount_GTE?: InputMaybe<Scalars['Int']['input']>;
+  totalCount_IN?: InputMaybe<Array<Scalars['Int']['input']>>;
+  totalCount_LT?: InputMaybe<Scalars['Int']['input']>;
+  totalCount_LTE?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type BmsPagedsConnection = {
+  __typename?: 'BmsPagedsConnection';
+  edges: Array<BmsPagedEdge>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
 export type Bookmark = {
   __typename?: 'Bookmark';
   createdAt?: Maybe<Scalars['DateTime']['output']>;
@@ -1081,7 +1140,7 @@ export type BookmarkFilterWhere = {
 export type BookmarkFilter_In = {
   bmLoose?: InputMaybe<Scalars['Boolean']['input']>;
   bmParentsTxt?: InputMaybe<Scalars['String']['input']>;
-  bmTags: Array<Scalars['String']['input']>;
+  bmTags?: InputMaybe<Array<Scalars['String']['input']>>;
   bmTxt?: InputMaybe<Scalars['String']['input']>;
   bmUrl?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
@@ -2181,6 +2240,12 @@ export type CollectionsConnection = {
 export type CreateBmsContainersMutationResponse = {
   __typename?: 'CreateBmsContainersMutationResponse';
   bmsContainers: Array<BmsContainer>;
+  info: CreateInfo;
+};
+
+export type CreateBmsPagedsMutationResponse = {
+  __typename?: 'CreateBmsPagedsMutationResponse';
+  bmsPageds: Array<BmsPaged>;
   info: CreateInfo;
 };
 
@@ -4022,6 +4087,7 @@ export type MembersConnection = {
 export type Mutation = {
   __typename?: 'Mutation';
   createBmsContainers: CreateBmsContainersMutationResponse;
+  createBmsPageds: CreateBmsPagedsMutationResponse;
   createBookmarkDl?: Maybe<Scalars['ID']['output']>;
   createBookmarkDls: CreateBookmarkDlsMutationResponse;
   createBookmarkFilters: CreateBookmarkFiltersMutationResponse;
@@ -4039,6 +4105,7 @@ export type Mutation = {
   createParentsChildren: CreateParentsChildrenMutationResponse;
   createTags: CreateTagsMutationResponse;
   deleteBmsContainers: DeleteInfo;
+  deleteBmsPageds: DeleteInfo;
   deleteBookmark: Scalars['Int']['output'];
   deleteBookmarkDls: DeleteInfo;
   deleteBookmarkFilters: DeleteInfo;
@@ -4061,6 +4128,7 @@ export type Mutation = {
   importFirefoxBookmarks?: Maybe<Scalars['Boolean']['output']>;
   moveManyNodes: Scalars['Boolean']['output'];
   updateBmsContainers: UpdateBmsContainersMutationResponse;
+  updateBmsPageds: UpdateBmsPagedsMutationResponse;
   updateBookmarkDls: UpdateBookmarkDlsMutationResponse;
   updateBookmarkFilters: UpdateBookmarkFiltersMutationResponse;
   updateBookmarks: UpdateBookmarksMutationResponse;
@@ -4079,6 +4147,11 @@ export type Mutation = {
 
 export type MutationCreateBmsContainersArgs = {
   input: Array<BmsContainerCreateInput>;
+};
+
+
+export type MutationCreateBmsPagedsArgs = {
+  input: Array<BmsPagedCreateInput>;
 };
 
 
@@ -4168,6 +4241,11 @@ export type MutationCreateTagsArgs = {
 export type MutationDeleteBmsContainersArgs = {
   delete?: InputMaybe<BmsContainerDeleteInput>;
   where?: InputMaybe<BmsContainerWhere>;
+};
+
+
+export type MutationDeleteBmsPagedsArgs = {
+  where?: InputMaybe<BmsPagedWhere>;
 };
 
 
@@ -4297,6 +4375,12 @@ export type MutationUpdateBmsContainersArgs = {
   disconnect?: InputMaybe<BmsContainerDisconnectInput>;
   update?: InputMaybe<BmsContainerUpdateInput>;
   where?: InputMaybe<BmsContainerWhere>;
+};
+
+
+export type MutationUpdateBmsPagedsArgs = {
+  update?: InputMaybe<BmsPagedUpdateInput>;
+  where?: InputMaybe<BmsPagedWhere>;
 };
 
 
@@ -4744,10 +4828,13 @@ export type ParentsChildrenWhere = {
 
 export type Query = {
   __typename?: 'Query';
-  bmsByFilter: Array<Bookmark>;
+  bmsByFilter: BmsPaged;
   bmsContainers: Array<BmsContainer>;
   bmsContainersAggregate: BmsContainerAggregateSelection;
   bmsContainersConnection: BmsContainersConnection;
+  bmsPageds: Array<BmsPaged>;
+  bmsPagedsAggregate: BmsPagedAggregateSelection;
+  bmsPagedsConnection: BmsPagedsConnection;
   bookmarkDls: Array<BookmarkDl>;
   bookmarkDlsAggregate: BookmarkDlAggregateSelection;
   bookmarkDlsConnection: BookmarkDlsConnection;
@@ -4817,6 +4904,25 @@ export type QueryBmsContainersConnectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<InputMaybe<BmsContainerSort>>>;
   where?: InputMaybe<BmsContainerWhere>;
+};
+
+
+export type QueryBmsPagedsArgs = {
+  options?: InputMaybe<BmsPagedOptions>;
+  where?: InputMaybe<BmsPagedWhere>;
+};
+
+
+export type QueryBmsPagedsAggregateArgs = {
+  where?: InputMaybe<BmsPagedWhere>;
+};
+
+
+export type QueryBmsPagedsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<BmsPagedSort>>>;
+  where?: InputMaybe<BmsPagedWhere>;
 };
 
 
@@ -5524,6 +5630,12 @@ export type UpdateBmsContainersMutationResponse = {
   info: UpdateInfo;
 };
 
+export type UpdateBmsPagedsMutationResponse = {
+  __typename?: 'UpdateBmsPagedsMutationResponse';
+  bmsPageds: Array<BmsPaged>;
+  info: UpdateInfo;
+};
+
 export type UpdateBookmarkDlsMutationResponse = {
   __typename?: 'UpdateBookmarkDlsMutationResponse';
   bookmarkDls: Array<BookmarkDl>;
@@ -5745,6 +5857,15 @@ export type ResolversTypes = {
   BmsContainerUpdateInput: BmsContainerUpdateInput;
   BmsContainerWhere: BmsContainerWhere;
   BmsContainersConnection: ResolverTypeWrapper<BmsContainersConnection>;
+  BmsPaged: ResolverTypeWrapper<BmsPaged>;
+  BmsPagedAggregateSelection: ResolverTypeWrapper<BmsPagedAggregateSelection>;
+  BmsPagedCreateInput: BmsPagedCreateInput;
+  BmsPagedEdge: ResolverTypeWrapper<BmsPagedEdge>;
+  BmsPagedOptions: BmsPagedOptions;
+  BmsPagedSort: BmsPagedSort;
+  BmsPagedUpdateInput: BmsPagedUpdateInput;
+  BmsPagedWhere: BmsPagedWhere;
+  BmsPagedsConnection: ResolverTypeWrapper<BmsPagedsConnection>;
   Bookmark: ResolverTypeWrapper<Bookmark>;
   BookmarkAggregateSelection: ResolverTypeWrapper<BookmarkAggregateSelection>;
   BookmarkConnectInput: BookmarkConnectInput;
@@ -5941,6 +6062,7 @@ export type ResolversTypes = {
   CollectionWhere: CollectionWhere;
   CollectionsConnection: ResolverTypeWrapper<CollectionsConnection>;
   CreateBmsContainersMutationResponse: ResolverTypeWrapper<CreateBmsContainersMutationResponse>;
+  CreateBmsPagedsMutationResponse: ResolverTypeWrapper<CreateBmsPagedsMutationResponse>;
   CreateBookmarkDl: CreateBookmarkDl;
   CreateBookmarkDlsMutationResponse: ResolverTypeWrapper<CreateBookmarkDlsMutationResponse>;
   CreateBookmarkFiltersMutationResponse: ResolverTypeWrapper<CreateBookmarkFiltersMutationResponse>;
@@ -6270,6 +6392,7 @@ export type ResolversTypes = {
   TagWhere: TagWhere;
   TagsConnection: ResolverTypeWrapper<TagsConnection>;
   UpdateBmsContainersMutationResponse: ResolverTypeWrapper<UpdateBmsContainersMutationResponse>;
+  UpdateBmsPagedsMutationResponse: ResolverTypeWrapper<UpdateBmsPagedsMutationResponse>;
   UpdateBookmarkDlsMutationResponse: ResolverTypeWrapper<UpdateBookmarkDlsMutationResponse>;
   UpdateBookmarkFiltersMutationResponse: ResolverTypeWrapper<UpdateBookmarkFiltersMutationResponse>;
   UpdateBookmarksMutationResponse: ResolverTypeWrapper<UpdateBookmarksMutationResponse>;
@@ -6341,6 +6464,15 @@ export type ResolversParentTypes = {
   BmsContainerUpdateInput: BmsContainerUpdateInput;
   BmsContainerWhere: BmsContainerWhere;
   BmsContainersConnection: BmsContainersConnection;
+  BmsPaged: BmsPaged;
+  BmsPagedAggregateSelection: BmsPagedAggregateSelection;
+  BmsPagedCreateInput: BmsPagedCreateInput;
+  BmsPagedEdge: BmsPagedEdge;
+  BmsPagedOptions: BmsPagedOptions;
+  BmsPagedSort: BmsPagedSort;
+  BmsPagedUpdateInput: BmsPagedUpdateInput;
+  BmsPagedWhere: BmsPagedWhere;
+  BmsPagedsConnection: BmsPagedsConnection;
   Bookmark: Bookmark;
   BookmarkAggregateSelection: BookmarkAggregateSelection;
   BookmarkConnectInput: BookmarkConnectInput;
@@ -6537,6 +6669,7 @@ export type ResolversParentTypes = {
   CollectionWhere: CollectionWhere;
   CollectionsConnection: CollectionsConnection;
   CreateBmsContainersMutationResponse: CreateBmsContainersMutationResponse;
+  CreateBmsPagedsMutationResponse: CreateBmsPagedsMutationResponse;
   CreateBookmarkDl: CreateBookmarkDl;
   CreateBookmarkDlsMutationResponse: CreateBookmarkDlsMutationResponse;
   CreateBookmarkFiltersMutationResponse: CreateBookmarkFiltersMutationResponse;
@@ -6865,6 +6998,7 @@ export type ResolversParentTypes = {
   TagWhere: TagWhere;
   TagsConnection: TagsConnection;
   UpdateBmsContainersMutationResponse: UpdateBmsContainersMutationResponse;
+  UpdateBmsPagedsMutationResponse: UpdateBmsPagedsMutationResponse;
   UpdateBookmarkDlsMutationResponse: UpdateBookmarkDlsMutationResponse;
   UpdateBookmarkFiltersMutationResponse: UpdateBookmarkFiltersMutationResponse;
   UpdateBookmarksMutationResponse: UpdateBookmarksMutationResponse;
@@ -6963,6 +7097,31 @@ export type BmsContainerMemberRelationshipResolvers<ContextType = any, ParentTyp
 
 export type BmsContainersConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['BmsContainersConnection'] = ResolversParentTypes['BmsContainersConnection']> = {
   edges?: Resolver<Array<ResolversTypes['BmsContainerEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type BmsPagedResolvers<ContextType = any, ParentType extends ResolversParentTypes['BmsPaged'] = ResolversParentTypes['BmsPaged']> = {
+  bookmarks?: Resolver<Array<ResolversTypes['Bookmark']>, ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type BmsPagedAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['BmsPagedAggregateSelection'] = ResolversParentTypes['BmsPagedAggregateSelection']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['IntAggregateSelectionNonNullable'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type BmsPagedEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['BmsPagedEdge'] = ResolversParentTypes['BmsPagedEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['BmsPaged'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type BmsPagedsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['BmsPagedsConnection'] = ResolversParentTypes['BmsPagedsConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['BmsPagedEdge']>, ParentType, ContextType>;
   pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
   totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -7325,6 +7484,12 @@ export type CollectionsConnectionResolvers<ContextType = any, ParentType extends
 
 export type CreateBmsContainersMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateBmsContainersMutationResponse'] = ResolversParentTypes['CreateBmsContainersMutationResponse']> = {
   bmsContainers?: Resolver<Array<ResolversTypes['BmsContainer']>, ParentType, ContextType>;
+  info?: Resolver<ResolversTypes['CreateInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CreateBmsPagedsMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateBmsPagedsMutationResponse'] = ResolversParentTypes['CreateBmsPagedsMutationResponse']> = {
+  bmsPageds?: Resolver<Array<ResolversTypes['BmsPaged']>, ParentType, ContextType>;
   info?: Resolver<ResolversTypes['CreateInfo'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -7770,6 +7935,7 @@ export type MembersConnectionResolvers<ContextType = any, ParentType extends Res
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createBmsContainers?: Resolver<ResolversTypes['CreateBmsContainersMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateBmsContainersArgs, 'input'>>;
+  createBmsPageds?: Resolver<ResolversTypes['CreateBmsPagedsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateBmsPagedsArgs, 'input'>>;
   createBookmarkDl?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType, RequireFields<MutationCreateBookmarkDlArgs, 'data'>>;
   createBookmarkDls?: Resolver<ResolversTypes['CreateBookmarkDlsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateBookmarkDlsArgs, 'input'>>;
   createBookmarkFilters?: Resolver<ResolversTypes['CreateBookmarkFiltersMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateBookmarkFiltersArgs, 'input'>>;
@@ -7787,6 +7953,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createParentsChildren?: Resolver<ResolversTypes['CreateParentsChildrenMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateParentsChildrenArgs, 'input'>>;
   createTags?: Resolver<ResolversTypes['CreateTagsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateTagsArgs, 'input'>>;
   deleteBmsContainers?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteBmsContainersArgs>>;
+  deleteBmsPageds?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteBmsPagedsArgs>>;
   deleteBookmark?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationDeleteBookmarkArgs, 'id' | 'parentId'>>;
   deleteBookmarkDls?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteBookmarkDlsArgs>>;
   deleteBookmarkFilters?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteBookmarkFiltersArgs>>;
@@ -7809,6 +7976,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   importFirefoxBookmarks?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationImportFirefoxBookmarksArgs, 'file'>>;
   moveManyNodes?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationMoveManyNodesArgs, 'nodes'>>;
   updateBmsContainers?: Resolver<ResolversTypes['UpdateBmsContainersMutationResponse'], ParentType, ContextType, Partial<MutationUpdateBmsContainersArgs>>;
+  updateBmsPageds?: Resolver<ResolversTypes['UpdateBmsPagedsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateBmsPagedsArgs>>;
   updateBookmarkDls?: Resolver<ResolversTypes['UpdateBookmarkDlsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateBookmarkDlsArgs>>;
   updateBookmarkFilters?: Resolver<ResolversTypes['UpdateBookmarkFiltersMutationResponse'], ParentType, ContextType, Partial<MutationUpdateBookmarkFiltersArgs>>;
   updateBookmarks?: Resolver<ResolversTypes['UpdateBookmarksMutationResponse'], ParentType, ContextType, Partial<MutationUpdateBookmarksArgs>>;
@@ -7903,10 +8071,13 @@ export type ParentsChildrenEdgeResolvers<ContextType = any, ParentType extends R
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  bmsByFilter?: Resolver<Array<ResolversTypes['Bookmark']>, ParentType, ContextType, RequireFields<QueryBmsByFilterArgs, 'filter' | 'limit' | 'offset'>>;
+  bmsByFilter?: Resolver<ResolversTypes['BmsPaged'], ParentType, ContextType, RequireFields<QueryBmsByFilterArgs, 'filter' | 'limit' | 'offset'>>;
   bmsContainers?: Resolver<Array<ResolversTypes['BmsContainer']>, ParentType, ContextType, Partial<QueryBmsContainersArgs>>;
   bmsContainersAggregate?: Resolver<ResolversTypes['BmsContainerAggregateSelection'], ParentType, ContextType, Partial<QueryBmsContainersAggregateArgs>>;
   bmsContainersConnection?: Resolver<ResolversTypes['BmsContainersConnection'], ParentType, ContextType, Partial<QueryBmsContainersConnectionArgs>>;
+  bmsPageds?: Resolver<Array<ResolversTypes['BmsPaged']>, ParentType, ContextType, Partial<QueryBmsPagedsArgs>>;
+  bmsPagedsAggregate?: Resolver<ResolversTypes['BmsPagedAggregateSelection'], ParentType, ContextType, Partial<QueryBmsPagedsAggregateArgs>>;
+  bmsPagedsConnection?: Resolver<ResolversTypes['BmsPagedsConnection'], ParentType, ContextType, Partial<QueryBmsPagedsConnectionArgs>>;
   bookmarkDls?: Resolver<Array<ResolversTypes['BookmarkDl']>, ParentType, ContextType, Partial<QueryBookmarkDlsArgs>>;
   bookmarkDlsAggregate?: Resolver<ResolversTypes['BookmarkDlAggregateSelection'], ParentType, ContextType, Partial<QueryBookmarkDlsAggregateArgs>>;
   bookmarkDlsConnection?: Resolver<ResolversTypes['BookmarkDlsConnection'], ParentType, ContextType, Partial<QueryBookmarkDlsConnectionArgs>>;
@@ -8037,6 +8208,12 @@ export type UpdateBmsContainersMutationResponseResolvers<ContextType = any, Pare
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UpdateBmsPagedsMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateBmsPagedsMutationResponse'] = ResolversParentTypes['UpdateBmsPagedsMutationResponse']> = {
+  bmsPageds?: Resolver<Array<ResolversTypes['BmsPaged']>, ParentType, ContextType>;
+  info?: Resolver<ResolversTypes['UpdateInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UpdateBookmarkDlsMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateBookmarkDlsMutationResponse'] = ResolversParentTypes['UpdateBookmarkDlsMutationResponse']> = {
   bookmarkDls?: Resolver<Array<ResolversTypes['BookmarkDl']>, ParentType, ContextType>;
   info?: Resolver<ResolversTypes['UpdateInfo'], ParentType, ContextType>;
@@ -8141,6 +8318,10 @@ export type Resolvers<ContextType = any> = {
   BmsContainerMemberMemberNodeAggregateSelection?: BmsContainerMemberMemberNodeAggregateSelectionResolvers<ContextType>;
   BmsContainerMemberRelationship?: BmsContainerMemberRelationshipResolvers<ContextType>;
   BmsContainersConnection?: BmsContainersConnectionResolvers<ContextType>;
+  BmsPaged?: BmsPagedResolvers<ContextType>;
+  BmsPagedAggregateSelection?: BmsPagedAggregateSelectionResolvers<ContextType>;
+  BmsPagedEdge?: BmsPagedEdgeResolvers<ContextType>;
+  BmsPagedsConnection?: BmsPagedsConnectionResolvers<ContextType>;
   Bookmark?: BookmarkResolvers<ContextType>;
   BookmarkAggregateSelection?: BookmarkAggregateSelectionResolvers<ContextType>;
   BookmarkDl?: BookmarkDlResolvers<ContextType>;
@@ -8188,6 +8369,7 @@ export type Resolvers<ContextType = any> = {
   CollectionParentMetaRelationship?: CollectionParentMetaRelationshipResolvers<ContextType>;
   CollectionsConnection?: CollectionsConnectionResolvers<ContextType>;
   CreateBmsContainersMutationResponse?: CreateBmsContainersMutationResponseResolvers<ContextType>;
+  CreateBmsPagedsMutationResponse?: CreateBmsPagedsMutationResponseResolvers<ContextType>;
   CreateBookmarkDlsMutationResponse?: CreateBookmarkDlsMutationResponseResolvers<ContextType>;
   CreateBookmarkFiltersMutationResponse?: CreateBookmarkFiltersMutationResponseResolvers<ContextType>;
   CreateBookmarksMutationResponse?: CreateBookmarksMutationResponseResolvers<ContextType>;
@@ -8277,6 +8459,7 @@ export type Resolvers<ContextType = any> = {
   TagEdge?: TagEdgeResolvers<ContextType>;
   TagsConnection?: TagsConnectionResolvers<ContextType>;
   UpdateBmsContainersMutationResponse?: UpdateBmsContainersMutationResponseResolvers<ContextType>;
+  UpdateBmsPagedsMutationResponse?: UpdateBmsPagedsMutationResponseResolvers<ContextType>;
   UpdateBookmarkDlsMutationResponse?: UpdateBookmarkDlsMutationResponseResolvers<ContextType>;
   UpdateBookmarkFiltersMutationResponse?: UpdateBookmarkFiltersMutationResponseResolvers<ContextType>;
   UpdateBookmarksMutationResponse?: UpdateBookmarksMutationResponseResolvers<ContextType>;

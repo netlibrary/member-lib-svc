@@ -41,7 +41,7 @@ export const bookmark_typeDefs = gql`
         bmTxt: String
         bmParentsTxt: String
         bmUrl: String
-        bmTags: [String!]!
+        bmTags: [String!]
         bmLoose: Boolean
 
         sortBy: String
@@ -81,6 +81,11 @@ export const bookmark_typeDefs = gql`
         deleteBookmark(id: ID!, parentId: ID!): Int!
     }
 
+    type BmsPaged {
+        bookmarks: [Bookmark!]!
+        totalCount: Int!
+    }
+
     type Query {
         nonHierarchBmCount(memberId: String!): Int!
         @cypher(
@@ -91,6 +96,6 @@ export const bookmark_typeDefs = gql`
             """
             columnName: "count"
         )
-        bmsByFilter(filter: BookmarkFilter_In!, limit: Int!, offset: Int!): [Bookmark!]!
+        bmsByFilter(filter: BookmarkFilter_In!, limit: Int!, offset: Int!): BmsPaged!
     }
 `;

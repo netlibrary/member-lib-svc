@@ -1,7 +1,7 @@
 import {ogm} from "../ogm";
-import {Driver, Session, Transaction} from 'neo4j-driver';
+import neo4j, {Driver, Integer, Session, Transaction} from 'neo4j-driver';
 import {ogm_Collection} from "./collection";
-import {BookmarkCreateInput, BookmarkFilter_In, ParentsChildren} from "../gen/types";
+import {BmsPaged, BookmarkCreateInput, BookmarkFilter_In, ParentsChildren} from "../gen/types";
 import {ParentMetaSvc} from "../services/parent_meta";
 import {memberIds} from "../../db_seeder/member";
 
@@ -102,23 +102,25 @@ export const bookmarkResolvers = {
         }, {driver}) => {
             const tx: Transaction = await driver.session().beginTransaction();
             try {
-                let queryParts: any = [];
+                let baseQueryParts: any = [];
                 // Determine path based on bmLoose
                 if (filter.bmLoose === true) {
                     // Path specifically for BmsContainer as parent
-                    queryParts.push('MATCH (member:Member {id: $memberId})-[:OWNS]->(container:BmsContainer)-[:CONTAINS*]->(bookmark:Bookmark)');
+                    baseQueryParts.push('MATCH (member:Member {id: $memberId})-[:OWNS]->(container:BmsContainer)-[:CONTAINS*]->(bookmark:Bookmark)');
                 } else if (filter.bmLoose === false) {
                     // Path specifically for Collection as root
-                    queryParts.push('MATCH (member:Member {id: $memberId})-[:OWNS]->(collection:Collection)-[:CONTAINS*]->(bookmark:Bookmark)');
+                    baseQueryParts.push('MATCH (member:Member {id: $memberId})-[:OWNS]->(collection:Collection)-[:CONTAINS*]->(bookmark:Bookmark)');
                 } else {
                     // General path for all bookmarks
-                    queryParts.push('MATCH (member:Member {id: $memberId})-[:OWNS|CONTAINS*]->(bookmark:Bookmark)');
+                    baseQueryParts.push('MATCH (member:Member {id: $memberId})-[:OWNS|CONTAINS*]->(bookmark:Bookmark)');
                 }
-                let queryParams: any = {memberId: memberIds[0]};
+                let queryParams: {
+                    [key: string]: string | string[] | Integer
+                } = {memberId: memberIds[0]};
 
                 // Handle bmUrl filter
                 if (filter.bmUrl) {
-                    queryParts.push('WHERE bookmark.urlScheme = $urlScheme AND bookmark.linkPath = $linkPath');
+                    baseQueryParts.push('WHERE bookmark.urlScheme = $urlScheme AND bookmark.linkPath = $linkPath');
                     // queryParams.urlScheme = extractUrlScheme(filter.bmUrl); // Assume a function to extract URL scheme
                     // queryParams.linkPath = extractLinkPath(filter.bmUrl); // Assume a function to extract link path
                 }
@@ -126,37 +128,59 @@ export const bookmarkResolvers = {
                 // Handle bmTxt filter
                 if (filter.bmTxt) {
                     const txtCondition = 'bookmark.description CONTAINS $bmTxt OR bookmark.name CONTAINS $bmTxt';
-                    queryParts.push(filter.bmUrl ? `AND (${txtCondition})` : `WHERE ${txtCondition}`);
+                    baseQueryParts.push(filter.bmUrl ? `AND (${txtCondition})` : `WHERE ${txtCondition}`);
                     queryParams.bmTxt = filter.bmTxt;
                 }
 
                 // Handle bmTags filter
                 if (filter.bmTags && filter.bmTags.length > 0) {
-                    queryParts.push('WITH bookmark', 'MATCH (bookmark)-[:BELONGS_TO]->(tag:Tag)');
-                    queryParts.push(`WHERE tag.name IN $bmTags`);
+                    baseQueryParts.push('WITH bookmark', 'MATCH (bookmark)-[:BELONGS_TO]->(tag:Tag)');
+                    baseQueryParts.push(`WHERE tag.name IN $bmTags`);
                     queryParams.bmTags = filter.bmTags;
                 }
 
                 // Handle bmParentsTxt filter, considering bmLoose
                 if (filter.bmParentsTxt && !filter.bmLoose) {
-                    queryParts.push('MATCH (bookmark)<-[:CONTAINS]-(parent:Parent {name: $bmParentsTxt})');
+                    baseQueryParts.push('MATCH (bookmark)<-[:CONTAINS]-(parent:Parent {name: $bmParentsTxt})');
                     queryParams.bmParentsTxt = filter.bmParentsTxt;
                 }
 
                 // Sorting (optional)
                 if (filter.sortBy) {
                     const sortDir = filter.sortDir === 'DESC' ? 'DESC' : 'ASC'; // Default to ASC if not specified
-                    queryParts.push(`ORDER BY bookmark.${filter.sortBy} ${sortDir}`);
+                    baseQueryParts.push(`ORDER BY bookmark.${filter.sortBy} ${sortDir}`);
                 }
 
-                // Pagination
-                queryParts.push('RETURN bookmark', 'SKIP $offset', 'LIMIT $limit');
-                queryParams.offset = offset;
-                queryParams.limit = limit;
+                // Clone the base query parts for the count query
+                let countQueryParts = Array.from(baseQueryParts);
+                // Add RETURN COUNT(bookmark) for the count query
+                countQueryParts.push('RETURN COUNT(bookmark) AS totalCount');
+                const countQueryString = countQueryParts.join(' ');
+                // Execute the count query
+                const countResult = await tx.run(countQueryString, queryParams);
 
-                const queryString = queryParts.join(' ');
-                const res = await tx.run(queryString, queryParams);
-                return res;
+                const totalCount = countResult.records[0].get('totalCount').low; // Assuming the count fits into a JS number
+
+                // Complete the base query with sorting (optional) and pagination
+                baseQueryParts.push('RETURN bookmark', 'SKIP $offset', "LIMIT $limit");
+                queryParams.offset = neo4j.int(offset);
+                queryParams.limit = neo4j.int(10);
+                // Join the query parts into complete query strings
+                const queryString = baseQueryParts.join(' ');
+                // Execute the main query to fetch paginated bookmarks
+                const dbRes = await tx.run(queryString, queryParams);
+
+                const bookmarks = dbRes.records.map(record => {
+                    // Map or process your bookmark data as needed
+                    return record.get('bookmark').properties;
+                });
+
+                // Return the paginated bookmarks and the total count
+                const res = {
+                    bookmarks: bookmarks,
+                    totalCount: totalCount
+                };
+                return res
             } catch (error) {
                 await tx.rollback()
                 throw error;
