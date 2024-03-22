@@ -43,7 +43,7 @@ export async function seedTag(bookmarkId: string) {
 
 export async function seedTags(bookmarkId: string) {
     try {
-        for (let i = 0; i < Math.floor(Math.random() * 3); i++) {
+        for (let i = 0; i < Math.floor(Math.random() * 3) + 1; i++) {
             await seedTag(bookmarkId)
         }
     } catch (error: any) {

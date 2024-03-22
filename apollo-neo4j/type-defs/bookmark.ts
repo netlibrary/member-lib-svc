@@ -13,7 +13,7 @@ export const bookmark_typeDefs = gql`
         iconUri: String
 
         parent: Parent @relationship(type: "CONTAINS", direction: IN)
-        tags: [Tag!]! @relationship(type: "BELONGS_TO", direction: OUT)
+        tags: [Tag!]! @relationship(type: "HAS", direction: OUT)
     }
 
     type BookmarkFilter @node(labels: ["BookmarkFilter"]) {
@@ -53,16 +53,18 @@ export const bookmark_typeDefs = gql`
         member: Member @relationship(type: "OWNS", direction: IN)
         bookmarks: [Bookmark!]! @relationship(type: "CONTAINS", direction: OUT)
     }
+    
+
 
     type BookmarkDl {
         id: ID!
-        type: String
         name: String!
         domainName: String!
         urlScheme: String!
         linkPath: String!
         iconUri: String
         description: String
+        tags: [TagDs!]
     }
 
     input CreateBookmarkDl {
@@ -82,7 +84,7 @@ export const bookmark_typeDefs = gql`
     }
 
     type BmsPaged {
-        bookmarks: [Bookmark!]!
+        bookmarks: [BookmarkDl!]!
         totalCount: Int!
     }
 

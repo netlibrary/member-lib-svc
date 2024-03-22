@@ -1,6 +1,6 @@
 import { driver } from "../apollo-neo4j/driver";
 import { seedCollections } from "./collection";
-import {seedNonHierarchBms} from "./bookmark";
+import {seedUnsortedBms} from "./bookmark";
 
 export const memberIds = [
     // 'f4e55dd4-b406-45b8-a407-6d686900b8c8',
@@ -21,7 +21,7 @@ export async function seedMembers() {
             );
             console.log(`Member created with ID: ${id}`);
             await seedCollections(id)
-            await seedNonHierarchBms(id)
+            await seedUnsortedBms(id)
         }
     } finally {
         await session.close();

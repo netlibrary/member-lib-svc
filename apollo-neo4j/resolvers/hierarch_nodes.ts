@@ -1,21 +1,21 @@
 import {NodesToMove, ParentsChildren, SelectedNodes} from "../gen/types";
-import {ogm} from "../ogm";
-import {ogm_Collection} from "./collection";
 import {NodeSvc} from "../services/node";
 import {MemberMetaSvc} from "../services/member_meta";
 import {memberIds} from "../../db_seeder/member";
 import {ParentMetaSvc} from "../services/parent_meta";
-import {Session, Transaction} from "neo4j-driver";
-import {de} from "@faker-js/faker";
+import {Transaction} from "neo4j-driver";
+import {bm_CypherSel} from "./bookmark";
 
 export const hierarchNodesResolvers = {
     ChildDl: {
         __resolveType(obj, context, info) {
             // Logic to determine the type
-            if (obj.type == "folder") {
-                return "FolderDl";
-            } else {
+            console.log("ChildDl", obj)
+            // Check if the object contains the key 'domainName'
+            if ('domainName' in obj) {
                 return "BookmarkDl";
+            } else {
+                return "FolderDl";
             }
         },
     },
@@ -150,7 +150,7 @@ const CypherQuery = {
   COLLECT(DISTINCT CASE WHEN f IS NOT NULL THEN ${CypherSelection.FolderWithDeepBookmarkCount(
         "f"
     )} END) AS folders, 
-  COLLECT(DISTINCT CASE WHEN b IS NOT NULL THEN ${CypherSelection.Bookmark(
+  COLLECT(DISTINCT CASE WHEN b IS NOT NULL THEN ${bm_CypherSel.BookmarkDl(
         "b"
     )} END) AS bookmarks
   WITH cm, folders + bookmarks AS children
@@ -168,7 +168,7 @@ const CypherQuery = {
   COLLECT(DISTINCT CASE WHEN f IS NOT NULL THEN ${CypherSelection.Folder(
         "f"
     )} END) AS folders, 
-  COLLECT(DISTINCT CASE WHEN b IS NOT NULL THEN ${CypherSelection.Bookmark(
+  COLLECT(DISTINCT CASE WHEN b IS NOT NULL THEN ${bm_CypherSel.BookmarkDl(
         "b"
     )} END) AS bookmarks
   WITH cm, folders + bookmarks AS children

@@ -134,7 +134,7 @@ export const bookmarkResolvers = {
 
                 // Handle bmTags filter
                 if (filter.bmTags && filter.bmTags.length > 0) {
-                    baseQueryParts.push('WITH bookmark', 'MATCH (bookmark)-[:BELONGS_TO]->(tag:Tag)');
+                    baseQueryParts.push('WITH bookmark', 'MATCH (bookmark)-[:HAS]->(tag:Tag)');
                     baseQueryParts.push(`WHERE tag.name IN $bmTags`);
                     queryParams.bmTags = filter.bmTags;
                 }
@@ -145,12 +145,6 @@ export const bookmarkResolvers = {
                     queryParams.bmParentsTxt = filter.bmParentsTxt;
                 }
 
-                // Sorting (optional)
-                if (filter.sortBy) {
-                    const sortDir = filter.sortDir === 'DESC' ? 'DESC' : 'ASC'; // Default to ASC if not specified
-                    baseQueryParts.push(`ORDER BY bookmark.${filter.sortBy} ${sortDir}`);
-                }
-
                 // Clone the base query parts for the count query
                 let countQueryParts = Array.from(baseQueryParts);
                 // Add RETURN COUNT(bookmark) for the count query
@@ -158,28 +152,36 @@ export const bookmarkResolvers = {
                 const countQueryString = countQueryParts.join(' ');
                 // Execute the count query
                 const countResult = await tx.run(countQueryString, queryParams);
+                const totalCount = countResult.records[0].get('totalCount').low;
 
-                const totalCount = countResult.records[0].get('totalCount').low; // Assuming the count fits into a JS number
+                // Sorting (optional)
+                if (filter.sortBy) {
+                    const sortDir = filter.sortDir === 'DESC' ? 'DESC' : 'ASC'; // Default to ASC if not specified
+                    baseQueryParts.push(`ORDER BY bookmark.${filter.sortBy} ${sortDir}`);
+                }
 
-                // Complete the base query with sorting (optional) and pagination
-                baseQueryParts.push('RETURN bookmark', 'SKIP $offset', "LIMIT $limit");
+                baseQueryParts.push('WITH bookmark', 'SKIP $offset', "LIMIT $limit");
                 queryParams.offset = neo4j.int(offset);
                 queryParams.limit = neo4j.int(10);
+
+                 // Assuming the count fits into a JS number
+
+                // Complete the base query with sorting (optional) and pagination
+                baseQueryParts.push(`RETURN COLLECT(${bm_CypherSel.BookmarkDl('bookmark')}) AS bookmarks`);
+
                 // Join the query parts into complete query strings
                 const queryString = baseQueryParts.join(' ');
                 // Execute the main query to fetch paginated bookmarks
                 const dbRes = await tx.run(queryString, queryParams);
 
-                const bookmarks = dbRes.records.map(record => {
-                    // Map or process your bookmark data as needed
-                    return record.get('bookmark').properties;
-                });
+                const bookmarks = dbRes.records[0].get('bookmarks');
 
                 // Return the paginated bookmarks and the total count
                 const res = {
                     bookmarks: bookmarks,
                     totalCount: totalCount
                 };
+
                 return res
             } catch (error) {
                 await tx.rollback()
@@ -190,4 +192,17 @@ export const bookmarkResolvers = {
 
         }
     }
+};
+
+export const bm_CypherSel = {
+    BookmarkDl: (alias: string) => `{
+  id: ${alias}.id, 
+  name: ${alias}.name, 
+  domainName: ${alias}.domainName, 
+  linkPath: ${alias}.linkPath, 
+  urlScheme: ${alias}.urlScheme, 
+  iconUri: ${alias}.iconUri, 
+  tags: [( ${alias} )-[:HAS]->(t:Tag) | { id: t.id, name: t.name }] 
+}`,
+
 };

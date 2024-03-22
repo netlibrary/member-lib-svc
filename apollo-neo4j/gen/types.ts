@@ -516,7 +516,7 @@ export type BmsContainersConnection = {
 
 export type BmsPaged = {
   __typename?: 'BmsPaged';
-  bookmarks: Array<Bookmark>;
+  bookmarks: Array<BookmarkDl>;
   totalCount: Scalars['Int']['output'];
 };
 
@@ -689,7 +689,7 @@ export type BookmarkDl = {
   id: Scalars['ID']['output'];
   linkPath: Scalars['String']['output'];
   name: Scalars['String']['output'];
-  type?: Maybe<Scalars['String']['output']>;
+  tags?: Maybe<Array<TagDs>>;
   urlScheme: Scalars['String']['output'];
 };
 
@@ -702,7 +702,6 @@ export type BookmarkDlAggregateSelection = {
   id: IdAggregateSelectionNonNullable;
   linkPath: StringAggregateSelectionNonNullable;
   name: StringAggregateSelectionNonNullable;
-  type: StringAggregateSelectionNullable;
   urlScheme: StringAggregateSelectionNonNullable;
 };
 
@@ -713,7 +712,6 @@ export type BookmarkDlCreateInput = {
   id: Scalars['ID']['input'];
   linkPath: Scalars['String']['input'];
   name: Scalars['String']['input'];
-  type?: InputMaybe<Scalars['String']['input']>;
   urlScheme: Scalars['String']['input'];
 };
 
@@ -738,7 +736,6 @@ export type BookmarkDlSort = {
   id?: InputMaybe<SortDirection>;
   linkPath?: InputMaybe<SortDirection>;
   name?: InputMaybe<SortDirection>;
-  type?: InputMaybe<SortDirection>;
   urlScheme?: InputMaybe<SortDirection>;
 };
 
@@ -749,7 +746,6 @@ export type BookmarkDlUpdateInput = {
   id?: InputMaybe<Scalars['ID']['input']>;
   linkPath?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  type?: InputMaybe<Scalars['String']['input']>;
   urlScheme?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -787,11 +783,6 @@ export type BookmarkDlWhere = {
   name_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
   name_IN?: InputMaybe<Array<Scalars['String']['input']>>;
   name_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
-  type?: InputMaybe<Scalars['String']['input']>;
-  type_CONTAINS?: InputMaybe<Scalars['String']['input']>;
-  type_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
-  type_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  type_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
   urlScheme?: InputMaybe<Scalars['String']['input']>;
   urlScheme_CONTAINS?: InputMaybe<Scalars['String']['input']>;
   urlScheme_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
@@ -2339,6 +2330,12 @@ export type CreateParentsChildrenMutationResponse = {
   __typename?: 'CreateParentsChildrenMutationResponse';
   info: CreateInfo;
   parentsChildren: Array<ParentsChildren>;
+};
+
+export type CreateTagDsMutationResponse = {
+  __typename?: 'CreateTagDsMutationResponse';
+  info: CreateInfo;
+  tagDs: Array<TagDs>;
 };
 
 export type CreateTagsMutationResponse = {
@@ -4103,6 +4100,7 @@ export type Mutation = {
   createMembers: CreateMembersMutationResponse;
   createParentMetas: CreateParentMetasMutationResponse;
   createParentsChildren: CreateParentsChildrenMutationResponse;
+  createTagDs: CreateTagDsMutationResponse;
   createTags: CreateTagsMutationResponse;
   deleteBmsContainers: DeleteInfo;
   deleteBmsPageds: DeleteInfo;
@@ -4124,6 +4122,7 @@ export type Mutation = {
   deleteMembers: DeleteInfo;
   deleteParentMetas: DeleteInfo;
   deleteParentsChildren: DeleteInfo;
+  deleteTagDs: DeleteInfo;
   deleteTags: DeleteInfo;
   importFirefoxBookmarks?: Maybe<Scalars['Boolean']['output']>;
   moveManyNodes: Scalars['Boolean']['output'];
@@ -4141,6 +4140,7 @@ export type Mutation = {
   updateMembers: UpdateMembersMutationResponse;
   updateParentMetas: UpdateParentMetasMutationResponse;
   updateParentsChildren: UpdateParentsChildrenMutationResponse;
+  updateTagDs: UpdateTagDsMutationResponse;
   updateTags: UpdateTagsMutationResponse;
 };
 
@@ -4230,6 +4230,11 @@ export type MutationCreateParentMetasArgs = {
 
 export type MutationCreateParentsChildrenArgs = {
   input: Array<ParentsChildrenCreateInput>;
+};
+
+
+export type MutationCreateTagDsArgs = {
+  input: Array<TagDsCreateInput>;
 };
 
 
@@ -4346,6 +4351,11 @@ export type MutationDeleteParentMetasArgs = {
 
 export type MutationDeleteParentsChildrenArgs = {
   where?: InputMaybe<ParentsChildrenWhere>;
+};
+
+
+export type MutationDeleteTagDsArgs = {
+  where?: InputMaybe<TagDsWhere>;
 };
 
 
@@ -4487,6 +4497,12 @@ export type MutationUpdateParentMetasArgs = {
 export type MutationUpdateParentsChildrenArgs = {
   update?: InputMaybe<ParentsChildrenUpdateInput>;
   where?: InputMaybe<ParentsChildrenWhere>;
+};
+
+
+export type MutationUpdateTagDsArgs = {
+  update?: InputMaybe<TagDsUpdateInput>;
+  where?: InputMaybe<TagDsWhere>;
 };
 
 
@@ -4875,6 +4891,9 @@ export type Query = {
   parentsChildren: Array<ParentsChildren>;
   parentsChildrenAggregate: ParentsChildrenAggregateSelection;
   parentsChildrenConnection: ParentsChildrenConnection;
+  tagDs: Array<TagDs>;
+  tagDsAggregate: TagDsAggregateSelection;
+  tagDsConnection: TagDsConnection;
   tags: Array<Tag>;
   tagsAggregate: TagAggregateSelection;
   tagsConnection: TagsConnection;
@@ -5172,6 +5191,25 @@ export type QueryParentsChildrenConnectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<InputMaybe<ParentsChildrenSort>>>;
   where?: InputMaybe<ParentsChildrenWhere>;
+};
+
+
+export type QueryTagDsArgs = {
+  options?: InputMaybe<TagDsOptions>;
+  where?: InputMaybe<TagDsWhere>;
+};
+
+
+export type QueryTagDsAggregateArgs = {
+  where?: InputMaybe<TagDsWhere>;
+};
+
+
+export type QueryTagDsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<TagDsSort>>>;
+  where?: InputMaybe<TagDsWhere>;
 };
 
 
@@ -5525,6 +5563,71 @@ export type TagDisconnectInput = {
   bookmarks?: InputMaybe<Array<TagBookmarksDisconnectFieldInput>>;
 };
 
+export type TagDs = {
+  __typename?: 'TagDs';
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+};
+
+export type TagDsAggregateSelection = {
+  __typename?: 'TagDsAggregateSelection';
+  count: Scalars['Int']['output'];
+  id: IdAggregateSelectionNonNullable;
+  name: StringAggregateSelectionNonNullable;
+};
+
+export type TagDsConnection = {
+  __typename?: 'TagDsConnection';
+  edges: Array<TagDsEdge>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type TagDsCreateInput = {
+  id: Scalars['ID']['input'];
+  name: Scalars['String']['input'];
+};
+
+export type TagDsEdge = {
+  __typename?: 'TagDsEdge';
+  cursor: Scalars['String']['output'];
+  node: TagDs;
+};
+
+export type TagDsOptions = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  /** Specify one or more TagDsSort objects to sort TagDs by. The sorts will be applied in the order in which they are arranged in the array. */
+  sort?: InputMaybe<Array<TagDsSort>>;
+};
+
+/** Fields to sort TagDs by. The order in which sorts are applied is not guaranteed when specifying many fields in one TagDsSort object. */
+export type TagDsSort = {
+  id?: InputMaybe<SortDirection>;
+  name?: InputMaybe<SortDirection>;
+};
+
+export type TagDsUpdateInput = {
+  id?: InputMaybe<Scalars['ID']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type TagDsWhere = {
+  AND?: InputMaybe<Array<TagDsWhere>>;
+  NOT?: InputMaybe<TagDsWhere>;
+  OR?: InputMaybe<Array<TagDsWhere>>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  id_CONTAINS?: InputMaybe<Scalars['ID']['input']>;
+  id_ENDS_WITH?: InputMaybe<Scalars['ID']['input']>;
+  id_IN?: InputMaybe<Array<Scalars['ID']['input']>>;
+  id_STARTS_WITH?: InputMaybe<Scalars['ID']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  name_CONTAINS?: InputMaybe<Scalars['String']['input']>;
+  name_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
+  name_IN?: InputMaybe<Array<Scalars['String']['input']>>;
+  name_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type TagEdge = {
   __typename?: 'TagEdge';
   cursor: Scalars['String']['output'];
@@ -5717,6 +5820,12 @@ export type UpdateParentsChildrenMutationResponse = {
   __typename?: 'UpdateParentsChildrenMutationResponse';
   info: UpdateInfo;
   parentsChildren: Array<ParentsChildren>;
+};
+
+export type UpdateTagDsMutationResponse = {
+  __typename?: 'UpdateTagDsMutationResponse';
+  info: UpdateInfo;
+  tagDs: Array<TagDs>;
 };
 
 export type UpdateTagsMutationResponse = {
@@ -6077,6 +6186,7 @@ export type ResolversTypes = {
   CreateMembersMutationResponse: ResolverTypeWrapper<CreateMembersMutationResponse>;
   CreateParentMetasMutationResponse: ResolverTypeWrapper<CreateParentMetasMutationResponse>;
   CreateParentsChildrenMutationResponse: ResolverTypeWrapper<CreateParentsChildrenMutationResponse>;
+  CreateTagDsMutationResponse: ResolverTypeWrapper<CreateTagDsMutationResponse>;
   CreateTagsMutationResponse: ResolverTypeWrapper<CreateTagsMutationResponse>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
   DateTimeAggregateSelectionNullable: ResolverTypeWrapper<DateTimeAggregateSelectionNullable>;
@@ -6382,6 +6492,15 @@ export type ResolversTypes = {
   TagCreateInput: TagCreateInput;
   TagDeleteInput: TagDeleteInput;
   TagDisconnectInput: TagDisconnectInput;
+  TagDs: ResolverTypeWrapper<TagDs>;
+  TagDsAggregateSelection: ResolverTypeWrapper<TagDsAggregateSelection>;
+  TagDsConnection: ResolverTypeWrapper<TagDsConnection>;
+  TagDsCreateInput: TagDsCreateInput;
+  TagDsEdge: ResolverTypeWrapper<TagDsEdge>;
+  TagDsOptions: TagDsOptions;
+  TagDsSort: TagDsSort;
+  TagDsUpdateInput: TagDsUpdateInput;
+  TagDsWhere: TagDsWhere;
   TagEdge: ResolverTypeWrapper<TagEdge>;
   TagOnCreateInput: TagOnCreateInput;
   TagOptions: TagOptions;
@@ -6406,6 +6525,7 @@ export type ResolversTypes = {
   UpdateMembersMutationResponse: ResolverTypeWrapper<UpdateMembersMutationResponse>;
   UpdateParentMetasMutationResponse: ResolverTypeWrapper<UpdateParentMetasMutationResponse>;
   UpdateParentsChildrenMutationResponse: ResolverTypeWrapper<UpdateParentsChildrenMutationResponse>;
+  UpdateTagDsMutationResponse: ResolverTypeWrapper<UpdateTagDsMutationResponse>;
   UpdateTagsMutationResponse: ResolverTypeWrapper<UpdateTagsMutationResponse>;
   Upload: ResolverTypeWrapper<Scalars['Upload']['output']>;
 };
@@ -6684,6 +6804,7 @@ export type ResolversParentTypes = {
   CreateMembersMutationResponse: CreateMembersMutationResponse;
   CreateParentMetasMutationResponse: CreateParentMetasMutationResponse;
   CreateParentsChildrenMutationResponse: CreateParentsChildrenMutationResponse;
+  CreateTagDsMutationResponse: CreateTagDsMutationResponse;
   CreateTagsMutationResponse: CreateTagsMutationResponse;
   DateTime: Scalars['DateTime']['output'];
   DateTimeAggregateSelectionNullable: DateTimeAggregateSelectionNullable;
@@ -6988,6 +7109,15 @@ export type ResolversParentTypes = {
   TagCreateInput: TagCreateInput;
   TagDeleteInput: TagDeleteInput;
   TagDisconnectInput: TagDisconnectInput;
+  TagDs: TagDs;
+  TagDsAggregateSelection: TagDsAggregateSelection;
+  TagDsConnection: TagDsConnection;
+  TagDsCreateInput: TagDsCreateInput;
+  TagDsEdge: TagDsEdge;
+  TagDsOptions: TagDsOptions;
+  TagDsSort: TagDsSort;
+  TagDsUpdateInput: TagDsUpdateInput;
+  TagDsWhere: TagDsWhere;
   TagEdge: TagEdge;
   TagOnCreateInput: TagOnCreateInput;
   TagOptions: TagOptions;
@@ -7012,6 +7142,7 @@ export type ResolversParentTypes = {
   UpdateMembersMutationResponse: UpdateMembersMutationResponse;
   UpdateParentMetasMutationResponse: UpdateParentMetasMutationResponse;
   UpdateParentsChildrenMutationResponse: UpdateParentsChildrenMutationResponse;
+  UpdateTagDsMutationResponse: UpdateTagDsMutationResponse;
   UpdateTagsMutationResponse: UpdateTagsMutationResponse;
   Upload: Scalars['Upload']['output'];
 };
@@ -7103,7 +7234,7 @@ export type BmsContainersConnectionResolvers<ContextType = any, ParentType exten
 };
 
 export type BmsPagedResolvers<ContextType = any, ParentType extends ResolversParentTypes['BmsPaged'] = ResolversParentTypes['BmsPaged']> = {
-  bookmarks?: Resolver<Array<ResolversTypes['Bookmark']>, ParentType, ContextType>;
+  bookmarks?: Resolver<Array<ResolversTypes['BookmarkDl']>, ParentType, ContextType>;
   totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -7166,7 +7297,7 @@ export type BookmarkDlResolvers<ContextType = any, ParentType extends ResolversP
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   linkPath?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  tags?: Resolver<Maybe<Array<ResolversTypes['TagDs']>>, ParentType, ContextType>;
   urlScheme?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -7179,7 +7310,6 @@ export type BookmarkDlAggregateSelectionResolvers<ContextType = any, ParentType 
   id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
   linkPath?: Resolver<ResolversTypes['StringAggregateSelectionNonNullable'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['StringAggregateSelectionNonNullable'], ParentType, ContextType>;
-  type?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
   urlScheme?: Resolver<ResolversTypes['StringAggregateSelectionNonNullable'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -7573,6 +7703,12 @@ export type CreateParentsChildrenMutationResponseResolvers<ContextType = any, Pa
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type CreateTagDsMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateTagDsMutationResponse'] = ResolversParentTypes['CreateTagDsMutationResponse']> = {
+  info?: Resolver<ResolversTypes['CreateInfo'], ParentType, ContextType>;
+  tagDs?: Resolver<Array<ResolversTypes['TagDs']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type CreateTagsMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateTagsMutationResponse'] = ResolversParentTypes['CreateTagsMutationResponse']> = {
   info?: Resolver<ResolversTypes['CreateInfo'], ParentType, ContextType>;
   tags?: Resolver<Array<ResolversTypes['Tag']>, ParentType, ContextType>;
@@ -7951,6 +8087,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createMembers?: Resolver<ResolversTypes['CreateMembersMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateMembersArgs, 'input'>>;
   createParentMetas?: Resolver<ResolversTypes['CreateParentMetasMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateParentMetasArgs, 'input'>>;
   createParentsChildren?: Resolver<ResolversTypes['CreateParentsChildrenMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateParentsChildrenArgs, 'input'>>;
+  createTagDs?: Resolver<ResolversTypes['CreateTagDsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateTagDsArgs, 'input'>>;
   createTags?: Resolver<ResolversTypes['CreateTagsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateTagsArgs, 'input'>>;
   deleteBmsContainers?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteBmsContainersArgs>>;
   deleteBmsPageds?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteBmsPagedsArgs>>;
@@ -7972,6 +8109,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteMembers?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteMembersArgs>>;
   deleteParentMetas?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteParentMetasArgs>>;
   deleteParentsChildren?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteParentsChildrenArgs>>;
+  deleteTagDs?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteTagDsArgs>>;
   deleteTags?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteTagsArgs>>;
   importFirefoxBookmarks?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationImportFirefoxBookmarksArgs, 'file'>>;
   moveManyNodes?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationMoveManyNodesArgs, 'nodes'>>;
@@ -7989,6 +8127,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateMembers?: Resolver<ResolversTypes['UpdateMembersMutationResponse'], ParentType, ContextType, Partial<MutationUpdateMembersArgs>>;
   updateParentMetas?: Resolver<ResolversTypes['UpdateParentMetasMutationResponse'], ParentType, ContextType, Partial<MutationUpdateParentMetasArgs>>;
   updateParentsChildren?: Resolver<ResolversTypes['UpdateParentsChildrenMutationResponse'], ParentType, ContextType, Partial<MutationUpdateParentsChildrenArgs>>;
+  updateTagDs?: Resolver<ResolversTypes['UpdateTagDsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateTagDsArgs>>;
   updateTags?: Resolver<ResolversTypes['UpdateTagsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateTagsArgs>>;
 };
 
@@ -8118,6 +8257,9 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   parentsChildren?: Resolver<Array<ResolversTypes['ParentsChildren']>, ParentType, ContextType, Partial<QueryParentsChildrenArgs>>;
   parentsChildrenAggregate?: Resolver<ResolversTypes['ParentsChildrenAggregateSelection'], ParentType, ContextType, Partial<QueryParentsChildrenAggregateArgs>>;
   parentsChildrenConnection?: Resolver<ResolversTypes['ParentsChildrenConnection'], ParentType, ContextType, Partial<QueryParentsChildrenConnectionArgs>>;
+  tagDs?: Resolver<Array<ResolversTypes['TagDs']>, ParentType, ContextType, Partial<QueryTagDsArgs>>;
+  tagDsAggregate?: Resolver<ResolversTypes['TagDsAggregateSelection'], ParentType, ContextType, Partial<QueryTagDsAggregateArgs>>;
+  tagDsConnection?: Resolver<ResolversTypes['TagDsConnection'], ParentType, ContextType, Partial<QueryTagDsConnectionArgs>>;
   tags?: Resolver<Array<ResolversTypes['Tag']>, ParentType, ContextType, Partial<QueryTagsArgs>>;
   tagsAggregate?: Resolver<ResolversTypes['TagAggregateSelection'], ParentType, ContextType, Partial<QueryTagsAggregateArgs>>;
   tagsConnection?: Resolver<ResolversTypes['TagsConnection'], ParentType, ContextType, Partial<QueryTagsConnectionArgs>>;
@@ -8186,6 +8328,32 @@ export type TagBookmarksConnectionResolvers<ContextType = any, ParentType extend
 export type TagBookmarksRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['TagBookmarksRelationship'] = ResolversParentTypes['TagBookmarksRelationship']> = {
   cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   node?: Resolver<ResolversTypes['Bookmark'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type TagDsResolvers<ContextType = any, ParentType extends ResolversParentTypes['TagDs'] = ResolversParentTypes['TagDs']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type TagDsAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['TagDsAggregateSelection'] = ResolversParentTypes['TagDsAggregateSelection']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['StringAggregateSelectionNonNullable'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type TagDsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['TagDsConnection'] = ResolversParentTypes['TagDsConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['TagDsEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type TagDsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['TagDsEdge'] = ResolversParentTypes['TagDsEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['TagDs'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -8295,6 +8463,12 @@ export type UpdateParentsChildrenMutationResponseResolvers<ContextType = any, Pa
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UpdateTagDsMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateTagDsMutationResponse'] = ResolversParentTypes['UpdateTagDsMutationResponse']> = {
+  info?: Resolver<ResolversTypes['UpdateInfo'], ParentType, ContextType>;
+  tagDs?: Resolver<Array<ResolversTypes['TagDs']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UpdateTagsMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateTagsMutationResponse'] = ResolversParentTypes['UpdateTagsMutationResponse']> = {
   info?: Resolver<ResolversTypes['UpdateInfo'], ParentType, ContextType>;
   tags?: Resolver<Array<ResolversTypes['Tag']>, ParentType, ContextType>;
@@ -8383,6 +8557,7 @@ export type Resolvers<ContextType = any> = {
   CreateMembersMutationResponse?: CreateMembersMutationResponseResolvers<ContextType>;
   CreateParentMetasMutationResponse?: CreateParentMetasMutationResponseResolvers<ContextType>;
   CreateParentsChildrenMutationResponse?: CreateParentsChildrenMutationResponseResolvers<ContextType>;
+  CreateTagDsMutationResponse?: CreateTagDsMutationResponseResolvers<ContextType>;
   CreateTagsMutationResponse?: CreateTagsMutationResponseResolvers<ContextType>;
   DateTime?: GraphQLScalarType;
   DateTimeAggregateSelectionNullable?: DateTimeAggregateSelectionNullableResolvers<ContextType>;
@@ -8456,6 +8631,10 @@ export type Resolvers<ContextType = any> = {
   TagBookmarkBookmarksNodeAggregateSelection?: TagBookmarkBookmarksNodeAggregateSelectionResolvers<ContextType>;
   TagBookmarksConnection?: TagBookmarksConnectionResolvers<ContextType>;
   TagBookmarksRelationship?: TagBookmarksRelationshipResolvers<ContextType>;
+  TagDs?: TagDsResolvers<ContextType>;
+  TagDsAggregateSelection?: TagDsAggregateSelectionResolvers<ContextType>;
+  TagDsConnection?: TagDsConnectionResolvers<ContextType>;
+  TagDsEdge?: TagDsEdgeResolvers<ContextType>;
   TagEdge?: TagEdgeResolvers<ContextType>;
   TagsConnection?: TagsConnectionResolvers<ContextType>;
   UpdateBmsContainersMutationResponse?: UpdateBmsContainersMutationResponseResolvers<ContextType>;
@@ -8473,6 +8652,7 @@ export type Resolvers<ContextType = any> = {
   UpdateMembersMutationResponse?: UpdateMembersMutationResponseResolvers<ContextType>;
   UpdateParentMetasMutationResponse?: UpdateParentMetasMutationResponseResolvers<ContextType>;
   UpdateParentsChildrenMutationResponse?: UpdateParentsChildrenMutationResponseResolvers<ContextType>;
+  UpdateTagDsMutationResponse?: UpdateTagDsMutationResponseResolvers<ContextType>;
   UpdateTagsMutationResponse?: UpdateTagsMutationResponseResolvers<ContextType>;
   Upload?: GraphQLScalarType;
 };

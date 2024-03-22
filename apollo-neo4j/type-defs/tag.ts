@@ -7,6 +7,11 @@ export const tag_typeDefs = gql`
         updatedAt: DateTime @timestamp(operations: [UPDATE])
         description: String
         name: String! @unique
-        bookmarks: [Bookmark!]! @relationship(type: "BELONGS_TO", direction: IN)
+        bookmarks: [Bookmark!]! @relationship(type: "HAS", direction: IN)
+    }
+
+    type TagDs {
+        id: ID!
+        name: String!
     }
 `;

@@ -22,7 +22,7 @@ export async function seedBookmarks(parentId): Promise<string[]> {
     }
 }
 
-export async function seedNonHierarchBms(memberId) {
+export async function seedUnsortedBms(memberId) {
     const ogm_BMsCont = ogm.model('BmsContainer')
     try {
         const ogm_bmsCont_createRes = await ogm_BMsCont.create({
