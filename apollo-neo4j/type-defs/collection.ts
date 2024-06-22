@@ -33,7 +33,7 @@ export const collection_typeDefs = gql`
         OPTIONAL MATCH path=(c)-[:CONTAINS*0..]->(f:Folder)
         WITH c, mm, length(path) AS depth
         WITH c, mm, MAX(depth) AS maxDepth
-        OPTIONAL MATCH (c)-[:CONTAINS*0..]->(:Folder)-[:CONTAINS*0..]->(b:Bookmark)
+        OPTIONAL MATCH (c)-[:CONTAINS*0..]->(b:Bookmark)
         WITH c AS collection, COUNT(DISTINCT b) AS bookmarkCount, mm, maxDepth + 1 AS deepness
         WITH mm, COLLECT({id: collection.id, name: collection.name, bookmarkCount: bookmarkCount, deepness: deepness}) AS collections
         UNWIND mm.collectionPositions AS pos
