@@ -54,8 +54,6 @@ export const bookmark_typeDefs = gql`
         bookmarks: [Bookmark!]! @relationship(type: "CONTAINS", direction: OUT)
     }
     
-
-
     type BookmarkDl {
         id: ID!
         name: String!
