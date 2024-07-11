@@ -20,6 +20,13 @@ export const hierarchNodes_typeDefs = gql`
         id: ID!
         children: [ChildDl!]!
     }
+    
+    type ParentDs {
+        id: ID!
+        name: String!
+        bmCount: Int!
+        parentId: ID
+    }
 
     input SelectedChilds {
         parentId: ID!
@@ -45,6 +52,7 @@ export const hierarchNodes_typeDefs = gql`
     type Query {
         parentChildren(id: String!, level: Int!): [ChildDl!]!
         nl_parentsChildren(ids: [String!]!, level: Int!): [ParentsChildren!]!
+        parentsByFilter(name: String!, limit: Int!, offset: Int!): [ParentDs!]
     }
 
     type Mutation {

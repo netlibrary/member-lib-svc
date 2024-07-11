@@ -39,9 +39,9 @@ export const bookmark_typeDefs = gql`
         id: ID
 
         bmTxt: String
-        bmParentsTxt: String
+        bmParents: [ID!]
         bmUrl: String
-        bmTags: [String!]
+        bmTags: [ID!]
         bmLoose: Boolean
 
         sortBy: String

@@ -3,7 +3,7 @@ import {NodeSvc} from "../services/node";
 import {MemberMetaSvc} from "../services/member_meta";
 import {memberIds} from "../../db_seeder/member";
 import {ParentMetaSvc} from "../services/parent_meta";
-import {Transaction} from "neo4j-driver";
+import neo4j, {Transaction} from "neo4j-driver";
 import {bm_CypherSel} from "./bookmark";
 
 export const hierarchNodesResolvers = {
@@ -57,11 +57,15 @@ export const hierarchNodesResolvers = {
                 await tx.close();
             }
         },
-        moveManyNodes: async (_, {nodes, destinationId, position}: {nodes: NodesToMove, destinationId: string | null, position: number | null}, {driver}) => {
+        moveManyNodes: async (_, {nodes, destinationId, position}: {
+            nodes: NodesToMove,
+            destinationId: string | null,
+            position: number | null
+        }, {driver}) => {
             const tx: Transaction = await driver.session().beginTransaction();
             try {
                 console.log("moveManyNodes", nodes, destinationId, position);
-                if(destinationId == null){
+                if (destinationId == null) {
                     await NodeSvc.removeHierarch(nodes, tx)
                 } else {
                     await NodeSvc.moveToDest(nodes, destinationId, position, memberIds[0], tx)
@@ -81,6 +85,22 @@ export const hierarchNodesResolvers = {
             const tx = await driver.session().beginTransaction();
             try {
                 return await Query_DeepParentChildren(1, level, rootId, tx);
+            } catch (error) {
+                await tx.rollback()
+                throw error;
+            } finally {
+                await tx.close();
+            }
+        },
+        parentsByFilter: async (_, {name: name, limit, offset}, {driver}) => {
+            const tx = await driver.session().beginTransaction();
+            try {
+                const ogm_result =  await tx.run(
+                    CypherQuery.ParentsByFilter,
+                    {name: name, limit: neo4j.int(limit), offset: neo4j.int(offset)}
+                );
+                const result = ogm_result!.records[0].get("parents");
+                return result
             } catch (error) {
                 await tx.rollback()
                 throw error;
@@ -177,6 +197,28 @@ const CypherQuery = {
   WITH COLLECT(sortedChild) AS sortedChildren
   RETURN sortedChildren
    AS children`,
+    ParentsByFilter: `MATCH (c:Parent)
+    WHERE toLower(c.name) CONTAINS toLower($name)
+    CALL {
+        WITH c
+        MATCH (c)-[:CONTAINS*0..]->(:Folder)-[:CONTAINS*0..]->(b:Bookmark)
+        RETURN COUNT(DISTINCT b) AS bookmarkCount
+    }
+    OPTIONAL MATCH path = (parent:Parent)-[:CONTAINS*1..]->(c)
+    WHERE toLower(parent.name) CONTAINS toLower($name)
+    WITH c, bookmarkCount, parent, path
+    ORDER BY length(path)
+    WITH c, bookmarkCount, COLLECT(parent)[0] AS closestParent
+    WITH {
+        name: c.name,
+        id: c.id, 
+        bmCount: bookmarkCount,
+        parentId: CASE WHEN closestParent IS NOT NULL THEN closestParent.id ELSE NULL END
+    } as parent
+    SKIP $offset LIMIT $limit
+    WITH COLLECT(parent) AS parents
+    
+    RETURN parents`
 };
 
 async function Query_DeepParentChildren(

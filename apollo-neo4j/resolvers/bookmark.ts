@@ -135,14 +135,15 @@ export const bookmarkResolvers = {
                 // Handle bmTags filter
                 if (filter.bmTags && filter.bmTags.length > 0) {
                     baseQueryParts.push('WITH bookmark', 'MATCH (bookmark)-[:HAS]->(tag:Tag)');
-                    baseQueryParts.push(`WHERE tag.name IN $bmTags`);
+                    baseQueryParts.push(`WHERE tag.id IN $bmTags`);
                     queryParams.bmTags = filter.bmTags;
                 }
 
                 // Handle bmParentsTxt filter, considering bmLoose
-                if (filter.bmParentsTxt && !filter.bmLoose) {
-                    baseQueryParts.push('MATCH (bookmark)<-[:CONTAINS]-(parent:Parent {name: $bmParentsTxt})');
-                    queryParams.bmParentsTxt = filter.bmParentsTxt;
+                if (filter.bmParents && filter.bmParents.length > 0 && !filter.bmLoose) {
+                    baseQueryParts.push('MATCH (bookmark)<-[:CONTAINS]-(p:Parent)');
+                    baseQueryParts.push(`WHERE p.id IN $bmParents`);
+                    queryParams.bmParents = filter.bmParents;
                 }
 
                 // Clone the base query parts for the count query
