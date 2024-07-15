@@ -201,7 +201,7 @@ const CypherQuery = {
     WHERE toLower(c.name) CONTAINS toLower($name)
     CALL {
         WITH c
-        MATCH (c)-[:CONTAINS*0..]->(:Folder)-[:CONTAINS*0..]->(b:Bookmark)
+        MATCH (c)-[:CONTAINS*]->(b:Bookmark)
         RETURN COUNT(DISTINCT b) AS bookmarkCount
     }
     OPTIONAL MATCH path = (parent:Parent)-[:CONTAINS*1..]->(c)

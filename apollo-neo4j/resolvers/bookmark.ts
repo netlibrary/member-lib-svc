@@ -106,13 +106,13 @@ export const bookmarkResolvers = {
                 // Determine path based on bmLoose
                 if (filter.bmLoose === true) {
                     // Path specifically for BmsContainer as parent
-                    baseQueryParts.push('MATCH (member:Member {id: $memberId})-[:OWNS]->(container:BmsContainer)-[:CONTAINS*]->(bookmark:Bookmark)');
+                    baseQueryParts.push('MATCH (member:Member {id: $memberId})-[:OWNS]->(container:BmsContainer)-[:CONTAINS*1..]->(bookmark:Bookmark)');
                 } else if (filter.bmLoose === false) {
                     // Path specifically for Collection as root
-                    baseQueryParts.push('MATCH (member:Member {id: $memberId})-[:OWNS]->(collection:Collection)-[:CONTAINS*]->(bookmark:Bookmark)');
+                    baseQueryParts.push('MATCH (member:Member {id: $memberId})-[:OWNS]->(collection:Collection)-[:CONTAINS*1..]->(bookmark:Bookmark)');
                 } else {
                     // General path for all bookmarks
-                    baseQueryParts.push('MATCH (member:Member {id: $memberId})-[:OWNS|CONTAINS*]->(bookmark:Bookmark)');
+                    baseQueryParts.push('MATCH (member:Member {id: $memberId})-[:OWNS|CONTAINS*1..]->(bookmark:Bookmark)');
                 }
                 let queryParams: {
                     [key: string]: string | string[] | Integer
@@ -141,8 +141,9 @@ export const bookmarkResolvers = {
 
                 // Handle bmParentsTxt filter, considering bmLoose
                 if (filter.bmParents && filter.bmParents.length > 0 && !filter.bmLoose) {
-                    baseQueryParts.push('MATCH (bookmark)<-[:CONTAINS]-(p:Parent)');
+                    baseQueryParts.push('MATCH (bookmark)<-[:CONTAINS*1..]-(p:Parent)');
                     baseQueryParts.push(`WHERE p.id IN $bmParents`);
+                    baseQueryParts.push(`WITH DISTINCT bookmark`);
                     queryParams.bmParents = filter.bmParents;
                 }
 
