@@ -9,14 +9,15 @@ export const ogm_Bookmark = ogm.model("Bookmark");
 
 export const bookmarkResolvers = {
     Mutation: {
-        deleteBookmark: async (_, {id, parentId}, {driver}: { driver: Driver }) => {
+        deleteHierarchBookmark: async (_, {id, parentId}, {driver}: { driver: Driver }) => {
             const tx = await driver.session().beginTransaction();
             try {
                 // Construct and execute the Cypher query
                 const result = await tx.run(`
                     MATCH (n:Bookmark { id: $id })
+                    optional match (p:Parent)-[:CONTAINS*]->(b)
                     DETACH DELETE n
-                    RETURN COUNT(n) AS nodesDeleted
+                    RETURN p.id
                 `, {id});
 
                 // Extract the nodesDeleted count from the result
@@ -44,6 +45,28 @@ export const bookmarkResolvers = {
                     // Handle case where MemberMeta object is not found
                     throw new Error('ParentMeta not found for parentId: ' + parentId);
                 }
+                await tx.commit()
+                return nodesDeleted;
+            } catch (error) {
+                await tx.rollback()
+                throw error;
+            } finally {
+                await tx.close();
+            }
+        },
+        deleteBookmark: async (_, {id}, {driver}: { driver: Driver }) => {
+            const tx = await driver.session().beginTransaction();
+            try {
+                // Construct and execute the Cypher query
+                const result = await tx.run(`
+                    MATCH (n:Bookmark { id: $id })
+                    DETACH DELETE n
+                    RETURN COUNT(n) AS nodesDeleted
+                `, {id});
+
+                // Extract the nodesDeleted count from the result
+                const nodesDeleted = result.records[0].get('nodesDeleted').toNumber();
+
                 await tx.commit()
                 return nodesDeleted;
             } catch (error) {
@@ -136,6 +159,7 @@ export const bookmarkResolvers = {
                 if (filter.bmTags && filter.bmTags.length > 0) {
                     baseQueryParts.push('WITH bookmark', 'MATCH (bookmark)-[:HAS]->(tag:Tag)');
                     baseQueryParts.push(`WHERE tag.id IN $bmTags`);
+                    baseQueryParts.push(`WITH DISTINCT bookmark`);
                     queryParams.bmTags = filter.bmTags;
                 }
 
@@ -169,7 +193,8 @@ export const bookmarkResolvers = {
                  // Assuming the count fits into a JS number
 
                 // Complete the base query with sorting (optional) and pagination
-                baseQueryParts.push(`RETURN COLLECT(${bm_CypherSel.BookmarkDl('bookmark')}) AS bookmarks`);
+                baseQueryParts.push(`optional match (p:Collection|Folder)-[:CONTAINS]->(bookmark)`);
+                baseQueryParts.push(`RETURN COLLECT(${bm_CypherSel.BookmarkDl2('bookmark')}) AS bookmarks`);
 
                 // Join the query parts into complete query strings
                 const queryString = baseQueryParts.join(' ');
@@ -197,8 +222,18 @@ export const bookmarkResolvers = {
 };
 
 export const bm_CypherSel = {
+    BookmarkDl2: (alias: string, p_alias = "p") => `{
+  id: ${alias}.id,
+  parentId: ${p_alias}.id, 
+  name: ${alias}.name, 
+  domainName: ${alias}.domainName, 
+  linkPath: ${alias}.linkPath, 
+  urlScheme: ${alias}.urlScheme, 
+  iconUri: ${alias}.iconUri, 
+  tags: [( ${alias} )-[:HAS]->(t:Tag) | { id: t.id, name: t.name }] 
+}`,
     BookmarkDl: (alias: string) => `{
-  id: ${alias}.id, 
+  id: ${alias}.id,
   name: ${alias}.name, 
   domainName: ${alias}.domainName, 
   linkPath: ${alias}.linkPath, 

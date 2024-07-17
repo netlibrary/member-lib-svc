@@ -65,6 +65,18 @@ export const bookmark_typeDefs = gql`
         tags: [TagDs!]
     }
 
+    type BookmarkDl2 {
+        id: ID!
+        parentId: ID!
+        name: String!
+        domainName: String!
+        urlScheme: String!
+        linkPath: String!
+        iconUri: String
+        description: String
+        tags: [TagDs!]
+    }
+
     input CreateBookmarkDl {
         parentId: ID
         position: Int
@@ -78,11 +90,12 @@ export const bookmark_typeDefs = gql`
 
     type Mutation {
         createBookmarkDl(data: CreateBookmarkDl!): ID
-        deleteBookmark(id: ID!, parentId: ID!): Int!
+        deleteHierarchBookmark(id: ID!, parentId: ID!): Int!
+        deleteBookmark(id: ID!): Int!
     }
 
     type BmsPaged {
-        bookmarks: [BookmarkDl!]!
+        bookmarks: [BookmarkDl2!]!
         totalCount: Int!
     }
 
