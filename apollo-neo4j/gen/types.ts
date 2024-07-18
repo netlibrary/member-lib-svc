@@ -701,7 +701,7 @@ export type BookmarkDl2 = {
   id: Scalars['ID']['output'];
   linkPath: Scalars['String']['output'];
   name: Scalars['String']['output'];
-  parentId: Scalars['ID']['output'];
+  parentId?: Maybe<Scalars['ID']['output']>;
   tags?: Maybe<Array<TagDs>>;
   urlScheme: Scalars['String']['output'];
 };
@@ -715,7 +715,7 @@ export type BookmarkDl2AggregateSelection = {
   id: IdAggregateSelectionNonNullable;
   linkPath: StringAggregateSelectionNonNullable;
   name: StringAggregateSelectionNonNullable;
-  parentId: IdAggregateSelectionNonNullable;
+  parentId: IdAggregateSelectionNullable;
   urlScheme: StringAggregateSelectionNonNullable;
 };
 
@@ -726,7 +726,7 @@ export type BookmarkDl2CreateInput = {
   id: Scalars['ID']['input'];
   linkPath: Scalars['String']['input'];
   name: Scalars['String']['input'];
-  parentId: Scalars['ID']['input'];
+  parentId?: InputMaybe<Scalars['ID']['input']>;
   urlScheme: Scalars['String']['input'];
 };
 
@@ -803,7 +803,7 @@ export type BookmarkDl2Where = {
   parentId?: InputMaybe<Scalars['ID']['input']>;
   parentId_CONTAINS?: InputMaybe<Scalars['ID']['input']>;
   parentId_ENDS_WITH?: InputMaybe<Scalars['ID']['input']>;
-  parentId_IN?: InputMaybe<Array<Scalars['ID']['input']>>;
+  parentId_IN?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
   parentId_STARTS_WITH?: InputMaybe<Scalars['ID']['input']>;
   urlScheme?: InputMaybe<Scalars['String']['input']>;
   urlScheme_CONTAINS?: InputMaybe<Scalars['String']['input']>;
@@ -1632,6 +1632,74 @@ export type ChildsToMove = {
   parentId: Scalars['ID']['input'];
 };
 
+export type CollBmCount = {
+  __typename?: 'CollBmCount';
+  bmCount: Scalars['Int']['output'];
+  id: Scalars['ID']['output'];
+};
+
+export type CollBmCountAggregateSelection = {
+  __typename?: 'CollBmCountAggregateSelection';
+  bmCount: IntAggregateSelectionNonNullable;
+  count: Scalars['Int']['output'];
+  id: IdAggregateSelectionNonNullable;
+};
+
+export type CollBmCountCreateInput = {
+  bmCount: Scalars['Int']['input'];
+  id: Scalars['ID']['input'];
+};
+
+export type CollBmCountEdge = {
+  __typename?: 'CollBmCountEdge';
+  cursor: Scalars['String']['output'];
+  node: CollBmCount;
+};
+
+export type CollBmCountOptions = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  /** Specify one or more CollBmCountSort objects to sort CollBmCounts by. The sorts will be applied in the order in which they are arranged in the array. */
+  sort?: InputMaybe<Array<CollBmCountSort>>;
+};
+
+/** Fields to sort CollBmCounts by. The order in which sorts are applied is not guaranteed when specifying many fields in one CollBmCountSort object. */
+export type CollBmCountSort = {
+  bmCount?: InputMaybe<SortDirection>;
+  id?: InputMaybe<SortDirection>;
+};
+
+export type CollBmCountUpdateInput = {
+  bmCount?: InputMaybe<Scalars['Int']['input']>;
+  bmCount_DECREMENT?: InputMaybe<Scalars['Int']['input']>;
+  bmCount_INCREMENT?: InputMaybe<Scalars['Int']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+};
+
+export type CollBmCountWhere = {
+  AND?: InputMaybe<Array<CollBmCountWhere>>;
+  NOT?: InputMaybe<CollBmCountWhere>;
+  OR?: InputMaybe<Array<CollBmCountWhere>>;
+  bmCount?: InputMaybe<Scalars['Int']['input']>;
+  bmCount_GT?: InputMaybe<Scalars['Int']['input']>;
+  bmCount_GTE?: InputMaybe<Scalars['Int']['input']>;
+  bmCount_IN?: InputMaybe<Array<Scalars['Int']['input']>>;
+  bmCount_LT?: InputMaybe<Scalars['Int']['input']>;
+  bmCount_LTE?: InputMaybe<Scalars['Int']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  id_CONTAINS?: InputMaybe<Scalars['ID']['input']>;
+  id_ENDS_WITH?: InputMaybe<Scalars['ID']['input']>;
+  id_IN?: InputMaybe<Array<Scalars['ID']['input']>>;
+  id_STARTS_WITH?: InputMaybe<Scalars['ID']['input']>;
+};
+
+export type CollBmCountsConnection = {
+  __typename?: 'CollBmCountsConnection';
+  edges: Array<CollBmCountEdge>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
 export type Collection = Parent & {
   __typename?: 'Collection';
   children: Array<Child>;
@@ -2398,6 +2466,12 @@ export type CreateBookmarkFiltersMutationResponse = {
 export type CreateBookmarksMutationResponse = {
   __typename?: 'CreateBookmarksMutationResponse';
   bookmarks: Array<Bookmark>;
+  info: CreateInfo;
+};
+
+export type CreateCollBmCountsMutationResponse = {
+  __typename?: 'CreateCollBmCountsMutationResponse';
+  collBmCounts: Array<CollBmCount>;
   info: CreateInfo;
 };
 
@@ -4240,6 +4314,7 @@ export type Mutation = {
   createBookmarkDls: CreateBookmarkDlsMutationResponse;
   createBookmarkFilters: CreateBookmarkFiltersMutationResponse;
   createBookmarks: CreateBookmarksMutationResponse;
+  createCollBmCounts: CreateCollBmCountsMutationResponse;
   createCollection?: Maybe<Scalars['ID']['output']>;
   createCollectionDs: CreateCollectionDsMutationResponse;
   createCollectionDsLists: CreateCollectionDsListsMutationResponse;
@@ -4263,6 +4338,7 @@ export type Mutation = {
   deleteBookmarkFilters: DeleteInfo;
   deleteBookmarks: DeleteInfo;
   deleteCascade?: Maybe<Scalars['Int']['output']>;
+  deleteCollBmCounts: DeleteInfo;
   deleteCollection: Scalars['Int']['output'];
   deleteCollectionDs: DeleteInfo;
   deleteCollectionDsLists: DeleteInfo;
@@ -4270,6 +4346,7 @@ export type Mutation = {
   deleteFolder: Scalars['Int']['output'];
   deleteFolderDls: DeleteInfo;
   deleteFolders: DeleteInfo;
+  deleteHierarchBmXGetBmPath?: Maybe<Array<Scalars['String']['output']>>;
   deleteHierarchBookmark: Scalars['Int']['output'];
   deleteListCascade?: Maybe<Scalars['Int']['output']>;
   deleteManyNodes: Scalars['Int']['output'];
@@ -4289,6 +4366,7 @@ export type Mutation = {
   updateBookmarkDls: UpdateBookmarkDlsMutationResponse;
   updateBookmarkFilters: UpdateBookmarkFiltersMutationResponse;
   updateBookmarks: UpdateBookmarksMutationResponse;
+  updateCollBmCounts: UpdateCollBmCountsMutationResponse;
   updateCollectionDs: UpdateCollectionDsMutationResponse;
   updateCollectionDsLists: UpdateCollectionDsListsMutationResponse;
   updateCollections: UpdateCollectionsMutationResponse;
@@ -4337,6 +4415,11 @@ export type MutationCreateBookmarkFiltersArgs = {
 
 export type MutationCreateBookmarksArgs = {
   input: Array<BookmarkCreateInput>;
+};
+
+
+export type MutationCreateCollBmCountsArgs = {
+  input: Array<CollBmCountCreateInput>;
 };
 
 
@@ -4461,6 +4544,11 @@ export type MutationDeleteCascadeArgs = {
 };
 
 
+export type MutationDeleteCollBmCountsArgs = {
+  where?: InputMaybe<CollBmCountWhere>;
+};
+
+
 export type MutationDeleteCollectionArgs = {
   id: Scalars['ID']['input'];
   memberId: Scalars['ID']['input'];
@@ -4497,6 +4585,12 @@ export type MutationDeleteFolderDlsArgs = {
 export type MutationDeleteFoldersArgs = {
   delete?: InputMaybe<FolderDeleteInput>;
   where?: InputMaybe<FolderWhere>;
+};
+
+
+export type MutationDeleteHierarchBmXGetBmPathArgs = {
+  id: Scalars['ID']['input'];
+  parentId: Scalars['ID']['input'];
 };
 
 
@@ -4620,6 +4714,12 @@ export type MutationUpdateBookmarksArgs = {
   disconnect?: InputMaybe<BookmarkDisconnectInput>;
   update?: InputMaybe<BookmarkUpdateInput>;
   where?: InputMaybe<BookmarkWhere>;
+};
+
+
+export type MutationUpdateCollBmCountsArgs = {
+  update?: InputMaybe<CollBmCountUpdateInput>;
+  where?: InputMaybe<CollBmCountWhere>;
 };
 
 
@@ -5164,6 +5264,9 @@ export type Query = {
   bookmarks: Array<Bookmark>;
   bookmarksAggregate: BookmarkAggregateSelection;
   bookmarksConnection: BookmarksConnection;
+  collBmCounts: Array<CollBmCount>;
+  collBmCountsAggregate: CollBmCountAggregateSelection;
+  collBmCountsConnection: CollBmCountsConnection;
   collectionDs: Array<CollectionDs>;
   collectionDsAggregate: CollectionDsAggregateSelection;
   collectionDsConnection: CollectionDsConnection;
@@ -5173,6 +5276,7 @@ export type Query = {
   collectionList?: Maybe<CollectionDsList>;
   collections: Array<Collection>;
   collectionsAggregate: CollectionAggregateSelection;
+  collectionsByBmIdsXBmCounts?: Maybe<Array<CollBmCount>>;
   collectionsConnection: CollectionsConnection;
   folderDls: Array<FolderDl>;
   folderDlsAggregate: FolderDlAggregateSelection;
@@ -5333,6 +5437,25 @@ export type QueryBookmarksConnectionArgs = {
 };
 
 
+export type QueryCollBmCountsArgs = {
+  options?: InputMaybe<CollBmCountOptions>;
+  where?: InputMaybe<CollBmCountWhere>;
+};
+
+
+export type QueryCollBmCountsAggregateArgs = {
+  where?: InputMaybe<CollBmCountWhere>;
+};
+
+
+export type QueryCollBmCountsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<CollBmCountSort>>>;
+  where?: InputMaybe<CollBmCountWhere>;
+};
+
+
 export type QueryCollectionDsArgs = {
   options?: InputMaybe<CollectionDsOptions>;
   where?: InputMaybe<CollectionDsWhere>;
@@ -5383,6 +5506,11 @@ export type QueryCollectionsArgs = {
 
 export type QueryCollectionsAggregateArgs = {
   where?: InputMaybe<CollectionWhere>;
+};
+
+
+export type QueryCollectionsByBmIdsXBmCountsArgs = {
+  ids: Array<Scalars['String']['input']>;
 };
 
 
@@ -6221,6 +6349,12 @@ export type UpdateBookmarksMutationResponse = {
   info: UpdateInfo;
 };
 
+export type UpdateCollBmCountsMutationResponse = {
+  __typename?: 'UpdateCollBmCountsMutationResponse';
+  collBmCounts: Array<CollBmCount>;
+  info: UpdateInfo;
+};
+
 export type UpdateCollectionDsListsMutationResponse = {
   __typename?: 'UpdateCollectionDsListsMutationResponse';
   collectionDsLists: Array<CollectionDsList>;
@@ -6556,6 +6690,15 @@ export type ResolversTypes = {
   ChildDl: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['ChildDl']>;
   ChildWhere: ChildWhere;
   ChildsToMove: ChildsToMove;
+  CollBmCount: ResolverTypeWrapper<CollBmCount>;
+  CollBmCountAggregateSelection: ResolverTypeWrapper<CollBmCountAggregateSelection>;
+  CollBmCountCreateInput: CollBmCountCreateInput;
+  CollBmCountEdge: ResolverTypeWrapper<CollBmCountEdge>;
+  CollBmCountOptions: CollBmCountOptions;
+  CollBmCountSort: CollBmCountSort;
+  CollBmCountUpdateInput: CollBmCountUpdateInput;
+  CollBmCountWhere: CollBmCountWhere;
+  CollBmCountsConnection: ResolverTypeWrapper<CollBmCountsConnection>;
   Collection: ResolverTypeWrapper<Omit<Collection, 'children'> & { children: Array<ResolversTypes['Child']> }>;
   CollectionAggregateSelection: ResolverTypeWrapper<CollectionAggregateSelection>;
   CollectionChildrenBookmarkConnectFieldInput: CollectionChildrenBookmarkConnectFieldInput;
@@ -6662,6 +6805,7 @@ export type ResolversTypes = {
   CreateBookmarkDlsMutationResponse: ResolverTypeWrapper<CreateBookmarkDlsMutationResponse>;
   CreateBookmarkFiltersMutationResponse: ResolverTypeWrapper<CreateBookmarkFiltersMutationResponse>;
   CreateBookmarksMutationResponse: ResolverTypeWrapper<CreateBookmarksMutationResponse>;
+  CreateCollBmCountsMutationResponse: ResolverTypeWrapper<CreateCollBmCountsMutationResponse>;
   CreateCollectionDsListsMutationResponse: ResolverTypeWrapper<CreateCollectionDsListsMutationResponse>;
   CreateCollectionDsMutationResponse: ResolverTypeWrapper<CreateCollectionDsMutationResponse>;
   CreateCollectionsMutationResponse: ResolverTypeWrapper<CreateCollectionsMutationResponse>;
@@ -7023,6 +7167,7 @@ export type ResolversTypes = {
   UpdateBookmarkDlsMutationResponse: ResolverTypeWrapper<UpdateBookmarkDlsMutationResponse>;
   UpdateBookmarkFiltersMutationResponse: ResolverTypeWrapper<UpdateBookmarkFiltersMutationResponse>;
   UpdateBookmarksMutationResponse: ResolverTypeWrapper<UpdateBookmarksMutationResponse>;
+  UpdateCollBmCountsMutationResponse: ResolverTypeWrapper<UpdateCollBmCountsMutationResponse>;
   UpdateCollectionDsListsMutationResponse: ResolverTypeWrapper<UpdateCollectionDsListsMutationResponse>;
   UpdateCollectionDsMutationResponse: ResolverTypeWrapper<UpdateCollectionDsMutationResponse>;
   UpdateCollectionsMutationResponse: ResolverTypeWrapper<UpdateCollectionsMutationResponse>;
@@ -7208,6 +7353,15 @@ export type ResolversParentTypes = {
   ChildDl: ResolversUnionTypes<ResolversParentTypes>['ChildDl'];
   ChildWhere: ChildWhere;
   ChildsToMove: ChildsToMove;
+  CollBmCount: CollBmCount;
+  CollBmCountAggregateSelection: CollBmCountAggregateSelection;
+  CollBmCountCreateInput: CollBmCountCreateInput;
+  CollBmCountEdge: CollBmCountEdge;
+  CollBmCountOptions: CollBmCountOptions;
+  CollBmCountSort: CollBmCountSort;
+  CollBmCountUpdateInput: CollBmCountUpdateInput;
+  CollBmCountWhere: CollBmCountWhere;
+  CollBmCountsConnection: CollBmCountsConnection;
   Collection: Omit<Collection, 'children'> & { children: Array<ResolversParentTypes['Child']> };
   CollectionAggregateSelection: CollectionAggregateSelection;
   CollectionChildrenBookmarkConnectFieldInput: CollectionChildrenBookmarkConnectFieldInput;
@@ -7314,6 +7468,7 @@ export type ResolversParentTypes = {
   CreateBookmarkDlsMutationResponse: CreateBookmarkDlsMutationResponse;
   CreateBookmarkFiltersMutationResponse: CreateBookmarkFiltersMutationResponse;
   CreateBookmarksMutationResponse: CreateBookmarksMutationResponse;
+  CreateCollBmCountsMutationResponse: CreateCollBmCountsMutationResponse;
   CreateCollectionDsListsMutationResponse: CreateCollectionDsListsMutationResponse;
   CreateCollectionDsMutationResponse: CreateCollectionDsMutationResponse;
   CreateCollectionsMutationResponse: CreateCollectionsMutationResponse;
@@ -7674,6 +7829,7 @@ export type ResolversParentTypes = {
   UpdateBookmarkDlsMutationResponse: UpdateBookmarkDlsMutationResponse;
   UpdateBookmarkFiltersMutationResponse: UpdateBookmarkFiltersMutationResponse;
   UpdateBookmarksMutationResponse: UpdateBookmarksMutationResponse;
+  UpdateCollBmCountsMutationResponse: UpdateCollBmCountsMutationResponse;
   UpdateCollectionDsListsMutationResponse: UpdateCollectionDsListsMutationResponse;
   UpdateCollectionDsMutationResponse: UpdateCollectionDsMutationResponse;
   UpdateCollectionsMutationResponse: UpdateCollectionsMutationResponse;
@@ -7853,7 +8009,7 @@ export type BookmarkDl2Resolvers<ContextType = any, ParentType extends Resolvers
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   linkPath?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  parentId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  parentId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   tags?: Resolver<Maybe<Array<ResolversTypes['TagDs']>>, ParentType, ContextType>;
   urlScheme?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -7867,7 +8023,7 @@ export type BookmarkDl2AggregateSelectionResolvers<ContextType = any, ParentType
   id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
   linkPath?: Resolver<ResolversTypes['StringAggregateSelectionNonNullable'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['StringAggregateSelectionNonNullable'], ParentType, ContextType>;
-  parentId?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
+  parentId?: Resolver<ResolversTypes['IDAggregateSelectionNullable'], ParentType, ContextType>;
   urlScheme?: Resolver<ResolversTypes['StringAggregateSelectionNonNullable'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -8041,6 +8197,32 @@ export type ChildResolvers<ContextType = any, ParentType extends ResolversParent
 
 export type ChildDlResolvers<ContextType = any, ParentType extends ResolversParentTypes['ChildDl'] = ResolversParentTypes['ChildDl']> = {
   __resolveType: TypeResolveFn<'BookmarkDl' | 'FolderDl', ParentType, ContextType>;
+};
+
+export type CollBmCountResolvers<ContextType = any, ParentType extends ResolversParentTypes['CollBmCount'] = ResolversParentTypes['CollBmCount']> = {
+  bmCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CollBmCountAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['CollBmCountAggregateSelection'] = ResolversParentTypes['CollBmCountAggregateSelection']> = {
+  bmCount?: Resolver<ResolversTypes['IntAggregateSelectionNonNullable'], ParentType, ContextType>;
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CollBmCountEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['CollBmCountEdge'] = ResolversParentTypes['CollBmCountEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['CollBmCount'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CollBmCountsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['CollBmCountsConnection'] = ResolversParentTypes['CollBmCountsConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['CollBmCountEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type CollectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Collection'] = ResolversParentTypes['Collection']> = {
@@ -8227,6 +8409,12 @@ export type CreateBookmarkFiltersMutationResponseResolvers<ContextType = any, Pa
 
 export type CreateBookmarksMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateBookmarksMutationResponse'] = ResolversParentTypes['CreateBookmarksMutationResponse']> = {
   bookmarks?: Resolver<Array<ResolversTypes['Bookmark']>, ParentType, ContextType>;
+  info?: Resolver<ResolversTypes['CreateInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CreateCollBmCountsMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateCollBmCountsMutationResponse'] = ResolversParentTypes['CreateCollBmCountsMutationResponse']> = {
+  collBmCounts?: Resolver<Array<ResolversTypes['CollBmCount']>, ParentType, ContextType>;
   info?: Resolver<ResolversTypes['CreateInfo'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -8684,6 +8872,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createBookmarkDls?: Resolver<ResolversTypes['CreateBookmarkDlsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateBookmarkDlsArgs, 'input'>>;
   createBookmarkFilters?: Resolver<ResolversTypes['CreateBookmarkFiltersMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateBookmarkFiltersArgs, 'input'>>;
   createBookmarks?: Resolver<ResolversTypes['CreateBookmarksMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateBookmarksArgs, 'input'>>;
+  createCollBmCounts?: Resolver<ResolversTypes['CreateCollBmCountsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateCollBmCountsArgs, 'input'>>;
   createCollection?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType, RequireFields<MutationCreateCollectionArgs, 'memberId' | 'name'>>;
   createCollectionDs?: Resolver<ResolversTypes['CreateCollectionDsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateCollectionDsArgs, 'input'>>;
   createCollectionDsLists?: Resolver<ResolversTypes['CreateCollectionDsListsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateCollectionDsListsArgs, 'input'>>;
@@ -8707,6 +8896,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteBookmarkFilters?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteBookmarkFiltersArgs>>;
   deleteBookmarks?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteBookmarksArgs>>;
   deleteCascade?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationDeleteCascadeArgs, 'id'>>;
+  deleteCollBmCounts?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteCollBmCountsArgs>>;
   deleteCollection?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationDeleteCollectionArgs, 'id' | 'memberId'>>;
   deleteCollectionDs?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteCollectionDsArgs>>;
   deleteCollectionDsLists?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteCollectionDsListsArgs>>;
@@ -8714,6 +8904,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteFolder?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationDeleteFolderArgs, 'id' | 'parentId'>>;
   deleteFolderDls?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteFolderDlsArgs>>;
   deleteFolders?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteFoldersArgs>>;
+  deleteHierarchBmXGetBmPath?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType, RequireFields<MutationDeleteHierarchBmXGetBmPathArgs, 'id' | 'parentId'>>;
   deleteHierarchBookmark?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationDeleteHierarchBookmarkArgs, 'id' | 'parentId'>>;
   deleteListCascade?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationDeleteListCascadeArgs, 'ids'>>;
   deleteManyNodes?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationDeleteManyNodesArgs, 'nodes'>>;
@@ -8733,6 +8924,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateBookmarkDls?: Resolver<ResolversTypes['UpdateBookmarkDlsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateBookmarkDlsArgs>>;
   updateBookmarkFilters?: Resolver<ResolversTypes['UpdateBookmarkFiltersMutationResponse'], ParentType, ContextType, Partial<MutationUpdateBookmarkFiltersArgs>>;
   updateBookmarks?: Resolver<ResolversTypes['UpdateBookmarksMutationResponse'], ParentType, ContextType, Partial<MutationUpdateBookmarksArgs>>;
+  updateCollBmCounts?: Resolver<ResolversTypes['UpdateCollBmCountsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateCollBmCountsArgs>>;
   updateCollectionDs?: Resolver<ResolversTypes['UpdateCollectionDsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateCollectionDsArgs>>;
   updateCollectionDsLists?: Resolver<ResolversTypes['UpdateCollectionDsListsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateCollectionDsListsArgs>>;
   updateCollections?: Resolver<ResolversTypes['UpdateCollectionsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateCollectionsArgs>>;
@@ -8876,6 +9068,9 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   bookmarks?: Resolver<Array<ResolversTypes['Bookmark']>, ParentType, ContextType, Partial<QueryBookmarksArgs>>;
   bookmarksAggregate?: Resolver<ResolversTypes['BookmarkAggregateSelection'], ParentType, ContextType, Partial<QueryBookmarksAggregateArgs>>;
   bookmarksConnection?: Resolver<ResolversTypes['BookmarksConnection'], ParentType, ContextType, Partial<QueryBookmarksConnectionArgs>>;
+  collBmCounts?: Resolver<Array<ResolversTypes['CollBmCount']>, ParentType, ContextType, Partial<QueryCollBmCountsArgs>>;
+  collBmCountsAggregate?: Resolver<ResolversTypes['CollBmCountAggregateSelection'], ParentType, ContextType, Partial<QueryCollBmCountsAggregateArgs>>;
+  collBmCountsConnection?: Resolver<ResolversTypes['CollBmCountsConnection'], ParentType, ContextType, Partial<QueryCollBmCountsConnectionArgs>>;
   collectionDs?: Resolver<Array<ResolversTypes['CollectionDs']>, ParentType, ContextType, Partial<QueryCollectionDsArgs>>;
   collectionDsAggregate?: Resolver<ResolversTypes['CollectionDsAggregateSelection'], ParentType, ContextType, Partial<QueryCollectionDsAggregateArgs>>;
   collectionDsConnection?: Resolver<ResolversTypes['CollectionDsConnection'], ParentType, ContextType, Partial<QueryCollectionDsConnectionArgs>>;
@@ -8885,6 +9080,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   collectionList?: Resolver<Maybe<ResolversTypes['CollectionDsList']>, ParentType, ContextType, RequireFields<QueryCollectionListArgs, 'memberId'>>;
   collections?: Resolver<Array<ResolversTypes['Collection']>, ParentType, ContextType, Partial<QueryCollectionsArgs>>;
   collectionsAggregate?: Resolver<ResolversTypes['CollectionAggregateSelection'], ParentType, ContextType, Partial<QueryCollectionsAggregateArgs>>;
+  collectionsByBmIdsXBmCounts?: Resolver<Maybe<Array<ResolversTypes['CollBmCount']>>, ParentType, ContextType, RequireFields<QueryCollectionsByBmIdsXBmCountsArgs, 'ids'>>;
   collectionsConnection?: Resolver<ResolversTypes['CollectionsConnection'], ParentType, ContextType, Partial<QueryCollectionsConnectionArgs>>;
   folderDls?: Resolver<Array<ResolversTypes['FolderDl']>, ParentType, ContextType, Partial<QueryFolderDlsArgs>>;
   folderDlsAggregate?: Resolver<ResolversTypes['FolderDlAggregateSelection'], ParentType, ContextType, Partial<QueryFolderDlsAggregateArgs>>;
@@ -9091,6 +9287,12 @@ export type UpdateBookmarksMutationResponseResolvers<ContextType = any, ParentTy
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UpdateCollBmCountsMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateCollBmCountsMutationResponse'] = ResolversParentTypes['UpdateCollBmCountsMutationResponse']> = {
+  collBmCounts?: Resolver<Array<ResolversTypes['CollBmCount']>, ParentType, ContextType>;
+  info?: Resolver<ResolversTypes['UpdateInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UpdateCollectionDsListsMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateCollectionDsListsMutationResponse'] = ResolversParentTypes['UpdateCollectionDsListsMutationResponse']> = {
   collectionDsLists?: Resolver<Array<ResolversTypes['CollectionDsList']>, ParentType, ContextType>;
   info?: Resolver<ResolversTypes['UpdateInfo'], ParentType, ContextType>;
@@ -9227,6 +9429,10 @@ export type Resolvers<ContextType = any> = {
   BookmarksConnection?: BookmarksConnectionResolvers<ContextType>;
   Child?: ChildResolvers<ContextType>;
   ChildDl?: ChildDlResolvers<ContextType>;
+  CollBmCount?: CollBmCountResolvers<ContextType>;
+  CollBmCountAggregateSelection?: CollBmCountAggregateSelectionResolvers<ContextType>;
+  CollBmCountEdge?: CollBmCountEdgeResolvers<ContextType>;
+  CollBmCountsConnection?: CollBmCountsConnectionResolvers<ContextType>;
   Collection?: CollectionResolvers<ContextType>;
   CollectionAggregateSelection?: CollectionAggregateSelectionResolvers<ContextType>;
   CollectionChildrenConnection?: CollectionChildrenConnectionResolvers<ContextType>;
@@ -9255,6 +9461,7 @@ export type Resolvers<ContextType = any> = {
   CreateBookmarkDlsMutationResponse?: CreateBookmarkDlsMutationResponseResolvers<ContextType>;
   CreateBookmarkFiltersMutationResponse?: CreateBookmarkFiltersMutationResponseResolvers<ContextType>;
   CreateBookmarksMutationResponse?: CreateBookmarksMutationResponseResolvers<ContextType>;
+  CreateCollBmCountsMutationResponse?: CreateCollBmCountsMutationResponseResolvers<ContextType>;
   CreateCollectionDsListsMutationResponse?: CreateCollectionDsListsMutationResponseResolvers<ContextType>;
   CreateCollectionDsMutationResponse?: CreateCollectionDsMutationResponseResolvers<ContextType>;
   CreateCollectionsMutationResponse?: CreateCollectionsMutationResponseResolvers<ContextType>;
@@ -9362,6 +9569,7 @@ export type Resolvers<ContextType = any> = {
   UpdateBookmarkDlsMutationResponse?: UpdateBookmarkDlsMutationResponseResolvers<ContextType>;
   UpdateBookmarkFiltersMutationResponse?: UpdateBookmarkFiltersMutationResponseResolvers<ContextType>;
   UpdateBookmarksMutationResponse?: UpdateBookmarksMutationResponseResolvers<ContextType>;
+  UpdateCollBmCountsMutationResponse?: UpdateCollBmCountsMutationResponseResolvers<ContextType>;
   UpdateCollectionDsListsMutationResponse?: UpdateCollectionDsListsMutationResponseResolvers<ContextType>;
   UpdateCollectionDsMutationResponse?: UpdateCollectionDsMutationResponseResolvers<ContextType>;
   UpdateCollectionsMutationResponse?: UpdateCollectionsMutationResponseResolvers<ContextType>;

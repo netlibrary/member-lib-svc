@@ -15,9 +15,8 @@ export const bookmarkResolvers = {
                 // Construct and execute the Cypher query
                 const result = await tx.run(`
                     MATCH (n:Bookmark { id: $id })
-                    optional match (p:Parent)-[:CONTAINS*]->(b)
                     DETACH DELETE n
-                    RETURN p.id
+                    RETURN COUNT(n) AS nodesDeleted
                 `, {id});
 
                 // Extract the nodesDeleted count from the result
@@ -47,6 +46,52 @@ export const bookmarkResolvers = {
                 }
                 await tx.commit()
                 return nodesDeleted;
+            } catch (error) {
+                await tx.rollback()
+                throw error;
+            } finally {
+                await tx.close();
+            }
+        },
+        deleteHierarchBmXGetBmPath: async (_, {id, parentId}, {driver}: { driver: Driver }) => {
+            const tx = await driver.session().beginTransaction();
+            try {
+                // Construct and execute the Cypher query
+                const result = await tx.run(`
+                    MATCH (b:Bookmark { id: $id })
+                    optional match (p:Parent)-[:CONTAINS*]->(b)
+                    DETACH DELETE b
+                    with reverse(COLLECT(p.id)) as parent_path
+                    RETURN parent_path
+                `, {id});
+
+                // Extract the nodesDeleted count from the result
+                const parentPath = result.records[0].get('parent_path');
+
+                // update parent meta
+                const ParentMeta = ogm.model("ParentMeta");
+                const parentMeta = await ParentMeta.find({
+                    where: {
+                        parentConnection: {
+                            node: {
+                                id: parentId
+                            }
+                        }
+                    }
+                });
+                // If parentMeta is found, update the child positions
+                if (parentMeta && parentMeta.length > 0) {
+                    const childPositions = parentMeta[0].childPositions.filter(childId => childId !== id);
+                    await ParentMeta.update({
+                        where: {id: parentMeta[0].id},
+                        update: {childPositions: childPositions},
+                    });
+                } else {
+                    // Handle case where MemberMeta object is not found
+                    throw new Error('ParentMeta not found for parentId: ' + parentId);
+                }
+                await tx.commit()
+                return parentPath;
             } catch (error) {
                 await tx.rollback()
                 throw error;
@@ -190,7 +235,7 @@ export const bookmarkResolvers = {
                 queryParams.offset = neo4j.int(offset);
                 queryParams.limit = neo4j.int(10);
 
-                 // Assuming the count fits into a JS number
+                // Assuming the count fits into a JS number
 
                 // Complete the base query with sorting (optional) and pagination
                 baseQueryParts.push(`optional match (p:Collection|Folder)-[:CONTAINS]->(bookmark)`);

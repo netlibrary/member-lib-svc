@@ -49,10 +49,16 @@ export const hierarchNodes_typeDefs = gql`
         childs: [SelectedChilds!]!
     }
 
+    type CollBmCount {
+        id: ID!
+        bmCount: Int!
+    }
+
     type Query {
         parentChildren(id: String!, level: Int!): [ChildDl!]!
         nl_parentsChildren(ids: [String!]!, level: Int!): [ParentsChildren!]!
         parentsByFilter(name: String!, limit: Int!, offset: Int!): [ParentDs!]
+        collectionsByBmIdsXBmCounts(ids: [String!]!): [CollBmCount!]
     }
 
     type Mutation {

@@ -95,7 +95,7 @@ export const hierarchNodesResolvers = {
         parentsByFilter: async (_, {name: name, limit, offset}, {driver}) => {
             const tx = await driver.session().beginTransaction();
             try {
-                const ogm_result =  await tx.run(
+                const ogm_result = await tx.run(
                     CypherQuery.ParentsByFilter,
                     {name: name, limit: neo4j.int(limit), offset: neo4j.int(offset)}
                 );
@@ -117,6 +117,32 @@ export const hierarchNodesResolvers = {
                     res.push({id, children});
                 }
                 return res;
+            } catch (error) {
+                await tx.rollback()
+                throw error;
+            } finally {
+                await tx.close();
+            }
+        },
+        collectionsByBmIdsXBmCounts: async (_, {bmIds}, {driver}) => {
+            const tx = await driver.session().beginTransaction();
+            try {
+                const query = `
+                        MATCH (b:Bookmark) WHERE b.id IN $bmIds
+                        OPTIONAL MATCH (p:Collection)-[:CONTAINS*]->(b)
+                        WITH distinct p
+                        OPTIONAL MATCH (p)-[:CONTAINS*]->(b2:Bookmark)
+                        with p, COUNT(b2) as bmCount
+                        with {id: p.id, bmCount: bmCount} as r
+                        RETURN r
+                        `
+                const ogm_result = await tx.run(
+                    query,
+                    {bmIds: bmIds}
+                );
+
+                const result = ogm_result!.records[0].get("r");
+                return result
             } catch (error) {
                 await tx.rollback()
                 throw error;

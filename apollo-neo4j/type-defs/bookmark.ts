@@ -67,7 +67,7 @@ export const bookmark_typeDefs = gql`
 
     type BookmarkDl2 {
         id: ID!
-        parentId: ID!
+        parentId: ID
         name: String!
         domainName: String!
         urlScheme: String!
@@ -91,6 +91,7 @@ export const bookmark_typeDefs = gql`
     type Mutation {
         createBookmarkDl(data: CreateBookmarkDl!): ID
         deleteHierarchBookmark(id: ID!, parentId: ID!): Int!
+        deleteHierarchBmXGetBmPath(id: ID!, parentId: ID!): [String!]
         deleteBookmark(id: ID!): Int!
     }
 
