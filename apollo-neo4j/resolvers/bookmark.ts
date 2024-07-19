@@ -1,7 +1,6 @@
 import {ogm} from "../ogm";
-import neo4j, {Driver, Integer, Session, Transaction} from 'neo4j-driver';
-import {ogm_Collection} from "./collection";
-import {BmsPaged, BookmarkCreateInput, BookmarkFilter_In, ParentsChildren} from "../gen/types";
+import neo4j, {Driver, Integer, Transaction} from 'neo4j-driver';
+import {BookmarkFilter_In, SelectedBms} from "../gen/types";
 import {ParentMetaSvc} from "../services/parent_meta";
 import {memberIds} from "../../db_seeder/member";
 
@@ -53,45 +52,31 @@ export const bookmarkResolvers = {
                 await tx.close();
             }
         },
-        deleteHierarchBmXGetBmPath: async (_, {id, parentId}, {driver}: { driver: Driver }) => {
+        deleteHierarchBmsXGetCollBmCounts: async (_, {input}: {input: SelectedBms[]}, {driver}: { driver: Driver }) => {
             const tx = await driver.session().beginTransaction();
+            const bmIds = input.map(i => i.bmIds).flat();
             try {
                 // Construct and execute the Cypher query
                 const result = await tx.run(`
-                    MATCH (b:Bookmark { id: $id })
-                    optional match (p:Parent)-[:CONTAINS*]->(b)
-                    DETACH DELETE b
-                    with reverse(COLLECT(p.id)) as parent_path
-                    RETURN parent_path
-                `, {id});
+                        MATCH (b:Bookmark) WHERE b.id IN $bmIds
+                        OPTIONAL MATCH (c:Collection)-[:CONTAINS*]->(b)
+                        DETACH DELETE b
+                        WITH distinct c
+                        OPTIONAL MATCH (c)-[:CONTAINS*]->(b2:Bookmark)
+                        with c, COUNT(b2) as bmCount
+                        with collect({id: c.id, bmCount: bmCount}) as r
+                        RETURN r
+                `, {bmIds});
 
                 // Extract the nodesDeleted count from the result
-                const parentPath = result.records[0].get('parent_path');
+                const res = result.records[0].get('r');
 
-                // update parent meta
-                const ParentMeta = ogm.model("ParentMeta");
-                const parentMeta = await ParentMeta.find({
-                    where: {
-                        parentConnection: {
-                            node: {
-                                id: parentId
-                            }
-                        }
-                    }
-                });
-                // If parentMeta is found, update the child positions
-                if (parentMeta && parentMeta.length > 0) {
-                    const childPositions = parentMeta[0].childPositions.filter(childId => childId !== id);
-                    await ParentMeta.update({
-                        where: {id: parentMeta[0].id},
-                        update: {childPositions: childPositions},
-                    });
-                } else {
-                    // Handle case where MemberMeta object is not found
-                    throw new Error('ParentMeta not found for parentId: ' + parentId);
+                for (const childsWrapper of input) {
+                    await ParentMetaSvc.deleteChildPositions([...childsWrapper.bmIds], childsWrapper.parentId)
                 }
+
                 await tx.commit()
-                return parentPath;
+                return res;
             } catch (error) {
                 await tx.rollback()
                 throw error;
@@ -195,7 +180,7 @@ export const bookmarkResolvers = {
 
                 // Handle bmTxt filter
                 if (filter.bmTxt) {
-                    const txtCondition = 'bookmark.description CONTAINS $bmTxt OR bookmark.name CONTAINS $bmTxt';
+                    const txtCondition = 'toLower(bookmark.description) CONTAINS toLower($bmTxt) OR toLower(bookmark.name) CONTAINS toLower($bmTxt)';
                     baseQueryParts.push(filter.bmUrl ? `AND (${txtCondition})` : `WHERE ${txtCondition}`);
                     queryParams.bmTxt = filter.bmTxt;
                 }

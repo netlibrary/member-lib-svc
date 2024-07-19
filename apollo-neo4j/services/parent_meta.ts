@@ -55,7 +55,7 @@ const addChildPositions = async (childIds, parentId, position) => {
     }
 }
 
-const deleteChildPositions = async (childIds: string[], parentId: string) => {
+export const deleteChildPositions = async (childIds: string[], parentId: string) => {
     const parentMeta = await getParentMeta(parentId);
     if (parentMeta) {
         // Filter out the deleted collection IDs from collectionPositions

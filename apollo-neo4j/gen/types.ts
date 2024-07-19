@@ -4346,7 +4346,7 @@ export type Mutation = {
   deleteFolder: Scalars['Int']['output'];
   deleteFolderDls: DeleteInfo;
   deleteFolders: DeleteInfo;
-  deleteHierarchBmXGetBmPath?: Maybe<Array<Scalars['String']['output']>>;
+  deleteHierarchBmsXGetCollBmCounts?: Maybe<Array<CollBmCount>>;
   deleteHierarchBookmark: Scalars['Int']['output'];
   deleteListCascade?: Maybe<Scalars['Int']['output']>;
   deleteManyNodes: Scalars['Int']['output'];
@@ -4588,9 +4588,8 @@ export type MutationDeleteFoldersArgs = {
 };
 
 
-export type MutationDeleteHierarchBmXGetBmPathArgs = {
-  id: Scalars['ID']['input'];
-  parentId: Scalars['ID']['input'];
+export type MutationDeleteHierarchBmsXGetCollBmCountsArgs = {
+  input?: InputMaybe<Array<SelectedBms>>;
 };
 
 
@@ -5744,6 +5743,11 @@ export type QueryTagsConnectionArgs = {
 export type QueryOptions = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type SelectedBms = {
+  bmIds: Array<Scalars['ID']['input']>;
+  parentId: Scalars['ID']['input'];
 };
 
 export type SelectedChilds = {
@@ -7102,6 +7106,7 @@ export type ResolversTypes = {
   ParentsChildrenWhere: ParentsChildrenWhere;
   Query: ResolverTypeWrapper<{}>;
   QueryOptions: QueryOptions;
+  SelectedBms: SelectedBms;
   SelectedChilds: SelectedChilds;
   SelectedNodes: SelectedNodes;
   SortDirection: SortDirection;
@@ -7765,6 +7770,7 @@ export type ResolversParentTypes = {
   ParentsChildrenWhere: ParentsChildrenWhere;
   Query: {};
   QueryOptions: QueryOptions;
+  SelectedBms: SelectedBms;
   SelectedChilds: SelectedChilds;
   SelectedNodes: SelectedNodes;
   String: Scalars['String']['output'];
@@ -8904,7 +8910,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteFolder?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationDeleteFolderArgs, 'id' | 'parentId'>>;
   deleteFolderDls?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteFolderDlsArgs>>;
   deleteFolders?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteFoldersArgs>>;
-  deleteHierarchBmXGetBmPath?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType, RequireFields<MutationDeleteHierarchBmXGetBmPathArgs, 'id' | 'parentId'>>;
+  deleteHierarchBmsXGetCollBmCounts?: Resolver<Maybe<Array<ResolversTypes['CollBmCount']>>, ParentType, ContextType, Partial<MutationDeleteHierarchBmsXGetCollBmCountsArgs>>;
   deleteHierarchBookmark?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationDeleteHierarchBookmarkArgs, 'id' | 'parentId'>>;
   deleteListCascade?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationDeleteListCascadeArgs, 'ids'>>;
   deleteManyNodes?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationDeleteManyNodesArgs, 'nodes'>>;

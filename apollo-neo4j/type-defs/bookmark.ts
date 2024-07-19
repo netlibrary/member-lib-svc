@@ -88,10 +88,15 @@ export const bookmark_typeDefs = gql`
         description: String
     }
 
+    input SelectedBms {
+        parentId: ID!
+        bmIds: [ID!]!
+    }
+
     type Mutation {
         createBookmarkDl(data: CreateBookmarkDl!): ID
         deleteHierarchBookmark(id: ID!, parentId: ID!): Int!
-        deleteHierarchBmXGetBmPath(id: ID!, parentId: ID!): [String!]
+        deleteHierarchBmsXGetCollBmCounts(input: [SelectedBms!]): [CollBmCount!]
         deleteBookmark(id: ID!): Int!
     }
 
