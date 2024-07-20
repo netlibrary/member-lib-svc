@@ -68,6 +68,7 @@ export const bookmark_typeDefs = gql`
     type BookmarkDl2 {
         id: ID!
         parentId: ID
+        collectionId: ID
         name: String!
         domainName: String!
         urlScheme: String!

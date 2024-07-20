@@ -224,6 +224,7 @@ export const bookmarkResolvers = {
 
                 // Complete the base query with sorting (optional) and pagination
                 baseQueryParts.push(`optional match (p:Collection|Folder)-[:CONTAINS]->(bookmark)`);
+                baseQueryParts.push(`optional match (c:Collection)-[:CONTAINS*]->(bookmark)`);
                 baseQueryParts.push(`RETURN COLLECT(${bm_CypherSel.BookmarkDl2('bookmark')}) AS bookmarks`);
 
                 // Join the query parts into complete query strings
@@ -252,9 +253,10 @@ export const bookmarkResolvers = {
 };
 
 export const bm_CypherSel = {
-    BookmarkDl2: (alias: string, p_alias = "p") => `{
+    BookmarkDl2: (alias: string, p_alias = "p", c_alias = "c") => `{
   id: ${alias}.id,
   parentId: ${p_alias}.id, 
+  collectionId: ${c_alias}.id, 
   name: ${alias}.name, 
   domainName: ${alias}.domainName, 
   linkPath: ${alias}.linkPath, 

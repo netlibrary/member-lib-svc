@@ -695,6 +695,7 @@ export type BookmarkDl = {
 
 export type BookmarkDl2 = {
   __typename?: 'BookmarkDl2';
+  collectionId?: Maybe<Scalars['ID']['output']>;
   description?: Maybe<Scalars['String']['output']>;
   domainName: Scalars['String']['output'];
   iconUri?: Maybe<Scalars['String']['output']>;
@@ -708,6 +709,7 @@ export type BookmarkDl2 = {
 
 export type BookmarkDl2AggregateSelection = {
   __typename?: 'BookmarkDl2AggregateSelection';
+  collectionId: IdAggregateSelectionNullable;
   count: Scalars['Int']['output'];
   description: StringAggregateSelectionNullable;
   domainName: StringAggregateSelectionNonNullable;
@@ -720,6 +722,7 @@ export type BookmarkDl2AggregateSelection = {
 };
 
 export type BookmarkDl2CreateInput = {
+  collectionId?: InputMaybe<Scalars['ID']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   domainName: Scalars['String']['input'];
   iconUri?: InputMaybe<Scalars['String']['input']>;
@@ -745,6 +748,7 @@ export type BookmarkDl2Options = {
 
 /** Fields to sort BookmarkDl2s by. The order in which sorts are applied is not guaranteed when specifying many fields in one BookmarkDl2Sort object. */
 export type BookmarkDl2Sort = {
+  collectionId?: InputMaybe<SortDirection>;
   description?: InputMaybe<SortDirection>;
   domainName?: InputMaybe<SortDirection>;
   iconUri?: InputMaybe<SortDirection>;
@@ -756,6 +760,7 @@ export type BookmarkDl2Sort = {
 };
 
 export type BookmarkDl2UpdateInput = {
+  collectionId?: InputMaybe<Scalars['ID']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   domainName?: InputMaybe<Scalars['String']['input']>;
   iconUri?: InputMaybe<Scalars['String']['input']>;
@@ -770,6 +775,11 @@ export type BookmarkDl2Where = {
   AND?: InputMaybe<Array<BookmarkDl2Where>>;
   NOT?: InputMaybe<BookmarkDl2Where>;
   OR?: InputMaybe<Array<BookmarkDl2Where>>;
+  collectionId?: InputMaybe<Scalars['ID']['input']>;
+  collectionId_CONTAINS?: InputMaybe<Scalars['ID']['input']>;
+  collectionId_ENDS_WITH?: InputMaybe<Scalars['ID']['input']>;
+  collectionId_IN?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
+  collectionId_STARTS_WITH?: InputMaybe<Scalars['ID']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   description_CONTAINS?: InputMaybe<Scalars['String']['input']>;
   description_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
@@ -8009,6 +8019,7 @@ export type BookmarkDlResolvers<ContextType = any, ParentType extends ResolversP
 };
 
 export type BookmarkDl2Resolvers<ContextType = any, ParentType extends ResolversParentTypes['BookmarkDl2'] = ResolversParentTypes['BookmarkDl2']> = {
+  collectionId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   domainName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   iconUri?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -8022,6 +8033,7 @@ export type BookmarkDl2Resolvers<ContextType = any, ParentType extends Resolvers
 };
 
 export type BookmarkDl2AggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['BookmarkDl2AggregateSelection'] = ResolversParentTypes['BookmarkDl2AggregateSelection']> = {
+  collectionId?: Resolver<ResolversTypes['IDAggregateSelectionNullable'], ParentType, ContextType>;
   count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   description?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
   domainName?: Resolver<ResolversTypes['StringAggregateSelectionNonNullable'], ParentType, ContextType>;
