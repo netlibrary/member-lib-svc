@@ -2,7 +2,7 @@ import {ogm} from "../ogm";
 import neo4j, {Driver, Integer, Transaction} from 'neo4j-driver';
 import {BookmarkFilter_In, SelectedBms} from "../gen/types";
 import {ParentMetaSvc} from "../services/parent_meta";
-import {memberIds} from "../../db_seeder/member";
+import {memberIds} from "../../../db_seeder/member";
 
 export const ogm_Bookmark = ogm.model("Bookmark");
 

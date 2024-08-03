@@ -1,4 +1,4 @@
-import { gql } from 'apollo-server-express';
+import { gql } from 'graphql-tag';
 
 export const folder_typeDefs = gql`
   type Folder implements Parent @node(labels: ["Folder", "Parent", "DeleteCascade", "Child"]) {

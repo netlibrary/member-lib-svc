@@ -1,7 +1,7 @@
 import {NodesToMove, ParentsChildren, SelectedNodes} from "../gen/types";
 import {NodeSvc} from "../services/node";
 import {MemberMetaSvc} from "../services/member_meta";
-import {memberIds} from "../../db_seeder/member";
+import {memberIds} from "../../../db_seeder/member";
 import {ParentMetaSvc} from "../services/parent_meta";
 import neo4j, {Transaction} from "neo4j-driver";
 import {bm_CypherSel} from "./bookmark";

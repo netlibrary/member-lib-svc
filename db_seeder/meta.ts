@@ -1,4 +1,4 @@
-import { ogm } from "../apollo-neo4j/ogm";
+import { ogm } from "../src/apollo-neo4j/ogm";
 
 export async function seedMemberMeta(memberId, collectionIds) {
     const MemberMeta = ogm.model('MemberMeta')

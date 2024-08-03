@@ -1,4 +1,4 @@
-import {gql} from "apollo-server-express";
+import gql from 'graphql-tag';
 
 export const tag_typeDefs = gql`
     type Tag @node(labels: ["Tag"]) {

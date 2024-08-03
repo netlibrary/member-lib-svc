@@ -1,8 +1,8 @@
 import {faker} from '@faker-js/faker';
-import {ogm} from '../apollo-neo4j/ogm';
+import {ogm} from '../src/apollo-neo4j/ogm';
 import {seedFolders} from "./folder";
 import {seedMemberMeta, seedParentMeta} from "./meta";
-import {ogm_Bookmark} from "../apollo-neo4j/resolvers/bookmark";
+import {ogm_Bookmark} from "../src/apollo-neo4j/resolvers/bookmark";
 import {seedTags} from "./tag";
 
 

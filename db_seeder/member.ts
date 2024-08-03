@@ -1,4 +1,4 @@
-import { driver } from "../apollo-neo4j/driver";
+import { driver } from "../src/apollo-neo4j/driver";
 import { seedCollections } from "./collection";
 import {seedUnsortedBms} from "./bookmark";
 

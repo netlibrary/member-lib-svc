@@ -1,4 +1,4 @@
-import { gql } from 'apollo-server-express';
+import { gql } from 'graphql-tag';
 import { bookmark_typeDefs } from './bookmark';
 import { collection_typeDefs } from './collection';
 import { hierarchNodes_typeDefs } from './hierarch_nodes';

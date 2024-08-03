@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { ogm } from '../apollo-neo4j/ogm';
+import { ogm } from '../src/apollo-neo4j/ogm';
 import { seedBookmarks } from './bookmark';
 import { seedFolders } from './folder';
 import { seedParentMeta, seedMemberMeta } from './meta';
