@@ -4340,6 +4340,7 @@ export type Mutation = {
   createTagDls: CreateTagDlsMutationResponse;
   createTagDs: CreateTagDsMutationResponse;
   createTags: CreateTagsMutationResponse;
+  deleteAllBms: Scalars['Int']['output'];
   deleteBmsContainers: DeleteInfo;
   deleteBmsPageds: DeleteInfo;
   deleteBookmark: Scalars['Int']['output'];
@@ -8906,6 +8907,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createTagDls?: Resolver<ResolversTypes['CreateTagDlsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateTagDlsArgs, 'input'>>;
   createTagDs?: Resolver<ResolversTypes['CreateTagDsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateTagDsArgs, 'input'>>;
   createTags?: Resolver<ResolversTypes['CreateTagsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateTagsArgs, 'input'>>;
+  deleteAllBms?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   deleteBmsContainers?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteBmsContainersArgs>>;
   deleteBmsPageds?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteBmsPagedsArgs>>;
   deleteBookmark?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationDeleteBookmarkArgs, 'id'>>;

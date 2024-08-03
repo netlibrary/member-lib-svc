@@ -8,6 +8,59 @@ export const ogm_Bookmark = ogm.model("Bookmark");
 
 export const bookmarkResolvers = {
     Mutation: {
+        deleteAllBms: async (_, {}, {driver}: { driver: Driver }) => {
+            const tx = await driver.session().beginTransaction();
+            try {
+                // Construct and execute the Cypher query
+                await tx.run(`
+                    MATCH (c:BmsContainer)
+                    OPTIONAL MATCH (c)-[:CONTAINS]->(b:Bookmark)
+                    DETACH DELETE b
+                `);
+
+                await tx.run(`
+                    MATCH (b:Bookmark)
+                    OPTIONAL MATCH (p:Folder|Collection)-[:CONTAINS]->(b)
+                    DETACH DELETE b
+                `);
+
+                await tx.run(`
+                    MATCH (p:ParentMeta)
+                    SET p.childPositions = []
+                `);
+
+                // ParentMetaSvc.deleteChildPositions()
+                // // update parent meta
+                // const ParentMeta = ogm.model("ParentMeta");
+                // const parentMeta = await ParentMeta.find({
+                //     where: {
+                //         parentConnection: {
+                //             node: {
+                //                 id: parentId
+                //             }
+                //         }
+                //     }
+                // });
+                // // If parentMeta is found, update the child positions
+                // if (parentMeta && parentMeta.length > 0) {
+                //     const childPositions = parentMeta[0].childPositions.filter(childId => childId !== id);
+                //     await ParentMeta.update({
+                //         where: {id: parentMeta[0].id},
+                //         update: {childPositions: childPositions},
+                //     });
+                // } else {
+                //     // Handle case where MemberMeta object is not found
+                //     throw new Error('ParentMeta not found for parentId: ' + parentId);
+                // }
+                await tx.commit()
+                return 0;
+            } catch (error) {
+                await tx.rollback()
+                throw error;
+            } finally {
+                await tx.close();
+            }
+        },
         deleteHierarchBookmark: async (_, {id, parentId}, {driver}: { driver: Driver }) => {
             const tx = await driver.session().beginTransaction();
             try {
@@ -52,7 +105,9 @@ export const bookmarkResolvers = {
                 await tx.close();
             }
         },
-        deleteHierarchBmsXGetCollBmCounts: async (_, {input}: {input: SelectedBms[]}, {driver}: { driver: Driver }) => {
+        deleteHierarchBmsXGetCollBmCounts: async (_, {input}: { input: SelectedBms[] }, {driver}: {
+            driver: Driver
+        }) => {
             const tx = await driver.session().beginTransaction();
             const bmIds = input.map(i => i.bmIds).flat();
             try {
