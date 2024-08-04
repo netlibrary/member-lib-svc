@@ -1,10 +1,10 @@
-import {ogm} from "../src/apollo-neo4j/ogm";
 import {faker} from "@faker-js/faker";
+import {seedOgm} from "./_db_seeder.js";
 
 export const tagIds: string[] = [];
 
 function connectTagToBookmark(bookmarkId: string) {
-    const ogm_Tag = ogm.model('Tag')
+    const ogm_Tag = seedOgm.model('Tag')
     try {
         const tagId = tagIds[Math.floor(Math.random() * tagIds.length)]
         ogm_Tag.update({
@@ -21,7 +21,7 @@ export async function seedTag(bookmarkId: string) {
         connectTagToBookmark(bookmarkId)
         return
     }
-    const ogm_Tag = ogm.model('Tag')
+    const ogm_Tag = seedOgm.model('Tag')
     try {
         const tagInput = {
             description: faker.lorem.sentences(2), // Replace with actual description

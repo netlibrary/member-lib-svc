@@ -1,8 +1,8 @@
-import {ogm} from "../ogm";
+import {ogm} from "../ogm.js";
 import {Driver} from 'neo4j-driver';
-import {ogm_Bookmark} from "./bookmark";
-import {FolderCreateInput} from "../gen/types";
-import {ParentMetaSvc} from "../services/parent_meta";
+import {ogm_Bookmark} from "./bookmark.js";
+import {FolderCreateInput} from "../gen/types.js";
+import {ParentMetaSvc} from "../services/parent_meta.js";
 
 export const ogm_Folder = ogm.model("Folder");
 

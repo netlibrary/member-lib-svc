@@ -1,13 +1,25 @@
-import { ogm } from '../src/apollo-neo4j/ogm';
-import { seedMembers } from './member';
+import {seedMembers} from './member.js';
+import {testDriver} from "../tests/helpers/driver.js";
+import {driver} from "../src/apollo-neo4j/driver.js"
+import {OGM} from "../src/wrapper.js"
+import {typeDefs} from "../src/apollo-neo4j/type-defs/_typeDefs.js";
 
+export const seedDriver = process.env.SEED_MODE == "test" ? testDriver : driver; // Export the driver for testing
+export const seedOgm =  new OGM({ typeDefs, driver: seedDriver });
 
 // Seed function
 async function seedDatabase() {
-  await ogm.init()
+  await seedOgm.init()
   await seedMembers()
   console.log('Database seeded!');
 }
 
-seedDatabase(); // Seed the database
+// Use an IIFE (Immediately Invoked Function Expression) to allow top-level await
+(async () => {
+  try {
+    await seedDatabase(); // Seed the database
+  } catch (error) {
+    console.error('Error seeding database:', error);
+  }
+})();
 

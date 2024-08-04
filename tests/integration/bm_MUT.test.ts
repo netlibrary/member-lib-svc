@@ -1,11 +1,11 @@
-import {typeDefs} from "../../src/apollo-neo4j/type-defs/_typeDefs";
+import {typeDefs} from "../../src/apollo-neo4j/type-defs/_typeDefs.js";
 import {describe} from "node:test";
-import {resolvers} from "../../src/apollo-neo4j/resolvers/_resolvers";
-import {testDriver} from "../../src/apollo-neo4j/driver";
+import {resolvers} from "../../src/apollo-neo4j/resolvers/_resolvers.js";
 import {ApolloServer} from "@apollo/server";
 import express from "express";
 import * as http from "http";
-import {ApolloServerPluginDrainHttpServer} from "@apollo/server/src/plugin/drainHttpServer";
+import {testDriver} from "../helpers/driver.js";
+import {ApolloServerPluginDrainHttpServer} from "@apollo/server/plugin/drainHttpServer";
 
 // Define your context type
 type MyContext = {

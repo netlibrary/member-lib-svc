@@ -1,4 +1,4 @@
-import {ogm_MemberMeta} from "../ogm";
+import {ogm_MemberMeta} from "../ogm.js";
 
 const deleteCollectionPositions = async (memberId: string, collectionIds: string[]) => {
     const memberMeta = await ogm_MemberMeta.find({

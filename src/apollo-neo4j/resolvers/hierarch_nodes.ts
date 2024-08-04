@@ -1,10 +1,10 @@
-import {NodesToMove, ParentsChildren, SelectedNodes} from "../gen/types";
-import {NodeSvc} from "../services/node";
-import {MemberMetaSvc} from "../services/member_meta";
-import {memberIds} from "../../../db_seeder/member";
-import {ParentMetaSvc} from "../services/parent_meta";
+import {NodesToMove, ParentsChildren, SelectedNodes} from "../gen/types.js";
+import {NodeSvc} from "../services/node.js";
+import {MemberMetaSvc} from "../services/member_meta.js";
+import {memberIds} from "../../../db_seeder/member.js";
+import {ParentMetaSvc} from "../services/parent_meta.js";
 import neo4j, {Transaction} from "neo4j-driver";
-import {bm_CypherSel} from "./bookmark";
+import {bm_CypherSel} from "./bookmark.js";
 
 export const hierarchNodesResolvers = {
     ChildDl: {

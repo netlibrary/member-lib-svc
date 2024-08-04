@@ -1,7 +1,7 @@
 import { GraphQLUpload } from "graphql-upload-ts";
-import { memberIds } from "../../../db_seeder/member";
-import { seedParentMeta } from "../../../db_seeder/meta";
-import { ogm } from "../ogm";
+import { memberIds } from "../../../db_seeder/member.js";
+import { seedParentMeta } from "../../../db_seeder/meta.js";
+import { ogm } from "../ogm.js";
 
 export const generalResolvers = {
   Upload: GraphQLUpload,

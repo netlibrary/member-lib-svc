@@ -1,7 +1,7 @@
-import { ogm } from "../src/apollo-neo4j/ogm";
+import {seedOgm} from "./_db_seeder.js";
 
 export async function seedMemberMeta(memberId, collectionIds) {
-    const MemberMeta = ogm.model('MemberMeta')
+    const MemberMeta = seedOgm.model('MemberMeta')
 
     const memberMeta = await MemberMeta.create({
         input: {
@@ -15,7 +15,7 @@ export async function seedMemberMeta(memberId, collectionIds) {
 }
 
 export async function seedParentMeta(parentId, childIds) {
-    const ParentMeta = ogm.model('ParentMeta')
+    const ParentMeta = seedOgm.model('ParentMeta')
     const parentMeta = await ParentMeta.create({
         input: {
             childPositions: childIds,

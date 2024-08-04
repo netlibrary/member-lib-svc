@@ -1,13 +1,10 @@
 import {faker} from '@faker-js/faker';
-import {ogm} from '../src/apollo-neo4j/ogm';
-import {seedFolders} from "./folder";
-import {seedMemberMeta, seedParentMeta} from "./meta";
-import {ogm_Bookmark} from "../src/apollo-neo4j/resolvers/bookmark";
-import {seedTags} from "./tag";
+import {seedTags} from "./tag.js";
+import {seedOgm} from "./_db_seeder.js";
 
 
 export async function seedBookmarks(parentId): Promise<string[]> {
-    const ogm_Bookmark = ogm.model('Bookmark')
+    const ogm_Bookmark = seedOgm.model('Bookmark')
     const bookmarkIds: any = []
     try {
         for (let i = 0; i < Math.floor(Math.random() * 2) + 2; i++) {
@@ -23,7 +20,7 @@ export async function seedBookmarks(parentId): Promise<string[]> {
 }
 
 export async function seedUnsortedBms(memberId) {
-    const ogm_BMsCont = ogm.model('BmsContainer')
+    const ogm_BMsCont = seedOgm.model('BmsContainer')
     try {
         const ogm_bmsCont_createRes = await ogm_BMsCont.create({
             input: {
@@ -46,7 +43,7 @@ export async function seedUnsortedBms(memberId) {
 }
 
 export async function seedBm(parentId): Promise<string> {
-    const ogm_Bookmark = ogm.model('Bookmark')
+    const ogm_Bookmark = seedOgm.model('Bookmark')
     let bookmarkId: any = null
     try {
         const bookmarkInput = {

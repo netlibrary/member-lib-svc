@@ -1,8 +1,8 @@
 
 import { Neo4jGraphQL } from "@neo4j/graphql";
-import { typeDefs } from "./type-defs/_typeDefs";
-import { driver } from "./driver";
-import { resolvers } from "./resolvers/_resolvers";
+import { typeDefs } from "./type-defs/_typeDefs.js";
+import { driver } from "./driver.js";
+import { resolvers } from "./resolvers/_resolvers.js";
 
 export const neoSchema = new Neo4jGraphQL({
     typeDefs,

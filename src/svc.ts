@@ -1,15 +1,15 @@
 import express from "express";
-import {ogm} from "./apollo-neo4j/ogm";
-import {neoSchema} from "./apollo-neo4j/schema"; // Assuming schema is defined in another file
+import {ogm} from "./apollo-neo4j/ogm.js";
+import {neoSchema} from "./apollo-neo4j/schema.js"; // Assuming schema is defined in another file
 import {graphqlUploadExpress} from "graphql-upload-ts";
 import {ApolloServer, ApolloServerPlugin} from "@apollo/server";
-import {Context} from "./apollo-neo4j/context";
+import {Context} from "./apollo-neo4j/context.js";
 import {ApolloServerPluginDrainHttpServer} from "@apollo/server/plugin/drainHttpServer";
 import http from 'http';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import {expressMiddleware} from '@apollo/server/express4';
-import {driver} from "./apollo-neo4j/driver";
+import {driver} from "./apollo-neo4j/driver.js";
 import {InMemoryLRUCache} from "@apollo/utils.keyvaluecache";
 
 

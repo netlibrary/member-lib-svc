@@ -1,11 +1,11 @@
 import { faker } from '@faker-js/faker';
-import { ogm } from '../src/apollo-neo4j/ogm';
-import { seedBookmarks } from './bookmark';
-import { seedFolders } from './folder';
-import { seedParentMeta, seedMemberMeta } from './meta';
+import { seedBookmarks } from './bookmark.js';
+import { seedFolders } from './folder.js';
+import { seedParentMeta, seedMemberMeta } from './meta.js';
+import {seedOgm} from "./_db_seeder.js";
 
 export async function seedCollections(memberId) {
-    const ogm_Collection = ogm.model('Collection')
+    const ogm_Collection = seedOgm.model('Collection')
     try {
         const collectionIds: any = []
         for (let i = 0; i < 2; i++) {

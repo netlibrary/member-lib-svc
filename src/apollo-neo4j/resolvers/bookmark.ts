@@ -1,8 +1,8 @@
-import {ogm} from "../ogm";
+import {ogm} from "../ogm.js";
 import neo4j, {Driver, Integer, Transaction} from 'neo4j-driver';
-import {BookmarkFilter_In, SelectedBms} from "../gen/types";
-import {ParentMetaSvc} from "../services/parent_meta";
-import {memberIds} from "../../../db_seeder/member";
+import {BookmarkFilter_In, SelectedBms} from "../gen/types.js";
+import {ParentMetaSvc} from "../services/parent_meta.js";
+import {memberIds} from "../../../db_seeder/member.js";
 
 export const ogm_Bookmark = ogm.model("Bookmark");
 

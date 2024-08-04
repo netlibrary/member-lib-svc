@@ -1,5 +1,5 @@
-import {ogm_MemberMeta, ogm_ParentMeta} from "../ogm";
-import {MutationUpdateParentMetasArgs, ParentMeta, ParentMetaWhere} from "../gen/types";
+import {ogm_MemberMeta, ogm_ParentMeta} from "../ogm.js";
+import {MutationUpdateParentMetasArgs, ParentMeta, ParentMetaWhere} from "../gen/types.js";
 
 const pushChildPosition = async (childIds: string[], parentId) => {
     const updateInput: MutationUpdateParentMetasArgs = {

@@ -1,7 +1,7 @@
-import {ogm} from "../ogm";
+import {ogm} from "../ogm.js";
 import {Driver} from "neo4j-driver";
-import {MemberMetaSvc} from "../services/member_meta";
-import {NodeSvc} from "../services/node";
+import {MemberMetaSvc} from "../services/member_meta.js";
+import {NodeSvc} from "../services/node.js";
 
 export const ogm_Collection = ogm.model("Collection");
 

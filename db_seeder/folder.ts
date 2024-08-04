@@ -1,10 +1,10 @@
 import { faker } from '@faker-js/faker';
-import { ogm } from '../src/apollo-neo4j/ogm';
-import { seedBookmarks } from './bookmark';
-import { seedParentMeta } from './meta';
+import { seedBookmarks } from './bookmark.js';
+import { seedParentMeta } from './meta.js';
+import {seedOgm} from "./_db_seeder.js";
 
 export async function seedFolders(parentId, level = 0): Promise<[string]> {
-    const ogm_Folder = ogm.model('Folder')
+    const ogm_Folder = seedOgm.model('Folder')
     const folderIds: any = []
     try {
         for (let i = 0; i < Math.floor(Math.random() * 2) + 2; i++) {
