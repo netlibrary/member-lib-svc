@@ -1,15 +1,15 @@
 import {ogm} from "../ogm.js";
 import {Driver} from "neo4j-driver";
 import {MemberMetaSvc} from "../services/member_meta.js";
-import {NodeSvc} from "../services/node.js";
+import {NodeSvc} from "../services/collNode.js";
+import {getOgm_Collection} from "../../../global/ogm.js";
 
-export const ogm_Collection = ogm.model("Collection");
 
 export const collectionResolvers = {
     Mutation: {
         createCollection: async (_, {name, memberId}, {driver}) => {
             try {
-                const collection = await ogm_Collection.create({
+                const collection = await getOgm_Collection().create({
                     input: {
                         name: name,
                         member: {

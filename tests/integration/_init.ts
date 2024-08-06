@@ -4,7 +4,8 @@ import {resolvers} from "../../src/apollo-neo4j/resolvers/_resolvers.js";
 import {testDriver} from "../helpers/driver.js";
 import {Neo4jGraphQL} from "@neo4j/graphql";
 import {OGM} from "@neo4j/graphql-ogm";
-import {createApolloServer} from "../../src/apollo_server.js";
+import {startApolloServer} from "../../src/apollo_server.js";
+import {setOGMs} from "../../global/ogm.js";
 
 // Define your context type
 export type MyContext = {
@@ -15,6 +16,8 @@ export async function createTestSuite() {
     // Create OGM instance
     const ogm = new OGM({ typeDefs, driver: testDriver });
 
+    setOGMs(ogm);
+
     // Create Neo4jGraphQL instance
     const neoSchema = new Neo4jGraphQL({
         typeDefs,
@@ -24,7 +27,7 @@ export async function createTestSuite() {
 
     const [schema] = await Promise.all([neoSchema.getSchema(), ogm.init()]);
 
-    const {httpServer, apolloServer} = await createApolloServer(schema, testDriver, ogm);
+    const {httpServer, apolloServer} = await startApolloServer(schema, testDriver, ogm);
 
     const executeOperation = async (query: string, variables) => {
         const response = await apolloServer.executeOperation({

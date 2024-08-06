@@ -1,7 +1,7 @@
 import { gql } from 'graphql-tag';
 
 export const folder_typeDefs = gql`
-  type Folder implements Parent @node(labels: ["Folder", "Parent", "DeleteCascade", "Child"]) {
+  type Folder implements Parent @node(labels: ["Folder", "Parent", "DeleteCascade", "Child", "CollNode"]) {
     id: ID! @id @unique
     createdAt: DateTime @timestamp(operations: [CREATE])
     updatedAt: DateTime @timestamp(operations: [UPDATE])

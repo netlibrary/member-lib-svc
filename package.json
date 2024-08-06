@@ -3,7 +3,7 @@
   "scripts": {
     "start": "tsc && node dist/src/svc.js",
     "seed-db": "tsc && node dist/db_seeder/_db_seeder.js",
-    "gengql": "graphql-codegen --config gen_graphql.ts",
+    "gengql": "graphql-codegen --config src/gen_graphql.ts",
     "test:integration": "vitest run tests/integration"
   },
   "dependencies": {

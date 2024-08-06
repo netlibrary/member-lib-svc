@@ -2,6 +2,7 @@ import { GraphQLUpload } from "graphql-upload-ts";
 import { ogm } from "../ogm.js";
 import {createParentMeta} from "../services/parent_meta.js";
 import {memberIds} from "../../../global/vars.js";
+import {getOgm_Collection, getOgm_Folder} from "../../../global/ogm.js";
 
 export const generalResolvers = {
   Upload: GraphQLUpload,
@@ -40,8 +41,7 @@ function streamToString(stream: NodeJS.ReadableStream): Promise<string> {
 }
 
 async function processBookmarksData(bookmarksData) {
-  const ogm_Collection = ogm.model("Collection");
-  const collection = await ogm_Collection.create({
+  const collection = await getOgm_Collection().create({
     input: {
       name: "firefox",
       // createdAt: new Date(bookmarksData.dateAdded / 1000),
@@ -96,8 +96,7 @@ async function processChildren(
 }
 
 async function createFolder(folderData, parentId, parentName) {
-  const ogm_Folder = ogm.model("Folder");
-  const folder = await ogm_Folder.create({
+  const folder = await getOgm_Folder().create({
     input: {
       name: folderData.name,
       // createdAt: new Date(folderData.dateAdded / 1000),

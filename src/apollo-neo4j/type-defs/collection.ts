@@ -2,7 +2,7 @@ import { gql } from "graphql-tag";
 
 export const collection_typeDefs = gql`
   type Collection implements Parent
-    @node(labels: ["Collection", "Parent", "DeleteCascade"]) {
+    @node(labels: ["Collection", "Parent", "DeleteCascade", "CollNode"]) {
     id: ID! @id @unique
     createdAt: DateTime @timestamp(operations: [CREATE])
     updatedAt: DateTime @timestamp(operations: [UPDATE])

@@ -45,7 +45,7 @@ const myPlugin:ApolloServerPlugin  = {
     },
 };
 
-export async function createApolloServer(schema, driver, ogm) {
+export async function startApolloServer(schema, driver, ogm) {
     const app = express();
     const httpServer = http.createServer(app);
     const apolloServer = new ApolloServer<Context>({

@@ -1,7 +1,7 @@
 import { gql } from 'graphql-tag';
 
 export const bookmark_typeDefs = gql`
-    type Bookmark @node(labels: ["Bookmark", "Child"]) {
+    type Bookmark @node(labels: ["Bookmark", "Child", "CollNode"]) {
         id: ID! @id @unique
         createdAt: DateTime @timestamp(operations: [CREATE])
         updatedAt: DateTime @timestamp(operations: [UPDATE])
@@ -48,7 +48,7 @@ export const bookmark_typeDefs = gql`
         sortDir: String
     }
 
-    type BmsContainer implements Parent @node(labels: ["BmsContainer", "Parent"]) {
+    type BmContainer implements Parent @node(labels: ["BmContainer"]) {
         id: ID! @id @unique
         member: Member @relationship(type: "OWNS", direction: IN)
         bookmarks: [Bookmark!]! @relationship(type: "CONTAINS", direction: OUT)
@@ -97,9 +97,10 @@ export const bookmark_typeDefs = gql`
     type Mutation {
         deleteAllBms: Int!
         createBookmarkDl(data: CreateBookmarkDl!): ID
-        deleteHierarchBookmark(id: ID!, parentId: ID!): Int!
+        deleteCollBookmark(id: ID!, parentId: ID!): Int!
         deleteHierarchBmsXGetCollBmCounts(input: [SelectedBms!]): [CollBmCount!]
         deleteBookmark(id: ID!): Int!
+        deleteManyBms(ids: [ID!]): Int!
     }
 
     type BmsPaged {
@@ -108,10 +109,10 @@ export const bookmark_typeDefs = gql`
     }
 
     type Query {
-        nonHierarchBmCount(memberId: String!): Int!
+        looseBmCount(memberId: String!): Int!
         @cypher(
             statement: """
-            MATCH (m:Member {id: $memberId})-[:OWNS]->(c:BmsContainer)
+            MATCH (m:Member {id: $memberId})-[:OWNS]->(c:BmContainer)
             OPTIONAL MATCH (c)-[:CONTAINS]->(b:Bookmark)
             RETURN COUNT(b) AS count
             """

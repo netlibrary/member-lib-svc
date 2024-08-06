@@ -1,10 +1,8 @@
-import {ogm} from "../ogm.js";
 import {Driver} from 'neo4j-driver';
-import {ogm_Bookmark} from "./bookmark.js";
 import {FolderCreateInput} from "../gen/types.js";
 import {ParentMetaSvc} from "../services/parent_meta.js";
+import {getOgm_Folder, getOgm_ParentMeta} from "../../../global/ogm.js";
 
-export const ogm_Folder = ogm.model("Folder");
 
 export const folderResolvers = {
     Mutation: {
@@ -29,7 +27,7 @@ export const folderResolvers = {
                     } : {})
                 }
 
-                const folder = await ogm_Folder.create({input: createFolderInput,});
+                const folder = await getOgm_Folder().create({input: createFolderInput,});
 
                 const folderId = folder.folders[0].id
                 console.log(
@@ -63,8 +61,7 @@ export const folderResolvers = {
                 const nodesDeleted = result.records[0].get('nodesDeleted').toNumber();
 
                 // update parent meta
-                const ParentMeta = ogm.model("ParentMeta");
-                const parentMeta = await ParentMeta.find({
+                const parentMeta = await getOgm_ParentMeta().find({
                     where: {
                         parentConnection: {
                             node: {
@@ -76,7 +73,7 @@ export const folderResolvers = {
                 // If parentMeta is found, update the child positions
                 if (parentMeta && parentMeta.length > 0) {
                     const childPositions = parentMeta[0].childPositions.filter(childId => childId !== id);
-                    await ParentMeta.update({
+                    await getOgm_ParentMeta().update({
                         where: {id: parentMeta[0].id},
                         update: {childPositions: childPositions},
                     });

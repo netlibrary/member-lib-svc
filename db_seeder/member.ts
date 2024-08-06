@@ -1,11 +1,15 @@
 import {seedCollections} from "./collection.js";
-import {seedUnsortedBms} from "./bookmark.js";
+import {seedLooseBms} from "./bookmark.js";
 import {seedDriver} from "./_db_seeder.js";
 import {memberIds} from "../global/vars.js";
 
 
 export async function seedMembers() {
     const session = seedDriver.session();
+    await session.run(
+        'MATCH (n)\n' +
+        'DETACH DELETE n'
+    );
     try {
         for (const id of memberIds) {
             const result = await session.run(
@@ -14,7 +18,7 @@ export async function seedMembers() {
             );
             console.log(`Member created with ID: ${id}`);
             await seedCollections(id)
-            await seedUnsortedBms(id)
+            await seedLooseBms(id)
         }
     } finally {
         await session.close();

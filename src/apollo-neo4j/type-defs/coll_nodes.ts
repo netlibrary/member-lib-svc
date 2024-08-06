@@ -1,14 +1,14 @@
 import { gql } from "graphql-tag";
 
-export const hierarchNodes_typeDefs = gql`
+export const collNodes_typeDefs = gql`
     union Child = Bookmark | Folder
-    union Parent = Collection | Folder | BmsContainer
+    union Parent = Collection | Folder
 
     interface Parent {
         id: ID! @id
     }
 
-    type ParentMeta {
+    type ParentMeta @node(labels: ["ParentMeta", "CollNode"]) {
         id: ID! @id @unique
         childPositions: [String!]!
         parent: Parent @relationship(type: "HAS", direction: IN)
@@ -30,8 +30,8 @@ export const hierarchNodes_typeDefs = gql`
 
     input SelectedChilds {
         parentId: ID!
-        bookmarkIds: [ID!]!
-        folderIds: [ID!]!
+        bookmarkIds: [ID!]
+        folderIds: [ID!]
     }
 
     input ChildsToMove {
@@ -45,8 +45,8 @@ export const hierarchNodes_typeDefs = gql`
     }
 
     input SelectedNodes {
-        collectionIds: [ID!]!
-        childs: [SelectedChilds!]!
+        collectionIds: [ID!]
+        childs: [SelectedChilds!]
     }
 
     type CollBmCount {

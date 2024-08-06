@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker';
 import { seedBookmarks } from './bookmark.js';
 import {seedOgm} from "./_db_seeder.js";
 import {createParentMeta} from "../src/apollo-neo4j/services/parent_meta.js";
+import {ogm} from "../src/apollo-neo4j/ogm.js";
 
 export async function seedFolders(parentId, level = 0): Promise<[string]> {
     const ogm_Folder = seedOgm.model('Folder')
