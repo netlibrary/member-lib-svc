@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { seedBookmarks } from './bookmark.js';
-import { seedParentMeta } from './meta.js';
 import {seedOgm} from "./_db_seeder.js";
+import {createParentMeta} from "../src/apollo-neo4j/services/parent_meta.js";
 
 export async function seedFolders(parentId, level = 0): Promise<[string]> {
     const ogm_Folder = seedOgm.model('Folder')
@@ -26,7 +26,7 @@ export async function seedFolders(parentId, level = 0): Promise<[string]> {
                 const subFolderIds = await seedFolders(ogm_folders_createRes.folders[0].id, ++level)
                 childIds = childIds.concat(subFolderIds)
             }
-            seedParentMeta(ogm_folders_createRes.folders[0].id, childIds)
+            createParentMeta(ogm_folders_createRes.folders[0].id, childIds)
             folderIds.push(ogm_folders_createRes.folders[0].id)
         }
     } catch (error: any) {

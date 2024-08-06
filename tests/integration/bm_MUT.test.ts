@@ -1,56 +1,43 @@
-import {typeDefs} from "../../src/apollo-neo4j/type-defs/_typeDefs.js";
-import {describe} from "node:test";
-import {resolvers} from "../../src/apollo-neo4j/resolvers/_resolvers.js";
+import {describe, expect, it} from 'vitest';
+import {createTestSuite, MyContext} from "./_init.js";
+import {beforeAll, afterAll} from "vitest";
 import {ApolloServer} from "@apollo/server";
-import express from "express";
-import * as http from "http";
-import {testDriver} from "../helpers/driver.js";
-import {ApolloServerPluginDrainHttpServer} from "@apollo/server/plugin/drainHttpServer";
 
-// Define your context type
-type MyContext = {
-    driver: typeof testDriver;
-};
 
 describe('Bookmark Mutations', () => {
-    let testServer: ApolloServer<MyContext>;
-    let mutate: any;
+    let testEnvironment: {
+        executeOperation: (query: string, variables?: any) => Promise<any>;
+    };
 
-    const app = express();
-
-    const httpServer = http.createServer(app);
     beforeAll(async () => {
-        // Set up test database connection
-
-        testServer = new ApolloServer<MyContext>({
-            typeDefs,
-            resolvers,
-            plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
-
-        });
-
-        await testServer.start();
-    });
-
-    afterAll(async () => {
-        await testServer.stop();
-        await testDriver.close();
+        testEnvironment = await createTestSuite();
+        console.log("Test environment created:", testEnvironment);
     });
 
     it('should delete all bookmarks', async () => {
+        const { executeOperation } = testEnvironment;
+
         const DELETE_ALL_BMS = `
-      mutation {
-        deleteAllBms
-      }
-    `;
+            mutation {
+              deleteAllBms
+            }
+        `;
 
-        const response = await testServer.executeOperation({
-                query: DELETE_ALL_BMS,
-                variables: {driver: testDriver},
-            },
-        );
+        try {
+            const response = await executeOperation(DELETE_ALL_BMS);
+            console.log("Response from executeOperation:", response);
 
-        expect(response.body.kind).toBe('single');
-        // Additional checks on the database state
+            expect(response.body.kind).toBe('single');
+        } catch (error) {
+            console.error("Error in test:", error);
+            throw error;
+        }
     });
 });
+
+// You can create more test suites for different sets of operations
+// describe('Other Operations', () => {
+//     const {executeOperation} = createTestSuite();
+//
+//     // Add tests for other operations...
+// });

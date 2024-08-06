@@ -1,7 +1,7 @@
-import {ogm_MemberMeta, ogm_ParentMeta} from "../ogm.js";
+import {ogm_ParentMeta} from "../ogm.js";
 import {MutationUpdateParentMetasArgs, ParentMeta, ParentMetaWhere} from "../gen/types.js";
 
-const pushChildPosition = async (childIds: string[], parentId) => {
+const pushChildPosition = async (childIds: string[], parentId, ogm_PM = ogm_ParentMeta) => {
     const updateInput: MutationUpdateParentMetasArgs = {
         update: {
             childPositions_PUSH: childIds,
@@ -14,10 +14,10 @@ const pushChildPosition = async (childIds: string[], parentId) => {
             }
         }
     };
-    await ogm_ParentMeta.update(updateInput as any);
+    await ogm_PM.update(updateInput as any);
 }
 
-const addChildPositions = async (childIds, parentId, position) => {
+const addChildPositions = async (childIds, parentId, position, ogm_PM = ogm_ParentMeta) => {
     if (position == null) {
         await pushChildPosition(childIds, parentId);
         return;
@@ -31,7 +31,7 @@ const addChildPositions = async (childIds, parentId, position) => {
             }
         }
     }
-    const currentParentMeta: ParentMeta[] = await ogm_ParentMeta.find({
+    const currentParentMeta: ParentMeta[] = await ogm_PM.find({
         where: parentMetaWhere as any,
     });
 
@@ -49,18 +49,18 @@ const addChildPositions = async (childIds, parentId, position) => {
             },
         };
 
-        await ogm_ParentMeta.update(updateInput as any); // Use 'as any' cautiously
+        await ogm_PM.update(updateInput as any); // Use 'as any' cautiously
     } else {
         throw ('ParentMeta not found');
     }
 }
 
-export const deleteChildPositions = async (childIds: string[], parentId: string) => {
+export const deleteChildPositions = async (childIds: string[], parentId: string, ogm_PM = ogm_ParentMeta) => {
     const parentMeta = await getParentMeta(parentId);
     if (parentMeta) {
         // Filter out the deleted collection IDs from collectionPositions
         const updatedChildPositions = parentMeta.childPositions.filter(child => !childIds.includes(child));
-        await ogm_ParentMeta.update({
+        await ogm_PM.update({
             where: {id: parentMeta.id},
             update: {childPositions: updatedChildPositions},
         });
@@ -76,7 +76,7 @@ export const ParentMetaSvc = {
     deleteChildPositions: deleteChildPositions
 }
 
-const getParentMeta = async (parentId: string) => {
+const getParentMeta = async (parentId: string, ogm_PM = ogm_ParentMeta) => {
     const parentMetaWhere: ParentMetaWhere = {
         parentConnection: {
             node: {
@@ -84,8 +84,20 @@ const getParentMeta = async (parentId: string) => {
             }
         }
     }
-    const currentParentMeta: ParentMeta[] = await ogm_ParentMeta.find({
+    const currentParentMeta: ParentMeta[] = await ogm_PM.find({
         where: parentMetaWhere as any,
     });
     return currentParentMeta[0] || null;
+}
+
+export async function createParentMeta(parentId, childIds, ogm_PM = ogm_ParentMeta) {
+    const parentMeta = await ogm_PM.create({
+        input: {
+            childPositions: childIds,
+            parent: {
+                connect: {where: {node: {id: parentId}}}
+            }
+        }
+    });
+    console.log(`ParentMeta created with ID: ${parentMeta.parentMetas[0].id}`);
 }

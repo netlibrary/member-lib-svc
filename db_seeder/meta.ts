@@ -14,15 +14,3 @@ export async function seedMemberMeta(memberId, collectionIds) {
     console.log(`MemberMeta created with ID: ${memberMeta.memberMetas[0].id}`);
 }
 
-export async function seedParentMeta(parentId, childIds) {
-    const ParentMeta = seedOgm.model('ParentMeta')
-    const parentMeta = await ParentMeta.create({
-        input: {
-            childPositions: childIds,
-            parent: {
-                connect: { where: { node: { id: parentId } } }
-            }
-        }
-    });
-    console.log(`ParentMeta created with ID: ${parentMeta.parentMetas[0].id}`);
-}

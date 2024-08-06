@@ -1,8 +1,9 @@
 import { faker } from '@faker-js/faker';
 import { seedBookmarks } from './bookmark.js';
 import { seedFolders } from './folder.js';
-import { seedParentMeta, seedMemberMeta } from './meta.js';
+import { seedMemberMeta } from './meta.js';
 import {seedOgm} from "./_db_seeder.js";
+import {createParentMeta} from "../src/apollo-neo4j/services/parent_meta.js";
 
 export async function seedCollections(memberId) {
     const ogm_Collection = seedOgm.model('Collection')
@@ -23,7 +24,7 @@ export async function seedCollections(memberId) {
             seedFolders(ogm_collections_createRes.collections[0].id)])
             .then(res => {
                 const childIds = [...res[0], ...res[1]]
-                seedParentMeta(ogm_collections_createRes.collections[0].id, childIds)
+                createParentMeta(ogm_collections_createRes.collections[0].id, childIds)
             })
             collectionIds.push(ogm_collections_createRes.collections[0].id)
         }

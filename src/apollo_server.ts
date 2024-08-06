@@ -1,17 +1,15 @@
-import express from "express";
-import {ogm} from "./apollo-neo4j/ogm.js";
-import {neoSchema} from "./apollo-neo4j/schema.js"; // Assuming schema is defined in another file
-import {graphqlUploadExpress} from "graphql-upload-ts";
 import {ApolloServer, ApolloServerPlugin} from "@apollo/server";
 import {Context} from "./apollo-neo4j/context.js";
-import {ApolloServerPluginDrainHttpServer} from "@apollo/server/plugin/drainHttpServer";
-import http from 'http';
-import cors from 'cors';
-import bodyParser from 'body-parser';
-import {expressMiddleware} from '@apollo/server/express4';
-import {driver} from "./apollo-neo4j/driver.js";
 import {InMemoryLRUCache} from "@apollo/utils.keyvaluecache";
-
+import {graphqlUploadExpress} from "graphql-upload-ts";
+import bodyParser from "body-parser";
+import {expressMiddleware} from "@apollo/server/express4";
+import {ogm} from "./apollo-neo4j/ogm.js";
+import {driver} from "./apollo-neo4j/driver.js";
+import express from "express";
+import cors from 'cors';
+import {ApolloServerPluginDrainHttpServer} from "@apollo/server/plugin/drainHttpServer";
+import http from "http";
 
 const myPlugin:ApolloServerPlugin  = {
     async requestDidStart(requestContext) {
@@ -47,42 +45,31 @@ const myPlugin:ApolloServerPlugin  = {
     },
 };
 
-
-async function startApolloServer() {
+export async function createApolloServer(schema, driver, ogm) {
     const app = express();
     const httpServer = http.createServer(app);
+    const apolloServer = new ApolloServer<Context>({
+        schema: schema,
+        csrfPrevention: true,
+        cache: new InMemoryLRUCache(),
+        plugins: [
+            ApolloServerPluginDrainHttpServer({httpServer}),
+            myPlugin
+        ],
+    });
 
-    await Promise.all([neoSchema.getSchema(), ogm.init()])
-        .then(async ([schema]) => {
-            const server = new ApolloServer<Context>({
-                schema: schema,
-                csrfPrevention: true,
-                cache: new InMemoryLRUCache(),
-                plugins: [
-                    ApolloServerPluginDrainHttpServer({httpServer}),
-                    myPlugin
-                ],
-            });
+    await apolloServer.start();
 
-            await server.start();
+    app.use(graphqlUploadExpress());
 
-            app.use(graphqlUploadExpress());
-
-            app.use(
-                '/graphql',
-                cors<cors.CorsRequest>(),
-                bodyParser.json(),
-                expressMiddleware(server, {
-                    context: async ({req}) => ({token: req.headers.token, ogm: ogm, driver: driver}),
-                })
-            );
-
-            await new Promise<void>((resolve) => httpServer.listen({port: 4000}, resolve));
-            console.log(`🚀 Server ready at http://localhost:4000/graphql`);
+    app.use(
+        '/graphql',
+        cors<cors.CorsRequest>(),
+        bodyParser.json(),
+        expressMiddleware(apolloServer, {
+            context: async ({req}) => ({token: req.headers.token, ogm: ogm, driver: driver}),
         })
-        .catch((error) => {
-            console.error("Failed to get schema:", error);
-        });
-}
+    )
 
-startApolloServer();
+    return {httpServer, apolloServer}
+}

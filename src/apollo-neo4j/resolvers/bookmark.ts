@@ -2,7 +2,8 @@ import {ogm} from "../ogm.js";
 import neo4j, {Driver, Integer, Transaction} from 'neo4j-driver';
 import {BookmarkFilter_In, SelectedBms} from "../gen/types.js";
 import {ParentMetaSvc} from "../services/parent_meta.js";
-import {memberIds} from "../../../db_seeder/member.js";
+
+import {memberIds} from "../../../global/vars.js";
 
 export const ogm_Bookmark = ogm.model("Bookmark");
 
@@ -13,14 +14,7 @@ export const bookmarkResolvers = {
             try {
                 // Construct and execute the Cypher query
                 await tx.run(`
-                    MATCH (c:BmsContainer)
-                    OPTIONAL MATCH (c)-[:CONTAINS]->(b:Bookmark)
-                    DETACH DELETE b
-                `);
-
-                await tx.run(`
                     MATCH (b:Bookmark)
-                    OPTIONAL MATCH (p:Folder|Collection)-[:CONTAINS]->(b)
                     DETACH DELETE b
                 `);
 
@@ -28,30 +22,6 @@ export const bookmarkResolvers = {
                     MATCH (p:ParentMeta)
                     SET p.childPositions = []
                 `);
-
-                // ParentMetaSvc.deleteChildPositions()
-                // // update parent meta
-                // const ParentMeta = ogm.model("ParentMeta");
-                // const parentMeta = await ParentMeta.find({
-                //     where: {
-                //         parentConnection: {
-                //             node: {
-                //                 id: parentId
-                //             }
-                //         }
-                //     }
-                // });
-                // // If parentMeta is found, update the child positions
-                // if (parentMeta && parentMeta.length > 0) {
-                //     const childPositions = parentMeta[0].childPositions.filter(childId => childId !== id);
-                //     await ParentMeta.update({
-                //         where: {id: parentMeta[0].id},
-                //         update: {childPositions: childPositions},
-                //     });
-                // } else {
-                //     // Handle case where MemberMeta object is not found
-                //     throw new Error('ParentMeta not found for parentId: ' + parentId);
-                // }
                 await tx.commit()
                 return 0;
             } catch (error) {

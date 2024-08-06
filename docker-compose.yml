@@ -1,23 +1,23 @@
 version: '3.9'
 services:
 # docker-compose up -d neo4j-graph-db
-  neo4j-graph-db:
-    image: neo4j:5.16.0
-    container_name: neo4j-graph-db
-    ports:
-      - "7474:7474"
-      - "7687:7687"
-    environment:
-      - NEO4J_AUTH=neo4j/password
-      - NEO4J_apoc_import_file_use__neo4j__config=true \
-    volumes:
-      - ./.data/neo4j/data:/data
-      - ./.data/neo4j/logs:/logs
-      - ./.data/neo4j/import:/var/lib/neo4j/import
-      - ./.data/neo4j/plugins:/plugins
-      - ./.data/neo4j/conf:/var/lib/neo4j/conf
-    networks:
-      - netlib-network
+#  neo4j-graph-db:
+#    image: neo4j:5.16.0
+#    container_name: neo4j-graph-db
+#    ports:
+#      - "7474:7474"
+#      - "7687:7687"
+#    environment:
+#      - NEO4J_AUTH=neo4j/password
+#      - NEO4J_apoc_import_file_use__neo4j__config=true \
+#    volumes:
+#      - ./.data/neo4j/data:/data
+#      - ./.data/neo4j/logs:/logs
+#      - ./.data/neo4j/import:/var/lib/neo4j/import
+#      - ./.data/neo4j/plugins:/plugins
+#      - ./.data/neo4j/conf:/var/lib/neo4j/conf
+#    networks:
+#      - netlib-network
 
   neo4j-graph-db-test:
     image: neo4j:5.16.0

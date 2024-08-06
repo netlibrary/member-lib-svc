@@ -11,15 +11,6 @@ export const seedOgm =  new OGM({ typeDefs, driver: seedDriver });
 async function seedDatabase() {
   await seedOgm.init()
   await seedMembers()
-  console.log('Database seeded!');
 }
 
-// Use an IIFE (Immediately Invoked Function Expression) to allow top-level await
-(async () => {
-  try {
-    await seedDatabase(); // Seed the database
-  } catch (error) {
-    console.error('Error seeding database:', error);
-  }
-})();
-
+seedDatabase()

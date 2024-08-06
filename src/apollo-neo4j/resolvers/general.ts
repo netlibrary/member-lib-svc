@@ -1,7 +1,7 @@
 import { GraphQLUpload } from "graphql-upload-ts";
-import { memberIds } from "../../../db_seeder/member.js";
-import { seedParentMeta } from "../../../db_seeder/meta.js";
 import { ogm } from "../ogm.js";
+import {createParentMeta} from "../services/parent_meta.js";
+import {memberIds} from "../../../global/vars.js";
 
 export const generalResolvers = {
   Upload: GraphQLUpload,
@@ -92,7 +92,7 @@ async function processChildren(
       childPositions.push(folderId);
     }
   }
-  seedParentMeta(parentId, childPositions);
+  createParentMeta(parentId, childPositions);
 }
 
 async function createFolder(folderData, parentId, parentName) {

@@ -4,21 +4,19 @@
     "start": "tsc && node dist/src/svc.js",
     "seed-db": "tsc && node dist/db_seeder/_db_seeder.js",
     "gengql": "graphql-codegen --config gen_graphql.ts",
-    "test:integration": "jest tests/integration"
+    "test:integration": "vitest run tests/integration"
   },
   "dependencies": {
     "@apollo/server": "^4.0.0",
     "@graphql-tools/merge": "^9.0.4",
     "@neo4j/graphql": "^4.4.2",
     "@neo4j/graphql-ogm": "^4.4.2",
-    "@types/jest": "^29.5.12",
     "@types/node": "^20.9.1",
     "dotenv": "^16.3.1",
     "graphql": "^16.8.1",
     "graphql-tools": "^9.0.0",
     "graphql-upload": "^16.0.2",
     "graphql-upload-ts": "^2.1.0",
-    "jest": "^29.7.0",
     "neo4j-driver": "^5.14.0",
     "typescript": "^5.2.2"
   },
@@ -29,6 +27,6 @@
     "@graphql-codegen/typescript-resolvers": "4.0.4",
     "@types/express": "^4.17.21",
     "express": "^4.19.2",
-    "ts-jest": "^29.2.4"
+    "vitest": "^2.0.5"
   }
 }
