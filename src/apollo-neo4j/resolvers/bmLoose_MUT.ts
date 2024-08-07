@@ -10,10 +10,11 @@ export const bmLoose_MUT_resolver = {
         try {
             // Construct and execute the Cypher query
             const nodesDeleted = (await tx.run(`
-                    MATCH (b:Bookmark {id IN $ids})
+                    MATCH (b:Bookmark)
+                    WHERE b.id IN $ids
                     DETACH DELETE b
-                    RETURN COUNT(n) AS nodesDeleted
-                `, {ids})).records[0].get('nodesDeleted').toNumber();
+                    RETURN COUNT(b) AS nodesDeleted
+                `, {ids: ids})).records[0].get('nodesDeleted').toNumber();
 
             await tx.commit()
             return nodesDeleted;
