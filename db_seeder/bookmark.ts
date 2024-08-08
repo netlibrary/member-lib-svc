@@ -20,7 +20,7 @@ export async function seedBookmarks(parentId): Promise<string[]> {
 }
 
 export async function seedLooseBms(memberId) {
-    const ogm_BMsCont = seedOgm.model('BmContainer')
+    const ogm_BMsCont = seedOgm.model('BmLooseContainer')
     try {
         const ogm_bmsCont_createRes = await ogm_BMsCont.create({
             input: {
@@ -30,7 +30,7 @@ export async function seedLooseBms(memberId) {
                 }
             }
         });
-        const contId = ogm_bmsCont_createRes.bmContainers[0].id
+        const contId = ogm_bmsCont_createRes.bmLooseContainers[0].id
         console.log(`bms cont created with ID: ${contId}`);
         for (let i = 0; i < Math.floor(Math.random() * 2) + 2; i++) {
             const bookmarkId = await seedBm(contId)

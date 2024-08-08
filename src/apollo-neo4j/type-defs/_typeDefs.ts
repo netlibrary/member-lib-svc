@@ -6,7 +6,7 @@ import { folder_typeDefs } from './folder.js';
 import { general_typeDefs } from './general.js';
 import { member_typeDefs } from './member.js';
 import {tag_typeDefs} from "./tag.js";
-import {bmContainer_typeDefs} from "./bmContainer.js";
+import {bmLooseContainer_typeDefs} from "./bmLoose.js";
 
 export const typeDefs = gql`
   ${member_typeDefs}
@@ -14,7 +14,7 @@ export const typeDefs = gql`
   ${tag_typeDefs}
   ${collection_typeDefs}
   ${folder_typeDefs}
-  ${bmContainer_typeDefs}
+  ${bmLooseContainer_typeDefs}
   ${bookmark_typeDefs}
   ${general_typeDefs}
 `

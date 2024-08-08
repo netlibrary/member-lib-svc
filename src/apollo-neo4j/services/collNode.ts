@@ -2,6 +2,7 @@ import {Session, Transaction} from "neo4j-driver";
 import {ChildsToMove, NodesToMove} from "../gen/types.js";
 import {MemberMetaSvc} from "./member_meta.js";
 import {ParentMetaSvc} from "./parent_meta.js";
+import {CollNodeSvcDb} from "../services_db/collNode.js";
 
 const deleteManyCascade = async (ids: string[], tx: Transaction): Promise<number> => {
     const result = await tx.run(`
@@ -119,10 +120,35 @@ const moveChildToDest = async (childs: ChildsToMove, destId: string, tx: Transac
         `, {childIds: childs.childIds, parentId: childs.parentId, destId}); // Note that we're now passing an array of ids
 }
 
-export const NodeSvc = {
+const moveBmsToBmLooseContainer = async (childs: ChildsToMove, destId: string, tx: Transaction): Promise<void> => {
+    const result = await tx.run(`
+                MATCH (ch:Child)
+                WHERE ch.id IN $childIds
+                
+                MATCH (oldParent:Parent {id: $parentId})
+                MATCH (oldParent)-[old_r:CONTAINS]->(ch)
+                DELETE old_r
+                WITH ch
+                MATCH (destParent:Parent {id: $destId})
+                WITH ch, destParent
+                MERGE (destParent)-[:CONTAINS]->(ch) // Create a new CONTAINS relationship
+        `, {childIds: childs.childIds, parentId: childs.parentId, destId}); // Note that we're now passing an array of ids
+}
+
+export const CollNodeSvc = {
     deleteManyCascade: deleteManyCascade,
     deleteCascade: deleteCascade,
     removeHierarch: removeHierarch,
-    moveToDest: moveToDest
+    moveToDest: moveToDest,
+    moveDeepParentBmsToBLC: async (parentIds: string[], tx: Transaction): Promise<void> => {
+        // move bms to bmLooseContainer
+        await CollNodeSvcDb.removeBmsChPositionsDeep(parentIds, tx)
+        await CollNodeSvcDb.moveParentBmsDeepToBLC(parentIds, tx)
+    },
+    moveBmsToBLC: async (bmIds: string[], tx: Transaction): Promise<void> => {
+        // move bms to bmLooseContainer
+        await CollNodeSvcDb.removeBmsChPositions(bmIds, tx)
+        await CollNodeSvcDb.moveBmsToBLC(bmIds, tx)
+    },
 }
 

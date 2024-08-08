@@ -48,7 +48,7 @@ export const bookmark_typeDefs = gql`
         sortDir: String
     }
 
-    type BmContainer implements Parent @node(labels: ["BmContainer"]) {
+    type BmLooseContainer implements Parent @node(labels: ["BmLooseContainer"]) {
         id: ID! @id @unique
         member: Member @relationship(type: "OWNS", direction: IN)
         bookmarks: [Bookmark!]! @relationship(type: "CONTAINS", direction: OUT)
@@ -112,7 +112,7 @@ export const bookmark_typeDefs = gql`
         looseBmCount(memberId: String!): Int!
         @cypher(
             statement: """
-            MATCH (m:Member {id: $memberId})-[:OWNS]->(c:BmContainer)
+            MATCH (m:Member {id: $memberId})-[:OWNS]->(c:BmLooseContainer)
             OPTIONAL MATCH (c)-[:CONTAINS]->(b:Bookmark)
             RETURN COUNT(b) AS count
             """

@@ -64,5 +64,6 @@ export const collNodes_typeDefs = gql`
     type Mutation {
         deleteManyNodes(nodes: SelectedNodes!): Int!
         moveManyNodes(nodes: NodesToMove!, destinationId: ID, position: Int): Boolean!
+        moveBmsToBLC(nodes: SelectedNodes!): Int!
     }
 `;

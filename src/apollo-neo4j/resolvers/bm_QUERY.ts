@@ -14,8 +14,8 @@ export const bm_QUERY_resolver = {
             let baseQueryParts: any = [];
             // Determine path based on bmLoose
             if (filter.bmLoose === true) {
-                // Path specifically for BmContainer as parent
-                baseQueryParts.push('MATCH (member:Member {id: $memberId})-[:OWNS]->(container:BmContainer)-[:CONTAINS*1..]->(bookmark:Bookmark)');
+                // Path specifically for BmLooseContainer as parent
+                baseQueryParts.push('MATCH (member:Member {id: $memberId})-[:OWNS]->(container:BmLooseContainer)-[:CONTAINS*1..]->(bookmark:Bookmark)');
             } else if (filter.bmLoose === false) {
                 // Path specifically for Collection as root
                 baseQueryParts.push('MATCH (member:Member {id: $memberId})-[:OWNS]->(collection:Collection)-[:CONTAINS*1..]->(bookmark:Bookmark)');

@@ -1,7 +1,7 @@
 import {ogm} from "../ogm.js";
 import {Driver} from "neo4j-driver";
 import {MemberMetaSvc} from "../services/member_meta.js";
-import {NodeSvc} from "../services/collNode.js";
+import {CollNodeSvc} from "../services/collNode.js";
 import {getOgm_Collection} from "../../../global/ogm.js";
 
 
@@ -41,7 +41,7 @@ export const collectionResolvers = {
             const tx = await driver.session().beginTransaction();
             try {
                 // Extract the nodesDeleted count from the result
-                const nodesDeleted = await NodeSvc.deleteCascade(id, tx);
+                const nodesDeleted = await CollNodeSvc.deleteCascade(id, tx);
                 await MemberMetaSvc.deleteCollectionPositions(memberId, [id]);
 
                 return nodesDeleted;
@@ -56,7 +56,7 @@ export const collectionResolvers = {
             const tx = await driver.session().beginTransaction();
             try {
                 // Construct and execute the Cypher query for multiple IDs
-                const nDeleted = await NodeSvc.deleteManyCascade(ids, tx);
+                const nDeleted = await CollNodeSvc.deleteManyCascade(ids, tx);
                 await MemberMetaSvc.deleteCollectionPositions(memberId, ids);
 
                 return nDeleted;
