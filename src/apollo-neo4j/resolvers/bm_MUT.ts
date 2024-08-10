@@ -1,8 +1,10 @@
 import {Driver} from "neo4j-driver";
 import {ogm} from "../ogm.js";
-import {SelectedBms} from "../gen/types.js";
+import {CreateBookmarkDl, SelectedBms} from "../gen/types.js";
 import {ParentMetaSvc} from "../services/parent_meta.js";
-import {getOgm_Bookmark, getOgm_ParentMeta} from "../../../global/ogm.js";
+import {getOgm_Bookmark, getOgm_ParentMeta, setOGMs} from "../../../global/ogm.js";
+import {BmCollSvc} from "../services/bmColl.js";
+import {BmLooseSvc} from "../services/bmLoose.js";
 
 export const bm_MUT_resolver = {
     deleteAllBms: async (_, {}, {driver}: { driver: Driver }) => {
@@ -105,38 +107,19 @@ export const bm_MUT_resolver = {
         }
     },
     createBookmarkDl: async (_, {data}: {
-        data: any
-    }, {driver}) => {
+        data: CreateBookmarkDl
+    }, {driver, ogm}) => {
         const tx = await driver.session().beginTransaction();
+        setOGMs(ogm)
+
         try {
-            const {parentId, position, name, domainName, urlScheme, linkPath, iconUri, description} = data;
+            const parentId = data.parentId;
 
-            const createBookmarkInput: any = {
-                description: description,
-                name: name,
-                domainName: domainName,
-                urlScheme: urlScheme,
-                linkPath: linkPath,
-                iconUri: iconUri,
-                ...(parentId ? {
-                    parent: {
-                        connect: {where: {node: {id: parentId}}}
-                    }
-                } : {})
+            if(parentId) {
+                return await BmCollSvc.create(data);
+            } else {
+                return await BmLooseSvc.create(data, tx);
             }
-
-            const bookmark = await getOgm_Bookmark().create({input: createBookmarkInput,});
-
-            const bookmarkId = bookmark.bookmarks[0].id
-            console.log(
-                `Bookmark created with ID: ${bookmarkId}`
-            );
-
-            if (parentId) {
-                await ParentMetaSvc.addChildPositions(bookmarkId, parentId, position)
-            }
-
-            return bookmarkId;
         } catch (error) {
             await tx.rollback()
             throw error;

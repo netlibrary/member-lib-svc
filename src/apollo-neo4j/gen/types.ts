@@ -4341,6 +4341,7 @@ export type Mutation = {
   createTagDs: CreateTagDsMutationResponse;
   createTags: CreateTagsMutationResponse;
   deleteAllBms: Scalars['Int']['output'];
+  deleteAllLooseBms: Scalars['Int']['output'];
   deleteBmLooseContainers: DeleteInfo;
   deleteBmsPageds: DeleteInfo;
   deleteBookmark: Scalars['Int']['output'];
@@ -4371,8 +4372,8 @@ export type Mutation = {
   deleteTagDs: DeleteInfo;
   deleteTags: DeleteInfo;
   importFirefoxBookmarks?: Maybe<Scalars['Boolean']['output']>;
+  moveBmsToBLC: Scalars['Int']['output'];
   moveCollBmsInContainer: Scalars['Int']['output'];
-  moveCollBmsToBmLooseContainer: Scalars['Int']['output'];
   moveManyNodes: Scalars['Boolean']['output'];
   updateBmLooseContainers: UpdateBmLooseContainersMutationResponse;
   updateBmsPageds: UpdateBmsPagedsMutationResponse;
@@ -4677,12 +4678,12 @@ export type MutationImportFirefoxBookmarksArgs = {
 };
 
 
-export type MutationMoveCollBmsInContainerArgs = {
+export type MutationMoveBmsToBlcArgs = {
   nodes: SelectedNodes;
 };
 
 
-export type MutationMoveCollBmsToBmLooseContainerArgs = {
+export type MutationMoveCollBmsInContainerArgs = {
   nodes: SelectedNodes;
 };
 
@@ -8926,6 +8927,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createTagDs?: Resolver<ResolversTypes['CreateTagDsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateTagDsArgs, 'input'>>;
   createTags?: Resolver<ResolversTypes['CreateTagsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateTagsArgs, 'input'>>;
   deleteAllBms?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  deleteAllLooseBms?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   deleteBmLooseContainers?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteBmLooseContainersArgs>>;
   deleteBmsPageds?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteBmsPagedsArgs>>;
   deleteBookmark?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationDeleteBookmarkArgs, 'id'>>;
@@ -8956,8 +8958,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteTagDs?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteTagDsArgs>>;
   deleteTags?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteTagsArgs>>;
   importFirefoxBookmarks?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationImportFirefoxBookmarksArgs, 'file'>>;
+  moveBmsToBLC?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationMoveBmsToBlcArgs, 'nodes'>>;
   moveCollBmsInContainer?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationMoveCollBmsInContainerArgs, 'nodes'>>;
-  moveCollBmsToBmLooseContainer?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationMoveCollBmsToBmLooseContainerArgs, 'nodes'>>;
   moveManyNodes?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationMoveManyNodesArgs, 'nodes'>>;
   updateBmLooseContainers?: Resolver<ResolversTypes['UpdateBmLooseContainersMutationResponse'], ParentType, ContextType, Partial<MutationUpdateBmLooseContainersArgs>>;
   updateBmsPageds?: Resolver<ResolversTypes['UpdateBmsPagedsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateBmsPagedsArgs>>;

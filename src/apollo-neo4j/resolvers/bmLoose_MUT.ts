@@ -27,6 +27,25 @@ export const bmLoose_MUT_resolver = {
             await tx.close();
         }
     },
+    deleteAllLooseBms: async (_, {}, {driver}: { driver: Driver }) => {
+        const tx = await driver.session().beginTransaction();
+        try {
+            // Construct and execute the Cypher query
+            const nodesDeleted = (await tx.run(`
+                    MATCH (blc:BmLooseContainer)-[:CONTAINS]->(b:Bookmark)
+                    DETACH DELETE b
+                    RETURN COUNT(b) AS r
+                `,)).records[0].get('r').toNumber();
+
+            await tx.commit()
+            return nodesDeleted;
+        } catch (error) {
+            await tx.rollback()
+            throw error;
+        } finally {
+            await tx.close();
+        }
+    },
     deleteBookmark: async (_, {id}, {driver}: { driver: Driver }) => {
         const tx = await driver.session().beginTransaction();
         try {

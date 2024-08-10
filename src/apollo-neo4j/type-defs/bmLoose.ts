@@ -9,5 +9,6 @@ export const bmLooseContainer_typeDefs = gql`
 
     type Mutation {
         moveCollBmsInContainer(nodes: SelectedNodes!): Int!
+        deleteAllLooseBms: Int!
     }
 `;
