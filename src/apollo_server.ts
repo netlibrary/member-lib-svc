@@ -10,8 +10,9 @@ import express from "express";
 import cors from 'cors';
 import {ApolloServerPluginDrainHttpServer} from "@apollo/server/plugin/drainHttpServer";
 import http from "http";
+import {authPlugin} from "./apollo-neo4j/plugins/auth.js";
 
-const myPlugin:ApolloServerPlugin  = {
+const myPlugin: ApolloServerPlugin = {
     async requestDidStart(requestContext) {
         return {
             // Fires whenever Apollo Server will parse a GraphQL
@@ -62,12 +63,20 @@ export async function startApolloServer(schema, driver, ogm) {
 
     app.use(graphqlUploadExpress());
 
+    const contextHandler = async ({req}) => {
+        return {
+            ogm,
+            driver,
+            token: req.headers.authorization || ''
+        };
+    }
+
     app.use(
         '/graphql',
         cors<cors.CorsRequest>(),
         bodyParser.json(),
         expressMiddleware(apolloServer, {
-            context: async ({req}) => ({token: req.headers.token, ogm: ogm, driver: driver}),
+            context: contextHandler,
         })
     )
 

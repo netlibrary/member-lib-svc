@@ -7883,6 +7883,10 @@ export type ResolversParentTypes = {
   Upload: Scalars['Upload']['output'];
 };
 
+export type AuthDirectiveArgs = { };
+
+export type AuthDirectiveResolver<Result, Parent, ContextType = any, Args = AuthDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
 export type BmLooseContainerResolvers<ContextType = any, ParentType extends ResolversParentTypes['BmLooseContainer'] = ResolversParentTypes['BmLooseContainer']> = {
   bookmarks?: Resolver<Array<ResolversTypes['Bookmark']>, ParentType, ContextType, RequireFields<BmLooseContainerBookmarksArgs, 'directed'>>;
   bookmarksAggregate?: Resolver<Maybe<ResolversTypes['BmLooseContainerBookmarkBookmarksAggregationSelection']>, ParentType, ContextType, RequireFields<BmLooseContainerBookmarksAggregateArgs, 'directed'>>;
@@ -9630,3 +9634,6 @@ export type Resolvers<ContextType = any> = {
   Upload?: GraphQLScalarType;
 };
 
+export type DirectiveResolvers<ContextType = any> = {
+  auth?: AuthDirectiveResolver<any, any, ContextType>;
+};

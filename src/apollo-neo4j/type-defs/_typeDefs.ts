@@ -7,8 +7,10 @@ import { general_typeDefs } from './general.js';
 import { member_typeDefs } from './member.js';
 import {tag_typeDefs} from "./tag.js";
 import {bmLooseContainer_typeDefs} from "./bmLoose.js";
+import {directive_typeDefs} from "./directive.js";
 
 export const typeDefs = gql`
+  ${directive_typeDefs}
   ${member_typeDefs}
   ${collNodes_typeDefs}
   ${tag_typeDefs}
