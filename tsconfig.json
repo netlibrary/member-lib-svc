@@ -1,6 +1,7 @@
 {
   "include": [
-    "./**/*"
+    "src/**/*",
+    "db_seeder/**/*",
   ],
   "exclude": [
     "node_modules"

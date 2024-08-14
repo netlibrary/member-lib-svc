@@ -2,7 +2,9 @@ import { gql } from "graphql-tag";
 
 export const collection_typeDefs = gql`
   type Collection implements Parent
-    @node(labels: ["Collection", "Parent", "DeleteCascade", "CollNode"]) {
+    @node(labels: ["Collection", "Parent", "DeleteCascade", "CollNode"])
+  @authorization(filter: [{ operations: [READ, AGGREGATE] where: { node: { member: { id: "$jwt.sub" } } } }])
+  {
     id: ID! @id @unique
     createdAt: DateTime @timestamp(operations: [CREATE])
     updatedAt: DateTime @timestamp(operations: [UPDATE])
@@ -10,7 +12,7 @@ export const collection_typeDefs = gql`
     children: [Child!]! @relationship(type: "CONTAINS", direction: OUT)
     parentMeta: ParentMeta @relationship(type: "HAS", direction: OUT)
 
-    member: Member @relationship(type: "OWNS", direction: IN)
+    member: Member! @relationship(type: "OWNS", direction: IN)
   }
 
   type CollectionDs {
@@ -28,7 +30,7 @@ export const collection_typeDefs = gql`
     collectionList(memberId: String!): CollectionDsList
       @cypher(
         statement: """
-        MATCH (m:Member {id: $memberId})-[:OWNS]->(c:Collection)
+        MATCH (m:Member {id: $jwt.sub})-[:OWNS]->(c:Collection)
         OPTIONAL MATCH (m)-[:HAS]->(mm:MemberMeta)
         OPTIONAL MATCH path=(c)-[:CONTAINS*0..]->(f:Folder)
         WITH c, mm, length(path) AS depth
@@ -48,7 +50,8 @@ export const collection_typeDefs = gql`
   }
 
   type Mutation {
-    createCollection(name: String!, memberId: ID!): ID @auth
+    createCollection(name: String!, memberId: ID!): ID
     deleteCollection(id: ID!, memberId: ID!): Int!
+      deleteManyColls(ids: [ID!]!): Int!
   }
 `;

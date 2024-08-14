@@ -3,11 +3,14 @@ import {Driver} from "neo4j-driver";
 import {MemberMetaSvc} from "../services/member_meta.js";
 import {CollNodeSvc} from "../services/collNode.js";
 import {getOgm_Collection, setOGMs} from "../../../global/ogm.js";
+import {Context} from "../context.js";
+import {IResolvers} from "@graphql-tools/utils";
+import {Resolvers} from "../gen/types.js";
 
 
 export const collectionResolvers = {
     Mutation: {
-        createCollection: async (_, {name}, context) => {
+        createCollection: async (t, {name}, ctx) => {
             setOGMs(ogm)
             try {
                 const collection = await getOgm_Collection().create({
@@ -53,12 +56,12 @@ export const collectionResolvers = {
                 await tx.close();
             }
         },
-        deleteCollections: async (_, {ids, memberId}, {driver}: { driver: Driver }) => {
+        deleteManyColls: async (_, {ids}, {driver}) => {
             const tx = await driver.session().beginTransaction();
             try {
                 // Construct and execute the Cypher query for multiple IDs
-                const nDeleted = await CollNodeSvc.deleteManyCascade(ids, tx);
-                await MemberMetaSvc.deleteCollectionPositions(memberId, ids);
+                const nDeleted = await CollNodeSvc.deleteManyCascade([], tx);
+                await MemberMetaSvc.deleteCollectionPositions('memberId', []);
 
                 return nDeleted;
             } catch (error) {

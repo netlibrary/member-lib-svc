@@ -5,6 +5,7 @@ let ogm_ParentMeta: Model | undefined;
 let ogm_Bookmark: Model | undefined;
 let ogm_Collection: Model | undefined;
 let ogm_Folder: Model | undefined;
+let ogm_Member: Model | undefined;
 
 export function setOGMs(ogm: OGM) {
     ogm_MemberMeta = ogm.model("MemberMeta");
@@ -12,6 +13,7 @@ export function setOGMs(ogm: OGM) {
     ogm_Bookmark = ogm.model("Bookmark");
     ogm_Collection = ogm.model("Collection");
     ogm_Folder = ogm.model("Folder");
+    ogm_Member = ogm.model("Member");
 }
 
 function getOgmModel(model: Model | undefined, modelName: string): Model {
@@ -39,4 +41,8 @@ export function getOgm_Collection(): Model {
 
 export function getOgm_Folder(): Model {
     return getOgmModel(ogm_Folder, "Folder");
+}
+
+export function getOgm_Member(): Model {
+    return getOgmModel(ogm_Member, "Member");
 }

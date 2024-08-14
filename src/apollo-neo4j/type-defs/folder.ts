@@ -10,6 +10,7 @@ export const folder_typeDefs = gql`
     parentMeta: ParentMeta @relationship(type: "HAS", direction: OUT)
 
     parent: Parent @relationship(type: "CONTAINS", direction: IN)
+    member: Member! @relationship(type: "OWNS", direction: IN)
   }
 
   type FolderDl {

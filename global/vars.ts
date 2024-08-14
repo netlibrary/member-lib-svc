@@ -4,3 +4,9 @@ export const memberIds = [
     // '22406d52-394f-4f46-89a3-679bad22db86',
     '106f4203-2af4-46d6-9687-2047c3dcdf8a'
 ];
+
+export enum MemberRoles {
+    ADMIN = 'ADMIN',
+    MEMBER = 'MEMBER',
+    GUEST = 'GUEST'
+}

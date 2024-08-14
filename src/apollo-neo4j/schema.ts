@@ -4,12 +4,18 @@ import { typeDefs } from "./type-defs/_typeDefs.js";
 import { driver } from "./driver.js";
 import { resolvers } from "./resolvers/_resolvers.js";
 import {authPlugin} from "./plugins/auth.js";
+import {Neo4jGraphQLAuthJWTPlugin} from "@neo4j/graphql-plugin-auth";
 
 export const neoSchema = new Neo4jGraphQL({
     typeDefs,
     resolvers,
     driver,
     debug: true,
+    features: {
+        authorization: {
+            key: "your-256-bit-secret",
+        },
+    },
 });
 
 

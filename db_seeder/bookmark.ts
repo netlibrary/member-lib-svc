@@ -1,6 +1,7 @@
 import {faker} from '@faker-js/faker';
 import {seedTags} from "./tag.js";
 import {seedOgm} from "./_db_seeder.js";
+import {memberIds} from "../global/vars.js";
 
 
 export async function seedBookmarks(parentId): Promise<string[]> {
@@ -54,6 +55,9 @@ export async function seedBm(parentId): Promise<string> {
             linkPath: faker.internet.domainWord(), // Replace with actual link path
             parent: {
                 connect: {where: {node: {id: parentId}}}
+            },
+            member: {
+                connect: {where: {node: {id: memberIds[0]}}}
             }
         };
         const ogm_bookmarks_createRes = await ogm_Bookmark.create({

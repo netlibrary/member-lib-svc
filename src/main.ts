@@ -6,9 +6,9 @@ import {setOGMs} from "../global/ogm.js";
 
 
 async function startServer() {
-    const [schema] = await Promise.all([neoSchema.getSchema(), ogm.init()]);
-    setOGMs(ogm);
     try {
+        const [schema] = await Promise.all([neoSchema.getSchema(), ogm.init()]);
+        setOGMs(ogm);
         const {httpServer, apolloServer} = await startApolloServer(schema, driver, ogm);
         await new Promise<void>((resolve) => httpServer.listen({port: 4000}, resolve));
         console.log(`🚀 Server ready at http://localhost:4000/graphql`);

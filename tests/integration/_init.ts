@@ -35,9 +35,12 @@ export async function createTestSuite() {
             variables,
         }, {
             contextValue: {
-                token: 'test-token',
+                req: {},
+                executionContext: {
+
                 ogm: ogm,
                 driver: testDriver
+                },
             },
         });
         return response;

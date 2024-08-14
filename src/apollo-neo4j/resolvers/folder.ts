@@ -8,10 +8,10 @@ export const folderResolvers = {
     Mutation: {
         createFolder: async (_, {name, position, parentId}: {
             name: string, position: number, parentId: string
-        }, {driver}) => {
+        }, {driver, memberId}) => {
             const tx = await driver.session().beginTransaction();
             try {
-                const createFolderInput: FolderCreateInput = {
+                const createFolderInput = {
                     name: name,
                     parentMeta: {
                         create: {
@@ -19,6 +19,9 @@ export const folderResolvers = {
                                 childPositions: []
                             }
                         }
+                    },
+                    member: {
+                        connect: { where: { node: { id: memberId } } }
                     },
                     ...(parentId ? {
                         parent: {

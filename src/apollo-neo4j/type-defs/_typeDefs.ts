@@ -8,9 +8,12 @@ import { member_typeDefs } from './member.js';
 import {tag_typeDefs} from "./tag.js";
 import {bmLooseContainer_typeDefs} from "./bmLoose.js";
 import {directive_typeDefs} from "./directive.js";
+import {jwt_typeDefs} from "./jwt.js";
+import {resolver_typeDefs} from "../resolvers/_typeDefs.js";
 
 export const typeDefs = gql`
-  ${directive_typeDefs}
+
+  ${jwt_typeDefs}
   ${member_typeDefs}
   ${collNodes_typeDefs}
   ${tag_typeDefs}
@@ -19,4 +22,6 @@ export const typeDefs = gql`
   ${bmLooseContainer_typeDefs}
   ${bookmark_typeDefs}
   ${general_typeDefs}
+  ${resolver_typeDefs}
 `
+// ${directive_typeDefs}

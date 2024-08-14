@@ -5,7 +5,7 @@ export const collNodes_typeDefs = gql`
     union Parent = Collection | Folder
 
     interface Parent {
-        id: ID! @id
+        id: ID!
     }
 
     type ParentMeta @node(labels: ["ParentMeta", "CollNode"]) {

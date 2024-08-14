@@ -4,13 +4,10 @@ import {InMemoryLRUCache} from "@apollo/utils.keyvaluecache";
 import {graphqlUploadExpress} from "graphql-upload-ts";
 import bodyParser from "body-parser";
 import {expressMiddleware} from "@apollo/server/express4";
-import {ogm} from "./apollo-neo4j/ogm.js";
-import {driver} from "./apollo-neo4j/driver.js";
 import express from "express";
 import cors from 'cors';
 import {ApolloServerPluginDrainHttpServer} from "@apollo/server/plugin/drainHttpServer";
 import http from "http";
-import {authPlugin} from "./apollo-neo4j/plugins/auth.js";
 
 const myPlugin: ApolloServerPlugin = {
     async requestDidStart(requestContext) {
@@ -18,7 +15,7 @@ const myPlugin: ApolloServerPlugin = {
             // Fires whenever Apollo Server will parse a GraphQL
             // request to create its associated document AST.
             async parsingDidStart(requestContext) {
-                console.log('Parsing started!');
+                console.log('Parsing started2!', requestContext.request);
             },
 
             async executionDidStart(requestContext) {
@@ -64,6 +61,7 @@ export async function startApolloServer(schema, driver, ogm) {
     app.use(graphqlUploadExpress());
 
     const contextHandler = async ({req}) => {
+        console.log('Request received:', req.body.query)
         return {
             ogm,
             driver,
@@ -76,7 +74,12 @@ export async function startApolloServer(schema, driver, ogm) {
         cors<cors.CorsRequest>(),
         bodyParser.json(),
         expressMiddleware(apolloServer, {
-            context: contextHandler,
+            context: async ({req, res}) => ({
+                memberId: req.headers.authorization || '',
+                ogm: ogm,
+                driver: driver,
+                token: req.headers.authorization || ''
+            })
         })
     )
 

@@ -5,12 +5,17 @@ import {collNodesResolvers} from './collNodes.js';
 import { mergeResolvers } from '@graphql-tools/merge';
 import {folderResolvers} from "./folder.js";
 import {bookmarkResolvers} from "./bm.js";
+import {Context} from "../context.js";
+import { IResolvers } from '@graphql-tools/utils';
+import {Resolvers} from "../gen/types.js";
+import {member_QUERY_resolvers} from "./member_QUERY.js";
 
-export const resolvers = mergeResolvers(
+export const resolvers: Resolvers = mergeResolvers(
     [
         collNodesResolvers,
         generalResolvers,
         bookmarkResolvers,
         collectionResolvers,
-        folderResolvers]
+        folderResolvers,
+        member_QUERY_resolvers]
 );

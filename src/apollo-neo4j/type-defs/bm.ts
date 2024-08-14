@@ -1,7 +1,9 @@
 import { gql } from 'graphql-tag';
 
 export const bookmark_typeDefs = gql`
-    type Bookmark @node(labels: ["Bookmark", "Child", "CollNode"]) {
+    type Bookmark 
+    @node(labels: ["Bookmark", "Child", "CollNode"]) 
+    {
         id: ID! @id @unique
         createdAt: DateTime @timestamp(operations: [CREATE])
         updatedAt: DateTime @timestamp(operations: [UPDATE])
@@ -14,6 +16,7 @@ export const bookmark_typeDefs = gql`
 
         parent: Parent @relationship(type: "CONTAINS", direction: IN)
         tags: [Tag!]! @relationship(type: "HAS", direction: OUT)
+        member: Member! @relationship(type: "OWNS", direction: IN)
     }
 
     type BookmarkFilter @node(labels: ["BookmarkFilter"]) {
