@@ -1,23 +1,48 @@
-import {ogm} from "../ogm.js";
-import {Driver} from "neo4j-driver";
 import {MemberMetaSvc} from "../services/member_meta.js";
 import {CollNodeSvc} from "../services/collNode.js";
-import {getOgm_Collection, setOGMs} from "../../../global/ogm.js";
-import {Context} from "../context.js";
-import {IResolvers} from "@graphql-tools/utils";
-import {Resolvers} from "../gen/types.js";
+import {gql} from "graphql-tag";
 
+export const collection_QUERY_typeDefs = gql`
+    type Query {
+        collectionList(memberId: String!): CollectionDsList
+        @cypher(
+            statement: """
+            MATCH (m:Member {id: $jwt.sub})-[:OWNS]->(c:Collection)
+            OPTIONAL MATCH (m)-[:HAS]->(mm:MemberMeta)
+            OPTIONAL MATCH path=(c)-[:CONTAINS*0..]->(f:Folder)
+            WITH c, mm, length(path) AS depth
+            WITH c, mm, MAX(depth) AS maxDepth
+            OPTIONAL MATCH (c)-[:CONTAINS*0..]->(b:Bookmark)
+            WITH c AS collection, COUNT(DISTINCT b) AS bookmarkCount, mm, maxDepth + 1 AS deepness
+            WITH mm, COLLECT({id: collection.id, name: collection.name, bookmarkCount: bookmarkCount, deepness: deepness}) AS collections
+            UNWIND mm.collectionPositions AS pos
+            WITH pos, [collection IN collections WHERE collection.id = pos][0] AS sortedCollection
+            WITH COLLECT(sortedCollection) AS sortedCollections
+            RETURN {
+            collections: sortedCollections
+            }  as r
+            """
+            columnName: "r"
+        )
+    }
+`;
 
 export const collectionResolvers = {
     Mutation: {
-        createCollection: async (t, {name}, ctx) => {
-            setOGMs(ogm)
+        createCollection: async (t, {name}, {ogm, jwt}) => {
             try {
-                const collection = await getOgm_Collection().create({
+                const collection = await ogm.model("Collection").create({
                     input: {
                         name: name,
+                        parentMeta: {
+                            create: {
+                                node: {
+                                    childPositions: []
+                                }
+                            }
+                        },
                         member: {
-                            connect: {where: {node: {id: 'memberId'}}},
+                            connect: {where: {node: {id: jwt.sub}}},
                         },
                     },
                 });
@@ -32,7 +57,7 @@ export const collectionResolvers = {
                     },
                     where: {
                         member: {
-                            id: 'memberId',
+                            id: jwt.sub,
                         },
                     },
                 });

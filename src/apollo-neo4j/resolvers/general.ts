@@ -7,7 +7,7 @@ import {getOgm_Collection, getOgm_Folder} from "../../../global/ogm.js";
 export const generalResolvers = {
   Upload: GraphQLUpload,
   Mutation: {
-    importFirefoxBookmarks: async (_, { file }) => {
+    importFirefoxBookmarks: async (_, { file }, {ogm}) => {
       try {
         const { createReadStream, filename, mimetype, encoding } = await file;
         // Invoking the `createReadStream` will return a Readable Stream.
@@ -20,7 +20,7 @@ export const generalResolvers = {
         const bookmarksData = JSON.parse(jsonString);
 
         // Process the bookmarksData to create Collection, Bookmark, and Folder nodes in the database
-        await processBookmarksData(bookmarksData);
+        await processBookmarksData(bookmarksData, ogm);
 
         return true;
       } catch (error) {
@@ -40,8 +40,8 @@ function streamToString(stream: NodeJS.ReadableStream): Promise<string> {
   });
 }
 
-async function processBookmarksData(bookmarksData) {
-  const collection = await getOgm_Collection().create({
+async function processBookmarksData(bookmarksData, ogm) {
+  const collection = await ogm.model("Collection").create({
     input: {
       name: "firefox",
       // createdAt: new Date(bookmarksData.dateAdded / 1000),
@@ -67,13 +67,14 @@ async function processBookmarksData(bookmarksData) {
   });
 
   // Process children recursively
-  await processChildren(bookmarksData.children, collection.collections[0].id);
+  await processChildren(bookmarksData.children, collection.collections[0].id, ogm);
 }
 
 async function processChildren(
   children,
   parentId,
-  parentName = "collection"
+  ogm,
+  parentName = "collection",
 ) {
   const childPositions: string[] = [];
   for (const child of children) {
@@ -88,11 +89,11 @@ async function processChildren(
     } else if (child.children) {
       // It's a folder
       const folderId = await createFolder(child, parentId, parentName);
-      await processChildren(child.children, folderId, "folder");
+      await processChildren(child.children, folderId, ogm,"folder");
       childPositions.push(folderId);
     }
   }
-  createParentMeta(parentId, childPositions);
+  createParentMeta(parentId, childPositions, ogm);
 }
 
 async function createFolder(folderData, parentId, parentName) {

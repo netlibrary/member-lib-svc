@@ -1,7 +1,7 @@
 import {MutationUpdateParentMetasArgs, ParentMeta, ParentMetaWhere} from "../gen/types.js";
 import {getOgm_ParentMeta} from "../../../global/ogm.js";
 
-const pushChildPosition = async (childIds: string[], parentId) => {
+const pushChildPosition = async (childIds: string[], parentId, ogm) => {
     const updateInput: MutationUpdateParentMetasArgs = {
         update: {
             childPositions_PUSH: childIds,
@@ -14,12 +14,12 @@ const pushChildPosition = async (childIds: string[], parentId) => {
             }
         }
     };
-    await getOgm_ParentMeta().update(updateInput as any);
+    await ogm.model("ParentMeta").update(updateInput as any);
 }
 
-const addChildPositions = async (childIds, parentId, position) => {
+const addChildPositions = async (childIds: string[], parentId, position, ogm) => {
     if (position == null) {
-        await pushChildPosition(childIds, parentId);
+        await pushChildPosition(childIds, parentId, ogm);
         return;
     }
 
@@ -31,7 +31,7 @@ const addChildPositions = async (childIds, parentId, position) => {
             }
         }
     }
-    const currentParentMeta: ParentMeta[] = await getOgm_ParentMeta().find({
+    const currentParentMeta: ParentMeta[] = await ogm.model("ParentMeta").find({
         where: parentMetaWhere as any,
     });
 
@@ -49,18 +49,18 @@ const addChildPositions = async (childIds, parentId, position) => {
             },
         };
 
-        await getOgm_ParentMeta().update(updateInput as any); // Use 'as any' cautiously
+        await ogm.model("ParentMeta").update(updateInput as any); // Use 'as any' cautiously
     } else {
         throw ('ParentMeta not found');
     }
 }
 
-export const deleteChildPositions = async (childIds: string[], parentId: string) => {
-    const parentMeta = await getParentMeta(parentId);
+export const deleteChildPositions = async (childIds: string[], parentId: string, ogm) => {
+    const parentMeta = await getParentMeta(parentId, ogm);
     if (parentMeta) {
         // Filter out the deleted collection IDs from collectionPositions
         const updatedChildPositions = parentMeta.childPositions.filter(child => !childIds.includes(child));
-        await getOgm_ParentMeta().update({
+        await ogm.model("ParentMeta").update({
             where: {id: parentMeta.id},
             update: {childPositions: updatedChildPositions},
         });
@@ -75,7 +75,7 @@ export const ParentMetaSvc = {
     deleteChildPositions: deleteChildPositions
 }
 
-const getParentMeta = async (parentId: string) => {
+const getParentMeta = async (parentId: string, ogm) => {
     const parentMetaWhere: ParentMetaWhere = {
         parentConnection: {
             node: {
@@ -83,14 +83,14 @@ const getParentMeta = async (parentId: string) => {
             }
         }
     }
-    const currentParentMeta: ParentMeta[] = await getOgm_ParentMeta().find({
+    const currentParentMeta: ParentMeta[] = await ogm.model("ParentMeta").find({
         where: parentMetaWhere as any,
     });
     return currentParentMeta[0] || null;
 }
 
-export async function createParentMeta(parentId, childIds) {
-    const parentMeta = await getOgm_ParentMeta().create({
+export async function createParentMeta(parentId, childIds, ogm) {
+    const parentMeta = await ogm.model("ParentMeta").create({
         input: {
             childPositions: childIds,
             parent: {

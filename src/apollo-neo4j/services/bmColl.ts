@@ -4,7 +4,7 @@ import {CreateBookmarkDl} from "../gen/types.js";
 
 
 export const BmCollSvc = {
-    create: async (data: CreateBookmarkDl) => {
+    create: async (data: CreateBookmarkDl, memberId, ogm) => {
         const {
             parentId,
             position,
@@ -22,19 +22,22 @@ export const BmCollSvc = {
             urlScheme: urlScheme,
             linkPath: linkPath,
             iconUri: iconUri,
+            member: {
+                connect: {where: {node: {id: memberId}}},
+            },
             parent: {
                 connect: {where: {node: {id: parentId}}}
             }
         }
 
-        const bookmark = await getOgm_Bookmark().create({input: createBookmarkInput,});
+        const bookmark = await ogm.model("Bookmark").create({input: createBookmarkInput,});
 
         const bookmarkId = bookmark.bookmarks[0].id
         console.log(
             `Bookmark created with ID: ${bookmarkId}`
         );
 
-        await ParentMetaSvc.addChildPositions(bookmarkId, parentId, position)
+        await ParentMetaSvc.addChildPositions(bookmarkId, parentId, position, ogm)
 
         return bookmarkId;
     }

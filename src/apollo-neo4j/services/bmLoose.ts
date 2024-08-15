@@ -6,7 +6,7 @@ import {Transaction} from "neo4j-driver";
 
 
 export const BmLooseSvc = {
-    create: async (data: CreateBookmarkDl, tx: Transaction) => {
+    create: async (data: CreateBookmarkDl, memberId, tx: Transaction, ogm) => {
         const {
             name,
             domainName, urlScheme,
@@ -15,7 +15,7 @@ export const BmLooseSvc = {
             description
         } = data;
 
-        const blcId = await BLC_SvcDb.getId(tx)
+        const blcId = await BLC_SvcDb.getId(memberId, tx)
 
         const createBookmarkInput: any = {
             description: description,
@@ -24,12 +24,15 @@ export const BmLooseSvc = {
             urlScheme: urlScheme,
             linkPath: linkPath,
             iconUri: iconUri,
+            member: {
+                connect: {where: {node: {id: memberId}}},
+            },
             parent: {
                 connect: {where: {node: {id: blcId}}}
             }
         }
 
-        const bookmark = await getOgm_Bookmark().create({input: createBookmarkInput,});
+        const bookmark = await ogm.model("Bookmark").create({input: createBookmarkInput,});
 
         const bookmarkId = bookmark.bookmarks[0].id
         console.log(

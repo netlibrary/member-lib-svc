@@ -72,9 +72,7 @@ export const bm_MUT_resolver = {
             await tx.close();
         }
     },
-    deleteHierarchBmsXGetCollBmCounts: async (_, {input}: { input: SelectedBms[] }, {driver}: {
-        driver: Driver
-    }) => {
+    deleteHierarchBmsXGetCollBmCounts: async (_, {input}: { input: SelectedBms[] }, {driver, ogm}) => {
         const tx = await driver.session().beginTransaction();
         const bmIds = input.map(i => i.bmIds).flat();
         try {
@@ -94,7 +92,7 @@ export const bm_MUT_resolver = {
             const res = result.records[0].get('r');
 
             for (const childsWrapper of input) {
-                await ParentMetaSvc.deleteChildPositions([...childsWrapper.bmIds], childsWrapper.parentId)
+                await ParentMetaSvc.deleteChildPositions([...childsWrapper.bmIds], childsWrapper.parentId, ogm)
             }
 
             await tx.commit()
@@ -108,17 +106,15 @@ export const bm_MUT_resolver = {
     },
     createBookmarkDl: async (_, {data}: {
         data: CreateBookmarkDl
-    }, {driver, ogm}) => {
+    }, {driver, ogm, jwt}) => {
         const tx = await driver.session().beginTransaction();
-        setOGMs(ogm)
-
         try {
             const parentId = data.parentId;
 
             if(parentId) {
-                return await BmCollSvc.create(data);
+                return await BmCollSvc.create(data, jwt.sub, ogm);
             } else {
-                return await BmLooseSvc.create(data, tx);
+                return await BmLooseSvc.create(data, jwt.sub, tx, ogm);
             }
         } catch (error) {
             await tx.rollback()

@@ -4,11 +4,12 @@ import {ParentMetaSvc} from "../services/parent_meta.js";
 import {getOgm_Folder, getOgm_ParentMeta} from "../../../global/ogm.js";
 
 
+
 export const folderResolvers = {
     Mutation: {
         createFolder: async (_, {name, position, parentId}: {
             name: string, position: number, parentId: string
-        }, {driver, memberId}) => {
+        }, {driver, ogm, jwt}) => {
             const tx = await driver.session().beginTransaction();
             try {
                 const createFolderInput = {
@@ -21,7 +22,7 @@ export const folderResolvers = {
                         }
                     },
                     member: {
-                        connect: { where: { node: { id: memberId } } }
+                        connect: { where: { node: { id: jwt.sub } } }
                     },
                     ...(parentId ? {
                         parent: {
@@ -30,14 +31,11 @@ export const folderResolvers = {
                     } : {})
                 }
 
-                const folder = await getOgm_Folder().create({input: createFolderInput,});
+                const folder = await ogm.model("Folder").create({input: createFolderInput,});
 
                 const folderId = folder.folders[0].id
-                console.log(
-                    `Bookmark created with ID: ${folderId}`
-                );
 
-                await ParentMetaSvc.addChildPositions(folderId, parentId, position)
+                await ParentMetaSvc.addChildPositions([folderId], parentId, position, ogm)
 
                 return folderId;
             } catch (error) {
@@ -48,7 +46,7 @@ export const folderResolvers = {
             }
         },
 
-        deleteFolder: async (_, {id, parentId}, {driver}: { driver: Driver }) => {
+        deleteFolder: async (_, {id, parentId}, {driver, ogm}) => {
             // Your code here
             const tx = await driver.session().beginTransaction();
             try {
@@ -64,7 +62,7 @@ export const folderResolvers = {
                 const nodesDeleted = result.records[0].get('nodesDeleted').toNumber();
 
                 // update parent meta
-                const parentMeta = await getOgm_ParentMeta().find({
+                const parentMeta = await ogm.model("ParentMeta").find({
                     where: {
                         parentConnection: {
                             node: {
@@ -76,7 +74,7 @@ export const folderResolvers = {
                 // If parentMeta is found, update the child positions
                 if (parentMeta && parentMeta.length > 0) {
                     const childPositions = parentMeta[0].childPositions.filter(childId => childId !== id);
-                    await getOgm_ParentMeta().update({
+                    await ogm.model("ParentMeta").update({
                         where: {id: parentMeta[0].id},
                         update: {childPositions: childPositions},
                     });

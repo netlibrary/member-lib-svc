@@ -24,7 +24,7 @@ export async function seedCollections(memberId) {
             seedFolders(ogm_collections_createRes.collections[0].id)])
             .then(res => {
                 const childIds = [...res[0], ...res[1]]
-                createParentMeta(ogm_collections_createRes.collections[0].id, childIds)
+                createParentMeta(ogm_collections_createRes.collections[0].id, childIds, seedOgm)
             })
             collectionIds.push(ogm_collections_createRes.collections[0].id)
         }

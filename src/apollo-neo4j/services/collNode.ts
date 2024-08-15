@@ -60,17 +60,17 @@ const removeHierarch = async (nodes: NodesToMove, tx: Transaction): Promise<numb
     return deleted;
 }
 
-const moveToDest = async (nodes: NodesToMove, destId, pos, memberId, tx: Transaction): Promise<void> => {
+const moveToDest = async (nodes: NodesToMove, destId, pos, memberId, tx: Transaction, ogm): Promise<void> => {
     let deleted = 0
     if (nodes.collectionIds.length > 0) {
         await moveCollectionsToDest(nodes.collectionIds, destId, tx)
         await MemberMetaSvc.deleteCollectionPositions(memberId, nodes.collectionIds);
-        await ParentMetaSvc.addChildPositions(nodes.collectionIds, destId, pos)
+        await ParentMetaSvc.addChildPositions(nodes.collectionIds, destId, pos, ogm)
     }
     for (const ch of nodes.childs) {
         await moveChildToDest(ch, destId, tx)
-        await ParentMetaSvc.deleteChildPositions(ch.childIds, ch.parentId)
-        await ParentMetaSvc.addChildPositions(ch.childIds, destId, pos)
+        await ParentMetaSvc.deleteChildPositions(ch.childIds, ch.parentId, ogm)
+        await ParentMetaSvc.addChildPositions(ch.childIds, destId, pos, ogm)
     }
 }
 

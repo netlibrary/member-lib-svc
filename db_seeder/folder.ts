@@ -30,7 +30,7 @@ export async function seedFolders(parentId, level = 0): Promise<[string]> {
                 const subFolderIds = await seedFolders(ogm_folders_createRes.folders[0].id, ++level)
                 childIds = childIds.concat(subFolderIds)
             }
-            createParentMeta(ogm_folders_createRes.folders[0].id, childIds)
+            createParentMeta(ogm_folders_createRes.folders[0].id, childIds, seedOgm)
             folderIds.push(ogm_folders_createRes.folders[0].id)
         }
     } catch (error: any) {

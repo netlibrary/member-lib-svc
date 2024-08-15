@@ -27,7 +27,7 @@ export const collNodes_MUT_resolvers = {
                 await MemberMetaSvc.deleteCollectionPositions(memberIds[0], nodes.collectionIds)
             if (nodes.childs) {
                 for (const childsWrapper of nodes.childs) {
-                    await ParentMetaSvc.deleteChildPositions([...(childsWrapper.bookmarkIds || []), ...(childsWrapper.folderIds || [])], childsWrapper.parentId)
+                    await ParentMetaSvc.deleteChildPositions([...(childsWrapper.bookmarkIds || []), ...(childsWrapper.folderIds || [])], childsWrapper.parentId, ogm)
                 }
             }
             await tx.commit()
@@ -44,14 +44,14 @@ export const collNodes_MUT_resolvers = {
         nodes: NodesToMove,
         destinationId: string | null,
         position: number | null
-    }, {driver}) => {
+    }, {driver, ogm}) => {
         const tx: Transaction = await driver.session().beginTransaction();
         try {
             console.log("moveManyNodes", nodes, destinationId, position);
             if (destinationId == null) {
                 await CollNodeSvc.removeHierarch(nodes, tx)
             } else {
-                await CollNodeSvc.moveToDest(nodes, destinationId, position, memberIds[0], tx)
+                await CollNodeSvc.moveToDest(nodes, destinationId, position, memberIds[0], tx, ogm)
             }
             await tx.commit()
             return true
