@@ -1,4 +1,5 @@
-import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
+import {GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig} from 'graphql';
+
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -730,6 +731,7 @@ export type BookmarkCreateInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   domainName?: InputMaybe<Scalars['String']['input']>;
   iconUri?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
   linkPath?: InputMaybe<Scalars['String']['input']>;
   member?: InputMaybe<BookmarkMemberFieldInput>;
   name?: InputMaybe<Scalars['String']['input']>;
@@ -1526,6 +1528,7 @@ export type BookmarkOnCreateInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   domainName?: InputMaybe<Scalars['String']['input']>;
   iconUri?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
   linkPath?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
@@ -1811,6 +1814,7 @@ export type BookmarkUpdateInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   domainName?: InputMaybe<Scalars['String']['input']>;
   iconUri?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
   linkPath?: InputMaybe<Scalars['String']['input']>;
   member?: InputMaybe<BookmarkMemberUpdateFieldInput>;
   name?: InputMaybe<Scalars['String']['input']>;
@@ -2262,6 +2266,7 @@ export type CollectionConnectWhere = {
 
 export type CollectionCreateInput = {
   children?: InputMaybe<CollectionChildrenCreateInput>;
+  id: Scalars['ID']['input'];
   member?: InputMaybe<CollectionMemberFieldInput>;
   name?: InputMaybe<Scalars['String']['input']>;
   parentMeta?: InputMaybe<CollectionParentMetaFieldInput>;
@@ -2557,6 +2562,7 @@ export type CollectionMemberUpdateFieldInput = {
 };
 
 export type CollectionOnCreateInput = {
+  id: Scalars['ID']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
 };
@@ -2692,6 +2698,7 @@ export type CollectionUniqueWhere = {
 export type CollectionUpdateInput = {
   children?: InputMaybe<CollectionChildrenUpdateInput>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
   member?: InputMaybe<CollectionMemberUpdateFieldInput>;
   name?: InputMaybe<Scalars['String']['input']>;
   parentMeta?: InputMaybe<CollectionParentMetaUpdateFieldInput>;
@@ -3208,6 +3215,7 @@ export type FolderConnectWhere = {
 
 export type FolderCreateInput = {
   children?: InputMaybe<FolderChildrenCreateInput>;
+  id: Scalars['ID']['input'];
   member?: InputMaybe<FolderMemberFieldInput>;
   name?: InputMaybe<Scalars['String']['input']>;
   parent?: InputMaybe<FolderParentFieldInput>;
@@ -3465,6 +3473,7 @@ export type FolderMemberUpdateFieldInput = {
 };
 
 export type FolderOnCreateInput = {
+  id: Scalars['ID']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
 };
@@ -3688,6 +3697,7 @@ export type FolderUniqueWhere = {
 export type FolderUpdateInput = {
   children?: InputMaybe<FolderChildrenUpdateInput>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
   member?: InputMaybe<FolderMemberUpdateFieldInput>;
   name?: InputMaybe<Scalars['String']['input']>;
   parent?: InputMaybe<FolderParentUpdateFieldInput>;
@@ -5425,6 +5435,7 @@ export type Mutation = {
   deleteTagDs: DeleteInfo;
   deleteTags: DeleteInfo;
   importFirefoxBookmarks?: Maybe<Scalars['Boolean']['output']>;
+  moveAllBms: Scalars['Int']['output'];
   moveBmsToBLC: Scalars['Int']['output'];
   moveCollBmsInContainer: Scalars['Int']['output'];
   moveManyNodes: Scalars['Boolean']['output'];
@@ -5733,6 +5744,12 @@ export type MutationDeleteTagsArgs = {
 
 export type MutationImportFirefoxBookmarksArgs = {
   file: Scalars['Upload']['input'];
+};
+
+
+export type MutationMoveAllBmsArgs = {
+  destId: Scalars['ID']['input'];
+  pos?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -6417,6 +6434,7 @@ export type Query = {
   parentsChildrenAggregate: ParentsChildrenAggregateSelection;
   parentsChildrenConnection: ParentsChildrenConnection;
   parentsConnection: ParentsConnection;
+  signIn: Scalars['String']['output'];
   tagDls: Array<TagDl>;
   tagDlsAggregate: TagDlAggregateSelection;
   tagDlsConnection: TagDlsConnection;
@@ -6821,6 +6839,12 @@ export type QueryParentsConnectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<InputMaybe<ParentSort>>>;
   where?: InputMaybe<ParentWhere>;
+};
+
+
+export type QuerySignInArgs = {
+  memberName: Scalars['String']['input'];
+  pw: Scalars['String']['input'];
 };
 
 
@@ -10365,6 +10389,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteTagDs?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteTagDsArgs>>;
   deleteTags?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteTagsArgs>>;
   importFirefoxBookmarks?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationImportFirefoxBookmarksArgs, 'file'>>;
+  moveAllBms?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationMoveAllBmsArgs, 'destId'>>;
   moveBmsToBLC?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationMoveBmsToBlcArgs, 'nodes'>>;
   moveCollBmsInContainer?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationMoveCollBmsInContainerArgs, 'nodes'>>;
   moveManyNodes?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationMoveManyNodesArgs, 'nodes'>>;
@@ -10593,6 +10618,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   parentsChildrenAggregate?: Resolver<ResolversTypes['ParentsChildrenAggregateSelection'], ParentType, ContextType, Partial<QueryParentsChildrenAggregateArgs>>;
   parentsChildrenConnection?: Resolver<ResolversTypes['ParentsChildrenConnection'], ParentType, ContextType, Partial<QueryParentsChildrenConnectionArgs>>;
   parentsConnection?: Resolver<ResolversTypes['ParentsConnection'], ParentType, ContextType, Partial<QueryParentsConnectionArgs>>;
+  signIn?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<QuerySignInArgs, 'memberName' | 'pw'>>;
   tagDls?: Resolver<Array<ResolversTypes['TagDl']>, ParentType, ContextType, Partial<QueryTagDlsArgs>>;
   tagDlsAggregate?: Resolver<ResolversTypes['TagDlAggregateSelection'], ParentType, ContextType, Partial<QueryTagDlsAggregateArgs>>;
   tagDlsConnection?: Resolver<ResolversTypes['TagDlsConnection'], ParentType, ContextType, Partial<QueryTagDlsConnectionArgs>>;

@@ -2,6 +2,7 @@
   "include": [
     "src/**/*",
     "db_seeder/**/*",
+    "tests/**/*",
   ],
   "exclude": [
     "node_modules"

@@ -1,13 +1,25 @@
-import {Driver} from "neo4j-driver";
-import {ogm} from "../ogm.js";
 import {CreateBookmarkDl, SelectedBms} from "../gen/types.js";
 import {ParentMetaSvc} from "../services/parent_meta.js";
-import {getOgm_Bookmark, getOgm_ParentMeta, setOGMs} from "../../../global/ogm.js";
+import {getOgm_ParentMeta} from "../../../global/ogm.js";
 import {BmCollSvc} from "../services/bmColl.js";
 import {BmLooseSvc} from "../services/bmLoose.js";
+import {gql} from "graphql-tag";
+import {ChildPosSvc} from "../services/child_pos.js";
+
+export const bm_MUT_typeDefs = gql`
+    type Mutation {
+        deleteAllBms: Int!
+        moveAllBms(destId: ID!, pos: Int): Int!
+        createBookmarkDl(data: CreateBookmarkDl!): ID
+        deleteCollBookmark(id: ID!, parentId: ID!): Int!
+        deleteHierarchBmsXGetCollBmCounts(input: [SelectedBms!]): [CollBmCount!]
+        deleteBookmark(id: ID!): Int!
+        deleteManyBms(ids: [ID!]): Int!
+    }
+`;
 
 export const bm_MUT_resolver = {
-    deleteAllBms: async (_, {}, {driver}: { driver: Driver }) => {
+    deleteAllBms: async (_, {}, {driver, ogm}) => {
         const tx = await driver.session().beginTransaction();
         try {
             // Construct and execute the Cypher query
@@ -29,7 +41,47 @@ export const bm_MUT_resolver = {
             await tx.close();
         }
     },
-    deleteCollBookmark: async (_, {id, parentId}, {driver}: { driver: Driver }) => {
+    moveAllBms: async (_, {destId, pos}, {driver, ogm, jwt}) => {
+        const tx = await driver.session().beginTransaction();
+        try {
+            // Construct and execute the Cypher query
+            const collBmIds = await ChildPosSvc.getAllBmIds(jwt.sub, tx)
+            const looseBmIds = await BmLooseSvc.getAllIds(jwt.sub, tx)
+            const bmIds = looseBmIds.concat(collBmIds)
+
+            // remain only folder ids
+            await tx.run(`
+                    match (m:Member {id: $memberId})-[*1..]->(pm:ParentMeta)
+                    SET pm.childPositions = [id IN pm.childPositions WHERE id STARTS WITH 'f:']
+                `, {memberId: jwt.sub});
+
+            // del all CONTAINS relationships
+            await tx.run(`
+                MATCH (b:Bookmark)<-[old_r:CONTAINS]-(p:BmContainer)<-[*1..]-(Member {id: $memberId})
+                DELETE old_r
+            `,{memberId: jwt.sub});
+
+            // create new CONTAINS relationships
+            await tx.run(`
+                MATCH (m:Member {id: $memberId})-[r*]->(b:Bookmark)
+                WHERE b.id IN $bmIds
+                WITH b
+                MATCH (parent:Parent {id: $destId})
+                MERGE (parent)-[:CONTAINS]->(b)
+            `, {memberId: jwt.sub, destId, bmIds});
+
+            await ParentMetaSvc.addChildPositions(bmIds, destId, pos, ogm)
+
+            await tx.commit()
+            return true;
+        } catch (error) {
+            await tx.rollback()
+            throw error;
+        } finally {
+            await tx.close();
+        }
+    },
+    deleteCollBookmark: async (_, {id, parentId}, {driver, ogm}) => {
         const tx = await driver.session().beginTransaction();
         try {
             // Construct and execute the Cypher query
@@ -54,7 +106,7 @@ export const bm_MUT_resolver = {
             });
             // If parentMeta is found, update the child positions
             if (parentMeta && parentMeta.length > 0) {
-                const childPositions = parentMeta[0].childPositions.filter(childId => childId !== id);
+                const childPositions = parentMeta[0].childPositions.filter(childId => childId !== ChildPosSvc.getPrefixedId(id));
                 await getOgm_ParentMeta().update({
                     where: {id: parentMeta[0].id},
                     update: {childPositions: childPositions},
@@ -92,7 +144,7 @@ export const bm_MUT_resolver = {
             const res = result.records[0].get('r');
 
             for (const childsWrapper of input) {
-                await ParentMetaSvc.deleteChildPositions([...childsWrapper.bmIds], childsWrapper.parentId, ogm)
+                await ParentMetaSvc.delChPositions(childsWrapper.bmIds, childsWrapper.parentId, ogm)
             }
 
             await tx.commit()
@@ -111,7 +163,7 @@ export const bm_MUT_resolver = {
         try {
             const parentId = data.parentId;
 
-            if(parentId) {
+            if (parentId) {
                 return await BmCollSvc.create(data, jwt.sub, ogm);
             } else {
                 return await BmLooseSvc.create(data, jwt.sub, tx, ogm);

@@ -12,8 +12,7 @@ export const member_QUERY_resolvers = {
         signIn: async (_, {memberName, pw}, {driver, ogm}) => {
             const tx = await driver.session().beginTransaction();
             try {
-                const memberOgm = ogm.model("Member");
-                return await MemberSvc_Ogm.signIn(memberName, pw, memberOgm);
+                return await MemberSvc_Ogm.signIn(memberName, pw, ogm);
             } catch (error) {
                 await tx.rollback()
                 throw error;

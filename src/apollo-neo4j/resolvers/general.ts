@@ -1,8 +1,9 @@
-import { GraphQLUpload } from "graphql-upload-ts";
-import { ogm } from "../ogm.js";
-import {createParentMeta} from "../services/parent_meta.js";
+import {GraphQLUpload} from "graphql-upload-ts";
+import {ogm} from "../ogm.js";
 import {memberIds} from "../../../global/vars.js";
-import {getOgm_Collection, getOgm_Folder} from "../../../global/ogm.js";
+import {getOgm_Folder} from "../../../global/ogm.js";
+import {ParentMetaSvc} from "../services/parent_meta.js";
+import {NodeSvc} from "../services/node.js";
 
 export const generalResolvers = {
   Upload: GraphQLUpload,
@@ -83,7 +84,8 @@ async function processChildren(
       const bookmarkId = await createBookmark(
         child,
         parentId,
-        parentName
+        parentName,
+          ogm
       );
       childPositions.push(bookmarkId);
     } else if (child.children) {
@@ -93,7 +95,7 @@ async function processChildren(
       childPositions.push(folderId);
     }
   }
-  createParentMeta(parentId, childPositions, ogm);
+  ParentMetaSvc.create(parentId, childPositions, ogm);
 }
 
 async function createFolder(folderData, parentId, parentName) {
@@ -110,11 +112,12 @@ async function createFolder(folderData, parentId, parentName) {
   return folder.folders[0].id;
 }
 
-async function createBookmark(bookmarkData, parentId, parentName) {
+async function createBookmark(bookmarkData, parentId, parentName, ogm) {
   const ogm_Bookmark = ogm.model("Bookmark");
   const urlParts = new URL(bookmarkData.uri);
   const bookmark = await ogm_Bookmark.create({
     input: {
+      id: NodeSvc.genBmId(),
       name: bookmarkData.name,
       domainName: urlParts.hostname,
       urlScheme: urlParts.protocol.replace(":", ""),

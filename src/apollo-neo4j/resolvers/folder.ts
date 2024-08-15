@@ -1,8 +1,5 @@
-import {Driver} from 'neo4j-driver';
-import {FolderCreateInput} from "../gen/types.js";
 import {ParentMetaSvc} from "../services/parent_meta.js";
-import {getOgm_Folder, getOgm_ParentMeta} from "../../../global/ogm.js";
-
+import {NodeSvc} from "../services/node.js";
 
 
 export const folderResolvers = {
@@ -13,6 +10,7 @@ export const folderResolvers = {
             const tx = await driver.session().beginTransaction();
             try {
                 const createFolderInput = {
+                    id: NodeSvc.genFolderId(),
                     name: name,
                     parentMeta: {
                         create: {

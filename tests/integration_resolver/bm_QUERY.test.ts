@@ -1,6 +1,6 @@
 import {beforeAll, describe, expect, it} from "vitest";
 import {createTestSuite} from "./_init.js";
-import {restoreDbState, saveDbState} from "./_utils.js";
+import {restoreDbState, saveDbState} from "../helpers/utils_db.js";
 import {testDriver} from "../helpers/driver.js";
 
 describe('Bookmark Queries', () => {

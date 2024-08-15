@@ -1,10 +1,4 @@
 import {Driver} from "neo4j-driver";
-import {ogm} from "../ogm.js";
-import {SelectedBms, SelectedNodes} from "../gen/types.js";
-import {ParentMetaSvc} from "../services/parent_meta.js";
-import {getOgm_Bookmark, getOgm_ParentMeta} from "../../../global/ogm.js";
-import {MemberMetaSvc} from "../services/member_meta.js";
-import {memberIds} from "../../../global/vars.js";
 
 export const bmLoose_MUT_resolver = {
     deleteManyBms: async (_, {ids}, {driver}: { driver: Driver }) => {

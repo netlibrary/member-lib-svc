@@ -1,18 +1,17 @@
-import { gql } from 'graphql-tag';
-import { bookmark_typeDefs } from './bm.js';
-import { collection_typeDefs } from './collection.js';
-import { collNodes_typeDefs } from './coll_nodes.js';
-import { folder_typeDefs } from './folder.js';
-import { general_typeDefs } from './general.js';
-import { member_typeDefs } from './member.js';
+import {gql} from 'graphql-tag';
+import {bookmark_typeDefs} from './bm.js';
+import {collection_typeDefs} from './collection.js';
+import {collNodes_typeDefs} from './coll_nodes.js';
+import {folder_typeDefs} from './folder.js';
+import {general_typeDefs} from './general.js';
+import {member_typeDefs} from './member.js';
 import {tag_typeDefs} from "./tag.js";
 import {bmLooseContainer_typeDefs} from "./bmLoose.js";
-import {directive_typeDefs} from "./directive.js";
 import {jwt_typeDefs} from "./jwt.js";
 import {resolver_typeDefs} from "../resolvers/_typeDefs.js";
+import {parentMeta_typeDefs} from "./parentMeta.js";
 
 export const typeDefs = gql`
-
   ${jwt_typeDefs}
   ${member_typeDefs}
   ${collNodes_typeDefs}
@@ -22,6 +21,7 @@ export const typeDefs = gql`
   ${bmLooseContainer_typeDefs}
   ${bookmark_typeDefs}
   ${general_typeDefs}
+  ${parentMeta_typeDefs}
   ${resolver_typeDefs}
 `
 // ${directive_typeDefs}

@@ -1,8 +1,9 @@
 import {faker} from '@faker-js/faker';
 import {seedBookmarks} from './bookmark.js';
 import {seedOgm} from "./_db_seeder.js";
-import {createParentMeta} from "../src/apollo-neo4j/services/parent_meta.js";
 import {memberIds} from "../global/vars.js";
+import {ParentMetaSvc} from "../src/apollo-neo4j/services/parent_meta.js";
+import {NodeSvc} from "../src/apollo-neo4j/services/node.js";
 
 export async function seedFolders(parentId, level = 0): Promise<[string]> {
     const ogm_Folder = seedOgm.model('Folder')
@@ -10,6 +11,7 @@ export async function seedFolders(parentId, level = 0): Promise<[string]> {
     try {
         for (let i = 0; i < Math.floor(Math.random() * 2) + 2; i++) {
             const folderInput = {
+                id: NodeSvc.genFolderId(),
                 name: faker.company.name(), // Replace with actual name
                 // No need to set createdAt and updatedAt, these are handled by the @timestamp directive
                 // Set relationships if needed
@@ -30,7 +32,7 @@ export async function seedFolders(parentId, level = 0): Promise<[string]> {
                 const subFolderIds = await seedFolders(ogm_folders_createRes.folders[0].id, ++level)
                 childIds = childIds.concat(subFolderIds)
             }
-            createParentMeta(ogm_folders_createRes.folders[0].id, childIds, seedOgm)
+            ParentMetaSvc.create(ogm_folders_createRes.folders[0].id, childIds, seedOgm)
             folderIds.push(ogm_folders_createRes.folders[0].id)
         }
     } catch (error: any) {

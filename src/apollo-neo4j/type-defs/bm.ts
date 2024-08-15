@@ -1,10 +1,10 @@
-import { gql } from 'graphql-tag';
+import {gql} from 'graphql-tag';
 
 export const bookmark_typeDefs = gql`
     type Bookmark 
     @node(labels: ["Bookmark", "Child", "CollNode"]) 
     {
-        id: ID! @id @unique
+        id: ID! @unique
         createdAt: DateTime @timestamp(operations: [CREATE])
         updatedAt: DateTime @timestamp(operations: [UPDATE])
         description: String
@@ -50,12 +50,6 @@ export const bookmark_typeDefs = gql`
         sortBy: String
         sortDir: String
     }
-
-    type BmLooseContainer implements Parent @node(labels: ["BmLooseContainer"]) {
-        id: ID! @id @unique
-        member: Member @relationship(type: "OWNS", direction: IN)
-        bookmarks: [Bookmark!]! @relationship(type: "CONTAINS", direction: OUT)
-    }
     
     type BookmarkDl {
         id: ID!
@@ -97,14 +91,7 @@ export const bookmark_typeDefs = gql`
         bmIds: [ID!]!
     }
 
-    type Mutation {
-        deleteAllBms: Int!
-        createBookmarkDl(data: CreateBookmarkDl!): ID
-        deleteCollBookmark(id: ID!, parentId: ID!): Int!
-        deleteHierarchBmsXGetCollBmCounts(input: [SelectedBms!]): [CollBmCount!]
-        deleteBookmark(id: ID!): Int!
-        deleteManyBms(ids: [ID!]): Int!
-    }
+
 
     type BmsPaged {
         bookmarks: [BookmarkDl2!]!

@@ -2,6 +2,8 @@ import {faker} from '@faker-js/faker';
 import {seedTags} from "./tag.js";
 import {seedOgm} from "./_db_seeder.js";
 import {memberIds} from "../global/vars.js";
+import  {v4 as uuid} from 'uuid';
+import {NodeSvc} from "../src/apollo-neo4j/services/node.js";
 
 
 export async function seedBookmarks(parentId): Promise<string[]> {
@@ -48,6 +50,7 @@ export async function seedBm(parentId): Promise<string> {
     let bookmarkId: any = null
     try {
         const bookmarkInput = {
+            id: NodeSvc.genBmId(),
             description: faker.lorem.sentences(2), // Replace with actual description
             name: faker.company.catchPhrase(), // Replace with actual name
             domainName: faker.internet.domainName(), // Replace with actual domain name

@@ -1,5 +1,4 @@
 // Custom directive implementation
-import {GraphQLError} from "graphql/error/index.js";
 
 // const authDirective = (next, source, args, context, info) => {
 //     if (!context.memberId) {

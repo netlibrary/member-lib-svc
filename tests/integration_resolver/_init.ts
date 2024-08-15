@@ -30,19 +30,25 @@ export async function createTestSuite() {
     const {httpServer, apolloServer} = await startApolloServer(schema, testDriver, ogm);
 
     const executeOperation = async (query: string, variables) => {
-        const response = await apolloServer.executeOperation({
-            query,
-            variables,
-        }, {
-            contextValue: {
-                req: {},
-                executionContext: {
+        const context = {
+            ogm: ogm,
+            driver: testDriver,
+            token: '', // Add any mock token if needed for authorization
+        };
 
-                ogm: ogm,
-                driver: testDriver
-                },
+        const response = await apolloServer.executeOperation(
+            {
+                query,
+                variables,
             },
-        });
+            {
+                contextValue: {
+                    ogm: ogm,
+                    driver: testDriver,
+                    token: '',
+                }
+            }
+        );
         return response;
     };
 

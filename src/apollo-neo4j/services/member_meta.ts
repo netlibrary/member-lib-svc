@@ -1,4 +1,5 @@
 import {getOgm_MemberMeta} from "../../../global/ogm.js";
+import {MutationUpdateParentMetasArgs, ParentMeta, ParentMetaWhere} from "../gen/types.js";
 
 const deleteCollectionPositions = async (memberId: string, collectionIds: string[]) => {
     const memberMeta = await getOgm_MemberMeta().find({
@@ -23,5 +24,5 @@ const deleteCollectionPositions = async (memberId: string, collectionIds: string
 }
 
 export const MemberMetaSvc = {
-    deleteCollectionPositions: deleteCollectionPositions
+    deleteCollectionPositions: deleteCollectionPositions,
 }

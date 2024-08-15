@@ -1,7 +1,7 @@
 import {beforeAll, describe, expect, it} from 'vitest';
 import {createTestSuite} from "./_init.js";
-import {restoreDbState, saveDbState} from "./_utils.js";
 import {testDriver} from "../helpers/driver.js";
+import {restoreDbState, saveDbState} from "../helpers/utils_db.js";
 
 
 describe('Dummy for state preserving', () => {

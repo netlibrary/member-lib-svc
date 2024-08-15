@@ -1,4 +1,4 @@
-import { gql } from "graphql-tag";
+import {gql} from "graphql-tag";
 
 export const collNodes_typeDefs = gql`
     union Child = Bookmark | Folder
@@ -6,12 +6,6 @@ export const collNodes_typeDefs = gql`
 
     interface Parent {
         id: ID!
-    }
-
-    type ParentMeta @node(labels: ["ParentMeta", "CollNode"]) {
-        id: ID! @id @unique
-        childPositions: [String!]!
-        parent: Parent @relationship(type: "HAS", direction: IN)
     }
 
     union ChildDl = FolderDl | BookmarkDl

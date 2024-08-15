@@ -6,7 +6,7 @@
     "start": "npm run build && npm run serve",
     "seed-db": "tsc && node dist/db_seeder/_db_seeder.js",
     "gengql": "graphql-codegen --config src/gen_graphql.ts",
-    "test:integration": "vitest run tests/integration"
+    "test:integration": "vitest run tests/integration_resolver"
   },
   "dependencies": {
     "@apollo/server": "^4.0.0",

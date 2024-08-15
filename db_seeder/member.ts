@@ -1,6 +1,6 @@
 import {seedCollections} from "./collection.js";
 import {seedLooseBms} from "./bookmark.js";
-import {seedDriver} from "./_db_seeder.js";
+import {seedDriver, seedOgm} from "./_db_seeder.js";
 import {memberIds} from "../global/vars.js";
 import {getOgm_Member, getOgm_MemberMeta} from "../global/ogm.js";
 import {MemberSvc_Ogm} from "../src/apollo-neo4j/services/member_ogm.js";
@@ -25,7 +25,7 @@ export async function seedMembers() {
             const member = await MemberSvc_Ogm.create(
                 `testmember`,
                 "hallo"
-                , getOgm_Member());
+                , seedOgm);
 
             await session.run(
                 `

@@ -1,9 +1,8 @@
-import {NodesToMove, ParentsChildren, SelectedNodes} from "../gen/types.js";
+import {NodesToMove, SelectedNodes} from "../gen/types.js";
 import {CollNodeSvc} from "../services/collNode.js";
 import {MemberMetaSvc} from "../services/member_meta.js";
 import {ParentMetaSvc} from "../services/parent_meta.js";
-import neo4j, {Driver, Transaction} from "neo4j-driver";
-import {bm_CypherSel} from "./bm.js";
+import {Driver, Transaction} from "neo4j-driver";
 import {memberIds} from "../../../global/vars.js";
 import {setOGMs} from "../../../global/ogm.js";
 
@@ -27,7 +26,7 @@ export const collNodes_MUT_resolvers = {
                 await MemberMetaSvc.deleteCollectionPositions(memberIds[0], nodes.collectionIds)
             if (nodes.childs) {
                 for (const childsWrapper of nodes.childs) {
-                    await ParentMetaSvc.deleteChildPositions([...(childsWrapper.bookmarkIds || []), ...(childsWrapper.folderIds || [])], childsWrapper.parentId, ogm)
+                    await ParentMetaSvc.delChPositions([...(childsWrapper.bookmarkIds || []), ...(childsWrapper.folderIds || [])], childsWrapper.parentId, ogm)
                 }
             }
             await tx.commit()

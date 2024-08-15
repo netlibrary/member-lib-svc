@@ -1,4 +1,4 @@
-import {Session, Transaction} from "neo4j-driver";
+import {Transaction} from "neo4j-driver";
 import {ChildsToMove, NodesToMove} from "../gen/types.js";
 import {MemberMetaSvc} from "./member_meta.js";
 import {ParentMetaSvc} from "./parent_meta.js";
@@ -69,7 +69,7 @@ const moveToDest = async (nodes: NodesToMove, destId, pos, memberId, tx: Transac
     }
     for (const ch of nodes.childs) {
         await moveChildToDest(ch, destId, tx)
-        await ParentMetaSvc.deleteChildPositions(ch.childIds, ch.parentId, ogm)
+        await ParentMetaSvc.delChPositions(ch.childIds, ch.parentId, ogm)
         await ParentMetaSvc.addChildPositions(ch.childIds, destId, pos, ogm)
     }
 }

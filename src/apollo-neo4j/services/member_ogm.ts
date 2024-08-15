@@ -11,8 +11,9 @@ interface UpdateMemberInput {
 }
 
 export const MemberSvc_Ogm = {
-    signIn: async (memberName: string, password: string, ogm_Member: Model) => {
+    signIn: async (memberName: string, password: string, ogm) => {
         try {
+            const ogm_Member = ogm.model('Member');
             // Find the member by memberName
             const members = await ogm_Member.find({
                 where: { memberName }
@@ -41,14 +42,16 @@ export const MemberSvc_Ogm = {
             throw new Error('Sign in failed');
         }
     },
-    signUp: async (memberName: string, password: string, ogm_Member) => {
+    signUp: async (memberName: string, password: string, ogm) => {
         const member: Member = await MemberSvc_Ogm.create(
             memberName,
-            password, ogm_Member);
+            password, ogm);
 
         return AuthSvc.createJWT({sub: member.id, roles: member.roles});
     },
-    create: async (memberName: string, password: string, ogm_Member): Promise<Member> => {
+    create: async (memberName: string, password: string, ogm): Promise<Member> => {
+        const ogm_Member = ogm.model('Member');
+
         const passwordHash = await AuthSvc.createPwHash(password);
 
         const createMemberInput = {
@@ -72,7 +75,8 @@ export const MemberSvc_Ogm = {
             throw new Error('Member creation failed');
         }
     },
-    update: async (id: string, updateData: UpdateMemberInput, ogm_Member: Model): Promise<Member> => {
+    update: async (id: string, updateData: UpdateMemberInput, ogm): Promise<Member> => {
+        const ogm_Member = ogm.model('Member');
         const {password, ...updateData2} = updateData;
 
         const updateMemberInput = {

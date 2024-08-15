@@ -1,7 +1,5 @@
-import {Session, Transaction} from "neo4j-driver";
-import {ChildsToMove, NodesToMove} from "../gen/types.js";
-import {MemberMetaSvc} from "./member_meta.js";
-import {ParentMetaSvc} from "./parent_meta.js";
+import {Transaction} from "neo4j-driver";
+import {randomUUID} from "node:crypto";
 
 const deleteManyCascade = async (ids: string[], tx: Transaction): Promise<number> => {
     const result = await tx.run(`
@@ -31,5 +29,14 @@ const deleteCascade = async (id: string, tx: Transaction): Promise<number> => {
 export const NodeSvc = {
     deleteManyCascade: deleteManyCascade,
     deleteCascade: deleteCascade,
+    genBmId: () => {
+        return `b:${randomUUID()}`
+    },
+    genCollId: () => {
+        return `c:${randomUUID()}`
+    },
+    genFolderId: () => {
+        return `f:${randomUUID()}`
+    }
 }
 

@@ -1,5 +1,5 @@
-import { mapSchema, getDirective, MapperKind } from '@graphql-tools/utils';
-import { defaultFieldResolver } from 'graphql';
+import {getDirective, MapperKind, mapSchema} from '@graphql-tools/utils';
+import {defaultFieldResolver} from 'graphql';
 
 // This function takes in a schema and adds upper-casing logic
 // to every resolver for an object field that has a directive with

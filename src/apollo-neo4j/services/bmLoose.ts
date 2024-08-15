@@ -1,5 +1,3 @@
-import {getOgm_Bookmark} from "../../../global/ogm.js";
-import {ParentMetaSvc} from "./parent_meta.js";
 import {CreateBookmarkDl} from "../gen/types.js";
 import {BLC_SvcDb} from "../services_db/blc.js";
 import {Transaction} from "neo4j-driver";
@@ -40,5 +38,11 @@ export const BmLooseSvc = {
         );
 
         return bookmarkId;
+    },
+    getAllIds: async (memberId: string, tx: Transaction): Promise<string[]> => {
+        return (await tx.run(`
+                    MATCH (m:Member {id: $memberId})-->(blc:BmLooseContainer)-->(b:Bookmark)
+                    RETURN collect(b.id) as r
+                `, {memberId: memberId})).records[0].get('r')
     }
 }

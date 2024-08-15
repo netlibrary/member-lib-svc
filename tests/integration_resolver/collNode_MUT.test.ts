@@ -1,8 +1,8 @@
 import {beforeAll, describe, expect, it} from "vitest";
 import {createTestSuite} from "./_init.js";
-import {restoreDbState, saveDbState} from "./_utils.js";
 import {testDriver} from "../helpers/driver.js";
 import {SelectedChilds, SelectedNodes} from "../../src/apollo-neo4j/gen/types.js";
+import {restoreDbState, saveDbState} from "../helpers/utils_db.js";
 
 describe('Collection Node Mutations', () => {
     let testEnvironment: {

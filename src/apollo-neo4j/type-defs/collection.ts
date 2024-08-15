@@ -1,11 +1,11 @@
-import { gql } from "graphql-tag";
+import {gql} from "graphql-tag";
 
 export const collection_typeDefs = gql`
   type Collection implements Parent
-    @node(labels: ["Collection", "Parent", "DeleteCascade", "CollNode"])
+    @node(labels: ["Collection", "Parent", "DeleteCascade", "CollNode", "BmContainer"])
   @authorization(filter: [{ operations: [READ, AGGREGATE] where: { node: { member: { id: "$jwt.sub" } } } }])
   {
-    id: ID! @id @unique
+    id: ID! @unique
     createdAt: DateTime @timestamp(operations: [CREATE])
     updatedAt: DateTime @timestamp(operations: [UPDATE])
     name: String

@@ -1,4 +1,3 @@
-import {getOgm_Bookmark} from "../../../global/ogm.js";
 import {ParentMetaSvc} from "./parent_meta.js";
 import {CreateBookmarkDl} from "../gen/types.js";
 
@@ -37,7 +36,7 @@ export const BmCollSvc = {
             `Bookmark created with ID: ${bookmarkId}`
         );
 
-        await ParentMetaSvc.addChildPositions(bookmarkId, parentId, position, ogm)
+        await ParentMetaSvc.addChildPositions([bookmarkId], parentId, position, ogm)
 
         return bookmarkId;
     }

@@ -1,6 +1,7 @@
 import {MemberMetaSvc} from "../services/member_meta.js";
 import {CollNodeSvc} from "../services/collNode.js";
 import {gql} from "graphql-tag";
+import {NodeSvc} from "../services/node.js";
 
 export const collection_QUERY_typeDefs = gql`
     type Query {
@@ -33,6 +34,7 @@ export const collectionResolvers = {
             try {
                 const collection = await ogm.model("Collection").create({
                     input: {
+                        id: NodeSvc.genCollId(),
                         name: name,
                         parentMeta: {
                             create: {
