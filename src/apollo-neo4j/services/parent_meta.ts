@@ -1,5 +1,7 @@
 import {MutationUpdateParentMetasArgs, ParentMeta, ParentMetaWhere} from "../gen/types.js";
 import {OGM} from "@neo4j/graphql-ogm";
+import {ChildPosSvc} from "./child_pos.js";
+import {CollChildType} from "../../models/coll.js";
 
 
 export const ParentMetaSvc = {
@@ -29,46 +31,22 @@ export const ParentMetaSvc = {
         };
         await ogm.model("ParentMeta").update(updateInput as any);
     },
-    addChildPositions: async (childIds: string[], parentId, position, ogm: OGM) => {
+    addChildPositions: async (memberId, childIds: string[], parentId, position, ogm: OGM, tx) => {
         if (position == null) {
             await ParentMetaSvc.pushChildPositions(childIds, parentId, ogm);
             return;
         }
 
-        // Step 1: Fetch the current ParentMeta including childPositions
-        const parentMetaWhere: ParentMetaWhere = {
-            parentConnection: {
-                node: {
-                    id: parentId
-                }
-            }
-        }
-        const currentParentMeta: ParentMeta[] = await ogm.model("ParentMeta").find({
-            where: parentMetaWhere as any,
+        const folderPositions = await ChildPosSvc.getChildIds(memberId, parentId, CollChildType.Folder, tx)
+
+        // Step 2: Insert childId at the specified position
+        folderPositions.splice(position - 1, 0, ...childIds);
+
+        // await ogm.model("ParentMeta").update(updateInput as any);
+        await tx.run("MATCH (p:Parent {id: $id})-->(pm:ParentMeta) SET pm.childPositions = $childPositions", {
+            childPositions: folderPositions,
+            id: parentId
         });
-
-        if (currentParentMeta && currentParentMeta[0]) {
-            let childPositions = currentParentMeta[0].childPositions || [];
-
-            // Step 2: Insert childId at the specified position
-            childPositions.splice(position - 1, 0, ...childIds);
-
-            // Step 3: Update the ParentMeta with the new childPositions array
-            const updateInput: MutationUpdateParentMetasArgs = {
-                where: {id: currentParentMeta[0].id},
-                update: {
-                    childPositions: childPositions,
-                },
-            };
-
-            try {
-                await ogm.model("ParentMeta").update(updateInput as any);
-            } catch (error) {
-                console.error("Error during update operation:", error);
-            }
-        } else {
-            throw ('ParentMeta not found');
-        }
     },
     getByParentId: async (parentId: string, ogm) => {
         const parentMetaWhere: ParentMetaWhere = {

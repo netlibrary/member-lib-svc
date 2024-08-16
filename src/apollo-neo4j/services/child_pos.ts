@@ -1,4 +1,5 @@
 import {Transaction} from "neo4j-driver";
+import {CollChildType} from "../../models/coll.js";
 
 export const ChildPosSvc = {
     getPrefixedId: (id: string, type = IdType.Bookmark) => {
@@ -7,12 +8,23 @@ export const ChildPosSvc = {
     getAllBmIds: async (memberId: string, tx: Transaction): Promise<string[]> => {
         return (await tx.run(`
                     MATCH (m:Member {id: $memberId})-[*1..]->(pm:ParentMeta)
+                    WITH DISTINCT pm
                     UNWIND pm.childPositions AS childPos
-                    WITH DISTINCT childPos
+                    with childPos
                     WHERE childPos STARTS WITH 'b:'
                     RETURN COLLECT(childPos) AS r
                 `, {memberId: memberId})).records[0].get('r')
-    }
+    },
+    getChildIds: async (memberId: string, parentId, childType: CollChildType | null = null, tx: Transaction): Promise<string[]> => {
+        return (await tx.run(`
+                    MATCH (m:Member {id: $memberId})-[*1..]->(:Parent {id: $parentId})-->(pm:ParentMeta)
+                    WITH DISTINCT pm
+                    UNWIND pm.childPositions AS childPos
+                    WITH childPos
+                    ${childType ? "WHERE childPos STARTS WITH '" + childType + ":'" : ""}
+                    RETURN collect(childPos) AS r
+                `, {memberId: memberId, parentId})).records[0].get('r')
+    },
 }
 
 export enum IdType {

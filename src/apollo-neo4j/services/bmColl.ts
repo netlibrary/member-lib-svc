@@ -3,7 +3,7 @@ import {CreateBookmarkDl} from "../gen/types.js";
 
 
 export const BmCollSvc = {
-    create: async (data: CreateBookmarkDl, memberId, ogm) => {
+    create: async (data: CreateBookmarkDl, memberId, ogm, tx) => {
         const {
             parentId,
             position,
@@ -36,7 +36,7 @@ export const BmCollSvc = {
             `Bookmark created with ID: ${bookmarkId}`
         );
 
-        await ParentMetaSvc.addChildPositions([bookmarkId], parentId, position, ogm)
+        await ParentMetaSvc.addChildPositions(memberId,[bookmarkId], parentId, position, ogm, tx)
 
         return bookmarkId;
     }

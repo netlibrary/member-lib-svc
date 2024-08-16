@@ -52,6 +52,7 @@ export const bm_MUT_resolver = {
             // remain only folder ids
             await tx.run(`
                     match (m:Member {id: $memberId})-[*1..]->(pm:ParentMeta)
+                    WITH DISTINCT pm
                     SET pm.childPositions = [id IN pm.childPositions WHERE id STARTS WITH 'f:']
                 `, {memberId: jwt.sub});
 
@@ -64,13 +65,14 @@ export const bm_MUT_resolver = {
             // create new CONTAINS relationships
             await tx.run(`
                 MATCH (m:Member {id: $memberId})-[r*]->(b:Bookmark)
+                WITH DISTINCT b
                 WHERE b.id IN $bmIds
                 WITH b
                 MATCH (parent:Parent {id: $destId})
                 MERGE (parent)-[:CONTAINS]->(b)
             `, {memberId: jwt.sub, destId, bmIds});
 
-            await ParentMetaSvc.addChildPositions(bmIds, destId, pos, ogm)
+            await ParentMetaSvc.addChildPositions(jwt.sub, bmIds, destId, pos, ogm, tx)
 
             await tx.commit()
             return true;
@@ -164,7 +166,7 @@ export const bm_MUT_resolver = {
             const parentId = data.parentId;
 
             if (parentId) {
-                return await BmCollSvc.create(data, jwt.sub, ogm);
+                return await BmCollSvc.create(data, jwt.sub, ogm, tx);
             } else {
                 return await BmLooseSvc.create(data, jwt.sub, tx, ogm);
             }

@@ -65,12 +65,12 @@ const moveToDest = async (nodes: NodesToMove, destId, pos, memberId, tx: Transac
     if (nodes.collectionIds.length > 0) {
         await moveCollectionsToDest(nodes.collectionIds, destId, tx)
         await MemberMetaSvc.deleteCollectionPositions(memberId, nodes.collectionIds);
-        await ParentMetaSvc.addChildPositions(nodes.collectionIds, destId, pos, ogm)
+        await ParentMetaSvc.addChildPositions(memberId, nodes.collectionIds, destId, pos, ogm, tx)
     }
     for (const ch of nodes.childs) {
         await moveChildToDest(ch, destId, tx)
         await ParentMetaSvc.delChPositions(ch.childIds, ch.parentId, ogm)
-        await ParentMetaSvc.addChildPositions(ch.childIds, destId, pos, ogm)
+        await ParentMetaSvc.addChildPositions(memberId, ch.childIds, destId, pos, ogm, tx)
     }
 }
 
