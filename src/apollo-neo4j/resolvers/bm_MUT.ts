@@ -58,13 +58,13 @@ export const bm_MUT_resolver = {
 
             // del all CONTAINS relationships
             await tx.run(`
-                MATCH (b:Bookmark)<-[old_r:CONTAINS]-(p:BmContainer)<-[*1..]-(Member {id: $memberId})
+                MATCH (b:Bookmark)<-[old_r:CONTAINS]-(p:BmContainer)<--(Member {id: $memberId})
                 DELETE old_r
             `,{memberId: jwt.sub});
 
             // create new CONTAINS relationships
             await tx.run(`
-                MATCH (m:Member {id: $memberId})-[r*]->(b:Bookmark)
+                MATCH (m:Member {id: $memberId})-->(b:Bookmark)
                 WITH DISTINCT b
                 WHERE b.id IN $bmIds
                 WITH b
@@ -72,7 +72,7 @@ export const bm_MUT_resolver = {
                 MERGE (parent)-[:CONTAINS]->(b)
             `, {memberId: jwt.sub, destId, bmIds});
 
-            await ParentMetaSvc.addChildPositions(jwt.sub, bmIds, destId, pos, ogm, tx)
+            await ParentMetaSvc.addChildPositions(jwt.sub, bmIds, destId, pos, tx)
 
             await tx.commit()
             return true;
@@ -126,7 +126,7 @@ export const bm_MUT_resolver = {
             await tx.close();
         }
     },
-    deleteHierarchBmsXGetCollBmCounts: async (_, {input}: { input: SelectedBms[] }, {driver, ogm}) => {
+    deleteHierarchBmsXGetCollBmCounts: async (_, {input}: { input: SelectedBms[] }, {driver, jwt}) => {
         const tx = await driver.session().beginTransaction();
         const bmIds = input.map(i => i.bmIds).flat();
         try {
@@ -146,7 +146,7 @@ export const bm_MUT_resolver = {
             const res = result.records[0].get('r');
 
             for (const childsWrapper of input) {
-                await ParentMetaSvc.delChPositions(childsWrapper.bmIds, childsWrapper.parentId, ogm)
+                await ParentMetaSvc.delChPositions(jwt.sub, childsWrapper.bmIds, childsWrapper.parentId, tx)
             }
 
             await tx.commit()

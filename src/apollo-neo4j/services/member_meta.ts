@@ -1,5 +1,6 @@
 import {getOgm_MemberMeta} from "../../../global/ogm.js";
 import {MutationUpdateParentMetasArgs, ParentMeta, ParentMetaWhere} from "../gen/types.js";
+import {ChildPosSvc} from "./child_pos.js";
 
 const deleteCollectionPositions = async (memberId: string, collectionIds: string[]) => {
     const memberMeta = await getOgm_MemberMeta().find({
@@ -24,5 +25,17 @@ const deleteCollectionPositions = async (memberId: string, collectionIds: string
 }
 
 export const MemberMetaSvc = {
-    deleteCollectionPositions: deleteCollectionPositions,
+    delCollPositions: async (memberId, collIds: string[], tx) => {
+        const query = `
+            MATCH (:Member {id: $memberId})-->(mm:MemberMeta)
+            SET mm.childPositions = [pos IN mm.childPositions WHERE NOT pos IN $collIds]
+        `;
+
+        const params = {
+            memberId,
+            collIds,
+        };
+
+        return await tx.run(query, params);
+    },
 }

@@ -54,10 +54,4 @@ export const collNodes_typeDefs = gql`
         parentsByFilter(name: String!, limit: Int!, offset: Int!): [ParentDs!]
         collectionsByBmIdsXBmCounts(ids: [String!]!): [CollBmCount!]
     }
-
-    type Mutation {
-        deleteManyNodes(nodes: SelectedNodes!): Int!
-        moveManyNodes(nodes: NodesToMove!, destinationId: ID, position: Int): Boolean!
-        moveBmsToBLC(nodes: SelectedNodes!): Int!
-    }
 `;

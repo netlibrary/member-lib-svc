@@ -1,15 +1,30 @@
-import {NodesToMove, SelectedNodes} from "../gen/types.js";
+import {NodesToMove, ParentChilds, SelectedNodes} from "../gen/types.js";
 import {CollNodeSvc} from "../services/collNode.js";
 import {MemberMetaSvc} from "../services/member_meta.js";
 import {ParentMetaSvc} from "../services/parent_meta.js";
 import {Driver, Transaction} from "neo4j-driver";
 import {memberIds} from "../../../global/vars.js";
 import {setOGMs} from "../../../global/ogm.js";
+import {gql} from "graphql-tag";
+import {CollectionSvc} from "../services/collection.js";
+
+export const collNodes_MUT_typeDefs = gql`
+    input ParentChilds {
+        parentId: ID!
+        childIds: [ID!]!
+    }
+    
+    type Mutation {
+        deleteManyNodes(nodes: SelectedNodes!): Int!
+        moveManyNodes(nodes: NodesToMove!, destinationId: ID, position: Int): Boolean!
+        moveBmsToBLC(nodes: SelectedNodes!): Int!
+        moveCollNodes2CollNode(parentChildsList: [ParentChilds!]!, destId: ID!, pos: Int): Int!
+    }
+`;
 
 export const collNodes_MUT_resolvers = {
-    deleteManyNodes: async (_, {nodes}: { nodes: SelectedNodes }, {driver, ogm}) => {
+    deleteManyNodes: async (_, {nodes}: { nodes: SelectedNodes }, {driver, jwt}) => {
         const tx = await driver.session().beginTransaction();
-        setOGMs(ogm)
         try {
             console.log("deleteManyNodes", nodes);
             const deleteCascadeIds = nodes.collectionIds || []
@@ -23,10 +38,10 @@ export const collNodes_MUT_resolvers = {
             }
             const nDeleted = await CollNodeSvc.deleteManyCascade(deleteCascadeIds, tx);
             if (nodes.collectionIds)
-                await MemberMetaSvc.deleteCollectionPositions(memberIds[0], nodes.collectionIds)
+                await MemberMetaSvc.delCollPositions(jwt.sub, nodes.collectionIds, tx)
             if (nodes.childs) {
                 for (const childsWrapper of nodes.childs) {
-                    await ParentMetaSvc.delChPositions([...(childsWrapper.bookmarkIds || []), ...(childsWrapper.folderIds || [])], childsWrapper.parentId, ogm)
+                    await ParentMetaSvc.delChPositions(jwt.sub,[...(childsWrapper.bookmarkIds || []), ...(childsWrapper.folderIds || [])], childsWrapper.parentId, tx)
                 }
             }
             await tx.commit()
@@ -43,14 +58,14 @@ export const collNodes_MUT_resolvers = {
         nodes: NodesToMove,
         destinationId: string | null,
         position: number | null
-    }, {driver, ogm}) => {
+    }, {driver, jwt}) => {
         const tx: Transaction = await driver.session().beginTransaction();
         try {
             console.log("moveManyNodes", nodes, destinationId, position);
             if (destinationId == null) {
                 await CollNodeSvc.removeHierarch(nodes, tx)
             } else {
-                await CollNodeSvc.moveToDest(nodes, destinationId, position, memberIds[0], tx, ogm)
+                await CollNodeSvc.moveToDest(nodes, destinationId, position, jwt.sub, tx)
             }
             await tx.commit()
             return true
@@ -91,4 +106,25 @@ export const collNodes_MUT_resolvers = {
             await tx.close();
         }
     },
+    moveCollNodes2CollNode: async (_, {parentChildsList, destId, pos}, {driver, jwt}) => {
+        parentChildsList = parentChildsList as ParentChilds[]
+        const tx = await driver.session().beginTransaction();
+        try {
+            const childIds = parentChildsList.map(pc => pc.childIds).flat()
+            await CollNodeSvc.moveChilds2Dest(jwt.sub, childIds, destId, tx)
+            for (const parentChilds of parentChildsList) {
+                await ParentMetaSvc.delChPositions(jwt.sub, parentChilds.childIds, parentChilds.parentId, tx)
+                await ParentMetaSvc.addChildPositions(jwt.sub, parentChilds.childIds, destId, pos, tx)
+            }
+
+            await tx.commit()
+            return true;
+        } catch (error) {
+            await tx.rollback()
+            throw error;
+        } finally {
+            await tx.close();
+        }
+
+    }
 }

@@ -25,11 +25,4 @@ export const collection_typeDefs = gql`
   type CollectionDsList {
     collections: [CollectionDs!]
   }
-  
-
-  type Mutation {
-    createCollection(name: String!, memberId: ID!): ID
-    deleteCollection(id: ID!, memberId: ID!): Int!
-      deleteManyColls(ids: [ID!]!): Int!
-  }
 `;

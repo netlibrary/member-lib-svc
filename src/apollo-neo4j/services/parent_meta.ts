@@ -16,24 +16,28 @@ export const ParentMetaSvc = {
         });
         console.log(`ParentMeta created with ID: ${parentMeta.parentMetas[0].id}`);
     },
-    pushChildPositions: async (childIds: string[], parentId, ogm) => {
-        const updateInput: MutationUpdateParentMetasArgs = {
-            update: {
-                childPositions_PUSH: childIds,
-            },
-            where: {
-                parentConnection: {
-                    node: {
-                        id: parentId
-                    }
-                }
-            }
+    pushChildPositions: async (memberId, childIds: string[], parentId, tx) => {
+        const query = `
+            MATCH (:Member {id: $memberId})-->(parent:Parent {id: $parentId})-->(pm:ParentMeta)
+            WITH pm
+            UNWIND $childIds AS childId
+            WITH pm, childId
+            WHERE NOT childId IN pm.childPositions
+            WITH pm, COLLECT(childId) AS newChildIds
+            SET pm.childPositions = pm.childPositions + newChildIds
+        `;
+
+        const params = {
+            parentId,
+            childIds,
+            memberId
         };
-        await ogm.model("ParentMeta").update(updateInput as any);
+
+        return await tx.run(query, params);
     },
-    addChildPositions: async (memberId, childIds: string[], parentId, position, ogm: OGM, tx) => {
+    addChildPositions: async (memberId, childIds: string[], parentId, position, tx) => {
         if (position == null) {
-            await ParentMetaSvc.pushChildPositions(childIds, parentId, ogm);
+            await ParentMetaSvc.pushChildPositions(memberId, childIds, parentId, tx);
             return;
         }
 
@@ -61,17 +65,18 @@ export const ParentMetaSvc = {
         });
         return currentParentMeta[0] || null;
     },
-    delChPositions: async (childIds: string[], parentId: string, ogm) => {
-        const parentMeta = await ParentMetaSvc.getByParentId(parentId, ogm);
-        if (parentMeta) {
-            // Filter out the deleted collection IDs from collectionPositions
-            const updatedChildPositions = parentMeta.childPositions.filter(child => !childIds.includes(child));
-            await ogm.model("ParentMeta").update({
-                where: {id: parentMeta.id},
-                update: {childPositions: updatedChildPositions},
-            });
-        } else {
-            console.log('ParentMeta not found for parentId: ' + parentId);
-        }
+    delChPositions: async (memberId, childIds: string[], parentId: string, tx) => {
+        const query = `
+            MATCH (:Member {id: $memberId})-->(:Parent {id: $parentId})-->(pm:ParentMeta)
+            SET pm.childPositions = [pos IN pm.childPositions WHERE NOT pos IN $childIds]
+        `;
+
+        const params = {
+            memberId,
+            parentId,
+            childIds,
+        };
+
+        return await tx.run(query, params);
     }
 }

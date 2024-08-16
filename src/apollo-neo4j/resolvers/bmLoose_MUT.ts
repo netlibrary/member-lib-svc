@@ -92,7 +92,7 @@ export const bmLoose_MUT_resolver = {
                 MERGE (bmc)-[:CONTAINS]->(b)
             `,{memberId: jwt.sub, looseBmIds, destId});
 
-            await ParentMetaSvc.addChildPositions(jwt.sub, looseBmIds, destId, pos, ogm, tx)
+            await ParentMetaSvc.addChildPositions(jwt.sub, looseBmIds, destId, pos, tx)
 
             await tx.commit()
             return true;

@@ -2,33 +2,20 @@ import {MemberMetaSvc} from "../services/member_meta.js";
 import {CollNodeSvc} from "../services/collNode.js";
 import {gql} from "graphql-tag";
 import {NodeSvc} from "../services/node.js";
+import {BmLooseSvc} from "../services/bmLoose.js";
+import {ParentMetaSvc} from "../services/parent_meta.js";
+import {CollectionSvc} from "../services/collection.js";
 
-export const collection_QUERY_typeDefs = gql`
-    type Query {
-        collectionList(memberId: String!): CollectionDsList
-        @cypher(
-            statement: """
-            MATCH (m:Member {id: $jwt.sub})-[:OWNS]->(c:Collection)
-            OPTIONAL MATCH (m)-[:HAS]->(mm:MemberMeta)
-            OPTIONAL MATCH path=(c)-[:CONTAINS*0..]->(f:Folder)
-            WITH c, mm, length(path) AS depth
-            WITH c, mm, MAX(depth) AS maxDepth
-            OPTIONAL MATCH (c)-[:CONTAINS*0..]->(b:Bookmark)
-            WITH c AS collection, COUNT(DISTINCT b) AS bookmarkCount, mm, maxDepth + 1 AS deepness
-            WITH mm, COLLECT({id: collection.id, name: collection.name, bookmarkCount: bookmarkCount, deepness: deepness}) AS collections
-            UNWIND mm.collectionPositions AS pos
-            WITH pos, [collection IN collections WHERE collection.id = pos][0] AS sortedCollection
-            WITH COLLECT(sortedCollection) AS sortedCollections
-            RETURN {
-            collections: sortedCollections
-            }  as r
-            """
-            columnName: "r"
-        )
+export const collection_MUT_typeDefs = gql`
+    type Mutation {
+        createCollection(name: String!, memberId: ID!): ID
+        deleteCollection(id: ID!): Int!
+        deleteManyColls(ids: [ID!]!): Int!
+        moveColls2CollNode(collIds: [ID!]!, destId: ID!, pos: Int): Int!
     }
 `;
 
-export const collectionResolvers = {
+export const collection_MUT_Resolvers = {
     Mutation: {
         createCollection: async (t, {name}, {ogm, jwt}) => {
             try {
@@ -68,12 +55,12 @@ export const collectionResolvers = {
                 throw error;
             }
         },
-        deleteCollection: async (_, {id, memberId}, {driver}) => {
+        deleteCollection: async (_, {id}, {driver, jwt}) => {
             const tx = await driver.session().beginTransaction();
             try {
                 // Extract the nodesDeleted count from the result
                 const nodesDeleted = await CollNodeSvc.deleteCascade(id, tx);
-                await MemberMetaSvc.deleteCollectionPositions(memberId, [id]);
+                await MemberMetaSvc.delCollPositions(jwt.sub, [id], tx);
 
                 return nodesDeleted;
             } catch (error) {
@@ -83,12 +70,12 @@ export const collectionResolvers = {
                 await tx.close();
             }
         },
-        deleteManyColls: async (_, {ids}, {driver}) => {
+        deleteManyColls: async (_, {ids}, {driver, jwt}) => {
             const tx = await driver.session().beginTransaction();
             try {
                 // Construct and execute the Cypher query for multiple IDs
-                const nDeleted = await CollNodeSvc.deleteManyCascade([], tx);
-                await MemberMetaSvc.deleteCollectionPositions('memberId', []);
+                const nDeleted = await CollNodeSvc.deleteManyCascade(ids, tx);
+                await MemberMetaSvc.delCollPositions(jwt.sub, ids, tx);
 
                 return nDeleted;
             } catch (error) {
@@ -98,5 +85,21 @@ export const collectionResolvers = {
                 await tx.close();
             }
         },
+        moveColls2CollNode: async (_, {collIds, destId, pos}, {driver, jwt}) => {
+            const tx = await driver.session().beginTransaction();
+            try {
+                const folderIds = await CollectionSvc.moveColls2CollNode(jwt.sub, collIds, destId, tx)
+                await MemberMetaSvc.delCollPositions(jwt.sub, collIds, tx)
+                await ParentMetaSvc.addChildPositions(jwt.sub, folderIds, destId, pos, tx)
+                await tx.commit()
+                return true;
+            } catch (error) {
+                await tx.rollback()
+                throw error;
+            } finally {
+                await tx.close();
+            }
+
+        }
     }
 };

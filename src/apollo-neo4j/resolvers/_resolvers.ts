@@ -1,4 +1,4 @@
-import {collectionResolvers} from './collection.js';
+import {collection_MUT_Resolvers} from './collection_MUT.js';
 import {generalResolvers} from './general.js';
 import {collNodesResolvers} from './collNodes.js';
 // Define resolvers
@@ -13,7 +13,7 @@ export const resolvers: Resolvers = mergeResolvers(
         collNodesResolvers,
         generalResolvers,
         bookmarkResolvers,
-        collectionResolvers,
+        collection_MUT_Resolvers,
         folderResolvers,
         member_QUERY_resolvers]
 );

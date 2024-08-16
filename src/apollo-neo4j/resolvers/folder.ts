@@ -33,7 +33,7 @@ export const folderResolvers = {
 
                 const folderId = folder.folders[0].id
 
-                await ParentMetaSvc.addChildPositions(jwt.sub,[folderId], parentId, position, ogm, tx)
+                await ParentMetaSvc.addChildPositions(jwt.sub, [folderId], parentId, position, tx)
 
                 return folderId;
             } catch (error) {

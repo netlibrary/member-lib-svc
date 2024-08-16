@@ -36,7 +36,7 @@ export const BmCollSvc = {
             `Bookmark created with ID: ${bookmarkId}`
         );
 
-        await ParentMetaSvc.addChildPositions(memberId,[bookmarkId], parentId, position, ogm, tx)
+        await ParentMetaSvc.addChildPositions(memberId, [bookmarkId], parentId, position, tx)
 
         return bookmarkId;
     }

@@ -1,5 +1,5 @@
 import {Transaction} from "neo4j-driver";
-import {ChildsToMove, NodesToMove} from "../gen/types.js";
+import {ChildsToMove, NodesToMove, ParentChilds} from "../gen/types.js";
 import {MemberMetaSvc} from "./member_meta.js";
 import {ParentMetaSvc} from "./parent_meta.js";
 import {CollNodeSvcDb} from "../services_db/collNode.js";
@@ -60,20 +60,6 @@ const removeHierarch = async (nodes: NodesToMove, tx: Transaction): Promise<numb
     return deleted;
 }
 
-const moveToDest = async (nodes: NodesToMove, destId, pos, memberId, tx: Transaction, ogm): Promise<void> => {
-    let deleted = 0
-    if (nodes.collectionIds.length > 0) {
-        await moveCollectionsToDest(nodes.collectionIds, destId, tx)
-        await MemberMetaSvc.deleteCollectionPositions(memberId, nodes.collectionIds);
-        await ParentMetaSvc.addChildPositions(memberId, nodes.collectionIds, destId, pos, ogm, tx)
-    }
-    for (const ch of nodes.childs) {
-        await moveChildToDest(ch, destId, tx)
-        await ParentMetaSvc.delChPositions(ch.childIds, ch.parentId, ogm)
-        await ParentMetaSvc.addChildPositions(memberId, ch.childIds, destId, pos, ogm, tx)
-    }
-}
-
 const removeHierarchFromCollections = async (collectionIds: string[], tx: Transaction): Promise<number> => {
     const result = await tx.run(`
                 MATCH (c:Collection)
@@ -109,10 +95,10 @@ const moveChildToDest = async (childs: ChildsToMove, destId: string, tx: Transac
     const result = await tx.run(`
                 MATCH (ch:Child)
                 WHERE ch.id IN $childIds
-                
                 MATCH (oldParent:Parent {id: $parentId})
                 MATCH (oldParent)-[old_r:CONTAINS]->(ch)
                 DELETE old_r
+                
                 WITH ch
                 MATCH (destParent:Parent {id: $destId})
                 WITH ch, destParent
@@ -139,7 +125,31 @@ export const CollNodeSvc = {
     deleteManyCascade: deleteManyCascade,
     deleteCascade: deleteCascade,
     removeHierarch: removeHierarch,
-    moveToDest: moveToDest,
+    moveChilds2Dest: async (memberId, childIds: string[], destId: string, tx: Transaction): Promise<void> => {
+        const result = await tx.run(`
+                MATCH (:Member {id: $memberId})-->(ch:Child)
+                WHERE ch.id IN $childIds
+                MATCH (:Parent)-[old_r]->(ch)
+                DELETE old_r
+                
+                WITH ch
+                MATCH (destParent:Parent {id: $destId})
+                MERGE (destParent)-[:CONTAINS]->(ch) // Create a new CONTAINS relationship
+        `, {memberId, childIds: childIds, destId}); // Note that we're now passing an array of ids
+    },
+    moveToDest: async (nodes: NodesToMove, destId, pos, memberId, tx: Transaction): Promise<void> => {
+        let deleted = 0
+        if (nodes.collectionIds.length > 0) {
+            await moveCollectionsToDest(nodes.collectionIds, destId, tx)
+            await MemberMetaSvc.delCollPositions(memberId, nodes.collectionIds, tx);
+            await ParentMetaSvc.addChildPositions(memberId, nodes.collectionIds, destId, pos, tx)
+        }
+        for (const ch of nodes.childs) {
+            await moveChildToDest(ch, destId, tx)
+            await ParentMetaSvc.delChPositions(memberId, ch.childIds, ch.parentId, tx)
+            await ParentMetaSvc.addChildPositions(memberId, ch.childIds, destId, pos, tx)
+        }
+    },
     moveDeepParentBmsToBLC: async (parentIds: string[], tx: Transaction): Promise<void> => {
         // move bms to bmLooseContainer
         await CollNodeSvcDb.removeBmsChPositionsDeep(parentIds, tx)
