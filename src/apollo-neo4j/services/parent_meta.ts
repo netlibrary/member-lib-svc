@@ -37,14 +37,14 @@ export const ParentMetaSvc = {
             return;
         }
 
-        const folderPositions = await ChildPosSvc.getChildIds(memberId, parentId, CollChildType.Folder, tx)
+        const childPositions = await ChildPosSvc.getChildIds(memberId, parentId, null, tx)
 
         // Step 2: Insert childId at the specified position
-        folderPositions.splice(position - 1, 0, ...childIds);
+        childPositions.splice(position - 1, 0, ...childIds);
 
         // await ogm.model("ParentMeta").update(updateInput as any);
         await tx.run("MATCH (p:Parent {id: $id})-->(pm:ParentMeta) SET pm.childPositions = $childPositions", {
-            childPositions: folderPositions,
+            childPositions: childPositions,
             id: parentId
         });
     },

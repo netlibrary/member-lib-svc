@@ -1,5 +1,4 @@
-import {GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig} from 'graphql';
-
+import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -5438,6 +5437,7 @@ export type Mutation = {
   moveAllBms: Scalars['Int']['output'];
   moveBmsToBLC: Scalars['Int']['output'];
   moveCollBmsInContainer: Scalars['Int']['output'];
+  moveLooseBms2CollNode: Scalars['Int']['output'];
   moveManyNodes: Scalars['Boolean']['output'];
   updateBmLooseContainers: UpdateBmLooseContainersMutationResponse;
   updateBmsPageds: UpdateBmsPagedsMutationResponse;
@@ -5760,6 +5760,12 @@ export type MutationMoveBmsToBlcArgs = {
 
 export type MutationMoveCollBmsInContainerArgs = {
   nodes: SelectedNodes;
+};
+
+
+export type MutationMoveLooseBms2CollNodeArgs = {
+  destId: Scalars['ID']['input'];
+  pos?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -10392,6 +10398,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   moveAllBms?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationMoveAllBmsArgs, 'destId'>>;
   moveBmsToBLC?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationMoveBmsToBlcArgs, 'nodes'>>;
   moveCollBmsInContainer?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationMoveCollBmsInContainerArgs, 'nodes'>>;
+  moveLooseBms2CollNode?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationMoveLooseBms2CollNodeArgs, 'destId'>>;
   moveManyNodes?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationMoveManyNodesArgs, 'nodes'>>;
   updateBmLooseContainers?: Resolver<ResolversTypes['UpdateBmLooseContainersMutationResponse'], ParentType, ContextType, Partial<MutationUpdateBmLooseContainersArgs>>;
   updateBmsPageds?: Resolver<ResolversTypes['UpdateBmsPagedsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateBmsPagedsArgs>>;

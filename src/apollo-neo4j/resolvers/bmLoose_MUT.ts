@@ -1,7 +1,19 @@
 import {Driver} from "neo4j-driver";
+import {ChildPosSvc} from "../services/child_pos.js";
+import {BmLooseSvc} from "../services/bmLoose.js";
+import {ParentMetaSvc} from "../services/parent_meta.js";
+import {gql} from "graphql-tag";
+
+export const bmLoose_MUT_typeDefs = gql`
+    type Mutation {
+        moveCollBmsInContainer(nodes: SelectedNodes!): Int!
+        deleteAllLooseBms: Int!
+        moveLooseBms2CollNode(destId: ID!, pos: Int): Int!
+    }
+`;
 
 export const bmLoose_MUT_resolver = {
-    deleteManyBms: async (_, {ids}, {driver}: { driver: Driver }) => {
+    deleteManyBms: async (_, {ids}, {driver, jwt}) => {
         const tx = await driver.session().beginTransaction();
         try {
             // Construct and execute the Cypher query
@@ -55,6 +67,35 @@ export const bmLoose_MUT_resolver = {
 
             await tx.commit()
             return nodesDeleted;
+        } catch (error) {
+            await tx.rollback()
+            throw error;
+        } finally {
+            await tx.close();
+        }
+    },
+    moveLooseBms2CollNode: async (_, {destId, pos}, {driver, ogm, jwt}) => {
+        const tx = await driver.session().beginTransaction();
+        try {
+            // Construct and execute the Cypher query
+            const looseBmIds = await BmLooseSvc.getAllIds(jwt.sub, tx)
+
+            // switch CONTAINS relationships
+            await tx.run(`
+                MATCH (b:Bookmark)<--(Member {id: $memberId})
+                where b.id IN $looseBmIds
+                with b
+                match (b)<-[old_r:CONTAINS]-(p:BmContainer)
+                DELETE old_r
+                with b
+                MATCH (bmc:BmContainer {id: $destId})
+                MERGE (bmc)-[:CONTAINS]->(b)
+            `,{memberId: jwt.sub, looseBmIds, destId});
+
+            await ParentMetaSvc.addChildPositions(jwt.sub, looseBmIds, destId, pos, ogm, tx)
+
+            await tx.commit()
+            return true;
         } catch (error) {
             await tx.rollback()
             throw error;
