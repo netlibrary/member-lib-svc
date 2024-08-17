@@ -10,7 +10,7 @@ import {CollChildType} from "../../src/models/coll.js";
 describe('Child Positions Queries', () => {
     let testEnvironment: {
         ogm: OGM;
-        tx: Transaction;
+        tx: any;
     };
 
     beforeAll(async () => {
@@ -45,7 +45,7 @@ describe('Child Positions Queries', () => {
             limit 1
             `)).records[0].get('r')
 
-            const childIds = await ChildPosSvc.getChildIds(memberIds[0], parentId, CollChildType.Bookmark, tx)
+            const childIds = await ChildPosSvc.getTypedChildIds(memberIds[0], parentId, CollChildType.Bookmark, tx)
 
             const collBmCount = (await tx.run(`
             match (:Parent {id: $parentId})-->(bm:Bookmark)

@@ -37,6 +37,7 @@ export async function createTestSuite() {
     const mockTx = {
         run: vi.fn().mockImplementation(async (query, params) => await tx.run(query, params)),
         commit: vi.fn().mockResolvedValue(undefined),
+        commitMock: vi.fn().mockImplementation(() => tx.commit()),
         rollback: vi.fn().mockResolvedValue(undefined),
         rollbackMock: vi.fn().mockImplementation(() => tx.rollback()),
         close: vi.fn().mockResolvedValue(undefined),

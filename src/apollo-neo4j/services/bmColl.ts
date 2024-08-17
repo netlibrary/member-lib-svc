@@ -1,5 +1,6 @@
 import {ParentMetaSvc} from "./parent_meta.js";
 import {CreateBookmarkDl} from "../gen/types.js";
+import {NodeSvc} from "./node.js";
 
 
 export const BmCollSvc = {
@@ -15,6 +16,7 @@ export const BmCollSvc = {
         } = data;
 
         const createBookmarkInput: any = {
+            id: NodeSvc.genBmId(),
             description: description,
             name: name,
             domainName: domainName,

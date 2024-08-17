@@ -22,8 +22,8 @@ export const folderResolvers = {
                 const folderId = await Folder_SvcDb.create({name, parentId, position}, {tx, jwt})
 
                 await ParentMetaSvc.addChildPositions(jwt.sub, [folderId], parentId, position, tx)
-                await tx.commit()
 
+                await tx.commit()
                 return folderId;
             } catch (error) {
                 await tx.rollback()

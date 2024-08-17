@@ -37,6 +37,9 @@ export const NodeSvc = {
     },
     genFolderId: () => {
         return `f:${randomUUID()}`
+    },
+    genId: () => {
+        return `${randomUUID()}`
     }
 }
 

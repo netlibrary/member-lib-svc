@@ -10,7 +10,7 @@ export const bm_MUT_typeDefs = gql`
     type Mutation {
         deleteAllBms: Int!
         moveAllBms(destId: ID!, pos: Int): Int!
-        createBookmarkDl(data: CreateBookmarkDl!): ID
+        createBookmarkDl(data: CreateBookmarkDl!): ID!
         deleteCollBookmark(id: ID!, parentId: ID!): Int!
         deleteHierarchBmsXGetCollBmCounts(input: [SelectedBms!]): [CollBmCount!]
         deleteBookmark(id: ID!): Int!
@@ -164,12 +164,15 @@ export const bm_MUT_resolver = {
         const tx = await driver.session().beginTransaction();
         try {
             const parentId = data.parentId;
-
+            let bmId = null
             if (parentId) {
-                return await BmCollSvc.create(data, jwt.sub, ogm, tx);
+                bmId = await BmCollSvc.create(data, jwt.sub, ogm, tx);
             } else {
-                return await BmLooseSvc.create(data, jwt.sub, tx, ogm);
+                bmId = await BmLooseSvc.create(data, jwt.sub, tx, ogm);
             }
+
+            tx.commit()
+            return bmId;
         } catch (error) {
             await tx.rollback()
             throw error;

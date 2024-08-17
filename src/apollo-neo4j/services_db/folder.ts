@@ -1,5 +1,6 @@
 import {FolderLabels} from "../type-defs/folder.js";
 import {NodeSvc} from "../services/node.js";
+import {ParentMetaLabels} from "../type-defs/parentMeta.js";
 
 export const Folder_SvcDb = {
     create: async (input: { name: string, parentId: string, position: number }, {tx, jwt}): Promise<string> => {
@@ -9,12 +10,27 @@ export const Folder_SvcDb = {
             CREATE (f:${FolderLabels.cypherList()} {id: $id, name: $name})
             CREATE (m)-[:OWNS]->(f)
             CREATE (p)-[:CONTAINS]->(f)
+            CREATE (pm:${ParentMetaLabels.cypherList()} {id: $pmId, childPositions: []})
+            CREATE (f)-[:HAS]->(pm)
             RETURN f.id as r
         `, {
             id: NodeSvc.genFolderId(),
             name: input.name,
             parentId: input.parentId,
-            memberId: jwt.sub
+            memberId: jwt.sub,
+            pmId: NodeSvc.genId()
         })).records[0].get('r');
+    },
+    get: async (id: string, tx): Promise<any> => {
+        return (await tx.run(`
+            MATCH (f:Parent {id: $id})
+            RETURN f
+        `, {id})).records[0].get('f').properties;
+    },
+    getParentMeta: async (folderId: string, tx): Promise<any> => {
+        return (await tx.run(`
+            MATCH (f:Parent {id: $folderId})-->(pm:ParentMeta)
+            RETURN pm
+        `, {folderId})).records[0].get('pm').properties;
     }
 }

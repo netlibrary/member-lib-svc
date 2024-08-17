@@ -212,7 +212,7 @@ describe('Collection Node Mutations', () => {
         }
     });
 
-    it('move collNodes 2 CollNode', async () => {
+    it('move bm 2 CollNode', async () => {
         const {executeOperation, mockTx} = testEnvironment;
         // Save initial state
 
@@ -230,7 +230,7 @@ describe('Collection Node Mutations', () => {
             }
         `;
 
-        const destChildIds = await ChildPosSvc.getChildIds(memberIds[0], destId, null, mockTx);
+        const destChildIds = await ChildPosSvc.getChildIds(memberIds[0], destId, mockTx);
 
         try {
             const response = await executeOperation(MUT, {parentChildsList, destId, pos: 1});
@@ -242,9 +242,9 @@ describe('Collection Node Mutations', () => {
             `,{bmId, destId})).records[0]?.get('r');
             expect(bmMoved).toBe(true);
 
-            const destChildIdsNew = await ChildPosSvc.getChildIds(memberIds[0], destId, null, mockTx);
+            const destChildIdsNew = await ChildPosSvc.getChildIds(memberIds[0], destId, mockTx);
             expect(destChildIdsNew.length).toBe(destChildIds.length + 1);
-
+            expect(destChildIdsNew[0]).toBe(bmId);
         } catch (error) {
             console.error("Error in test:", error);
             throw error;

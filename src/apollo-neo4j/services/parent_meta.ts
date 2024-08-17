@@ -41,7 +41,7 @@ export const ParentMetaSvc = {
             return;
         }
 
-        const childPositions = await ChildPosSvc.getChildIds(memberId, parentId, null, tx)
+        const childPositions = await ChildPosSvc.getChildIds(memberId, parentId, tx)
 
         // Step 2: Insert childId at the specified position
         childPositions.splice(position - 1, 0, ...childIds);

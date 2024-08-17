@@ -1,4 +1,4 @@
-import {afterAll} from "vitest";
+import {afterAll, vi} from "vitest";
 import {typeDefs} from "../../src/apollo-neo4j/type-defs/_typeDefs.js";
 import {resolvers} from "../../src/apollo-neo4j/resolvers/_resolvers.js";
 import {testDriver} from "../helpers/driver.js";
@@ -22,11 +22,20 @@ export async function createTestSuite() {
     const [schema] = await Promise.all([neoSchema.getSchema(), ogm.init()]);
 
     const tx = testDriver.session().beginTransaction();
+    const mockTx = {
+        run: vi.fn().mockImplementation(async (query, params) => await tx.run(query, params)),
+        commit: vi.fn().mockResolvedValue(undefined),
+        commitMock: vi.fn().mockImplementation(() => tx.commit()),
+        rollback: vi.fn().mockResolvedValue(undefined),
+        rollbackMock: vi.fn().mockImplementation(() => tx.rollback()),
+        close: vi.fn().mockResolvedValue(undefined),
+        closeMock: vi.fn().mockImplementation(() => tx.close()),
+    };
 
     afterAll(async () => {
         if (tx.isOpen())
             await tx.close();
     });
 
-    return {ogm, tx};
+    return {ogm, tx: mockTx};
 }

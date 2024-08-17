@@ -15,15 +15,34 @@ export const ChildPosSvc = {
                     RETURN COLLECT(childPos) AS r
                 `, {memberId: memberId})).records[0].get('r')
     },
-    getChildIds: async (memberId: string, parentId, childType: CollChildType | null = null, tx: Transaction): Promise<string[]> => {
-        return (await tx.run(`
+    getTypedChildIds: async (memberId: string, parentId, childType: CollChildType, tx: Transaction): Promise<string[]> => {
+        const r = (await tx.run(`
                     MATCH (m:Member {id: $memberId})-[*1..]->(:Parent {id: $parentId})-->(pm:ParentMeta)
                     WITH DISTINCT pm
-                    UNWIND pm.childPositions AS childPos
-                    WITH childPos
-                    ${childType ? "WHERE childPos STARTS WITH '" + childType + ":'" : ""}
-                    RETURN collect(childPos) AS r
-                `, {memberId: memberId, parentId})).records[0].get('r')
+                    UNWIND CASE WHEN size(pm.childPositions) > 0 THEN pm.childPositions ELSE [null] END AS childPos
+                    WITH childPos, pm
+                    ${"WHERE childPos STARTS WITH '" + childType + ":'"}
+                    WITH collect(childPos) as childPositions, pm
+                    RETURN  CASE 
+                        WHEN pm IS NULL THEN NULL 
+                        ELSE childPositions
+                    END AS r
+                `, {memberId: memberId, parentId})).records[0]?.get('r')
+        if (r == undefined) {
+            throw new Error(`No ParentMeta found for parentId: ${parentId}`)
+        }
+        return r
+    },
+    getChildIds: async (memberId: string, parentId, tx: Transaction): Promise<string[]> => {
+        const r = (await tx.run(`
+                    MATCH (m:Member {id: $memberId})-->(:Parent {id: $parentId})-->(pm:ParentMeta)
+                    return pm.childPositions as r
+                `, {memberId: memberId, parentId})).records[0]?.get('r')
+
+        if (r == undefined) {
+            throw new Error(`No ParentMeta found for parentId: ${parentId}`)
+        }
+        return r
     },
 }
 
