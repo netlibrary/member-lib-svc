@@ -5,6 +5,7 @@ import {bmLoose_MUT_typeDefs} from "./bmLoose_MUT.js";
 import {collection_QUERY_typeDefs} from "./collection_QUERY.js";
 import {collection_MUT_typeDefs} from "./collection_MUT.js";
 import {collNodes_MUT_typeDefs} from "./collNodes_MUT.js";
+import {folder_MUT_typeDefs} from "./folder.js";
 
 export const resolver_typeDefs = gql`
     ${member_QUERY_typeDefs}
@@ -13,4 +14,5 @@ export const resolver_typeDefs = gql`
     ${bmLoose_MUT_typeDefs}
     ${collection_MUT_typeDefs}
     ${collNodes_MUT_typeDefs}
+    ${folder_MUT_typeDefs}
 `

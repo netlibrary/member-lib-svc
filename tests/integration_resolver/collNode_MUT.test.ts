@@ -1,12 +1,15 @@
 import {beforeAll, describe, expect, it} from "vitest";
 import {createTestSuite} from "./_init.js";
 import {testDriver} from "../helpers/driver.js";
-import {SelectedChilds, SelectedNodes} from "../../src/apollo-neo4j/gen/types.js";
+import {ParentChilds, SelectedChilds, SelectedNodes} from "../../src/apollo-neo4j/gen/types.js";
 import {restoreDbState, saveDbState} from "../helpers/utils_db.js";
+import {memberIds} from "../../global/vars.js";
+import {ChildPosSvc} from "../../src/apollo-neo4j/services/child_pos.js";
 
 describe('Collection Node Mutations', () => {
     let testEnvironment: {
         executeOperation: (query: string, variables?: any) => Promise<any>;
+        mockTx: any;
     };
 
     beforeAll(async () => {
@@ -14,7 +17,7 @@ describe('Collection Node Mutations', () => {
     });
 
     it('delete a collection', async () => {
-        const { executeOperation } = testEnvironment;
+        const {executeOperation} = testEnvironment;
         // Save initial state
         const initialState = await saveDbState(testDriver);
 
@@ -81,7 +84,7 @@ describe('Collection Node Mutations', () => {
     });
 
     it('delete a bm', async () => {
-        const { executeOperation } = testEnvironment;
+        const {executeOperation} = testEnvironment;
         // Save initial state
         const initialState = await saveDbState(testDriver);
 
@@ -148,7 +151,7 @@ describe('Collection Node Mutations', () => {
     });
 
     it('delete a coll & bms', async () => {
-        const { executeOperation } = testEnvironment;
+        const {executeOperation} = testEnvironment;
         // Save initial state
         const initialState = await saveDbState(testDriver);
 
@@ -172,7 +175,7 @@ describe('Collection Node Mutations', () => {
                 `, {id: collId}))
                 .records[0].get('r');
             console.log(r);
-            for(const obj of r) {
+            for (const obj of r) {
                 selectedChilds.push({bookmarkIds: obj.bookmarkIds, parentId: obj.parentId});
             }
         } finally {
@@ -206,6 +209,48 @@ describe('Collection Node Mutations', () => {
         } finally {
             // Restore initial state
             await restoreDbState(testDriver, initialState);
+        }
+    });
+
+    it('move collNodes 2 CollNode', async () => {
+        const {executeOperation, mockTx} = testEnvironment;
+        // Save initial state
+
+        const {bmId, parentId, destId} = (await mockTx.run(`
+            match (:Member {id: $memberId})
+            match (c:Collection)-->(b:Bookmark)
+            match (c2:Collection)
+            where c.id <> c2.id
+            return {bmId: b.id, parentId: c.id, destId: c2.id} as r
+        `,{memberId: memberIds[0]})).records[0].get('r');
+        const parentChildsList: ParentChilds[] = [{parentId, childIds: [bmId]}];
+        const MUT = `
+            mutation MoveCollNodes2CollNode($parentChildsList: [ParentChilds!]!, $destId: ID!, $pos: Int) {
+              moveCollNodes2CollNode(parentChildsList: $parentChildsList, destId: $destId, pos: $pos)
+            }
+        `;
+
+        const destChildIds = await ChildPosSvc.getChildIds(memberIds[0], destId, null, mockTx);
+
+        try {
+            const response = await executeOperation(MUT, {parentChildsList, destId, pos: 1});
+            expect(response.body.singleResult.errors).toBeUndefined();
+
+            const bmMoved = (await mockTx.run(`
+                match (c:Collection {id: $destId})-->(b:Bookmark {id: $bmId})
+                RETURN true AS r
+            `,{bmId, destId})).records[0]?.get('r');
+            expect(bmMoved).toBe(true);
+
+            const destChildIdsNew = await ChildPosSvc.getChildIds(memberIds[0], destId, null, mockTx);
+            expect(destChildIdsNew.length).toBe(destChildIds.length + 1);
+
+        } catch (error) {
+            console.error("Error in test:", error);
+            throw error;
+        } finally {
+            // Restore initial state
+            await mockTx.rollbackMock();
         }
     });
 });

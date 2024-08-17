@@ -6,6 +6,10 @@ import {Neo4jGraphQL} from "@neo4j/graphql";
 import {OGM} from "@neo4j/graphql-ogm";
 import {startApolloServer} from "../../src/apollo_server.js";
 import {setOGMs} from "../../global/ogm.js";
+import {memberIds} from "../../global/vars.js";
+import { vi } from 'vitest';
+import {Session} from "neo4j-driver";
+import {Driver} from "neo4j-driver/types/driver.js";
 
 // Define your context type
 export type MyContext = {
@@ -29,12 +33,36 @@ export async function createTestSuite() {
 
     const {httpServer, apolloServer} = await startApolloServer(schema, testDriver, ogm);
 
+    const tx = await testDriver.session().beginTransaction();
+    const mockTx = {
+        run: vi.fn().mockImplementation(async (query, params) => await tx.run(query, params)),
+        commit: vi.fn().mockResolvedValue(undefined),
+        rollback: vi.fn().mockResolvedValue(undefined),
+        rollbackMock: vi.fn().mockImplementation(() => tx.rollback()),
+        close: vi.fn().mockResolvedValue(undefined),
+        closeMock: vi.fn().mockImplementation(() => tx.close()),
+    };
+
+    // Create a mock session
+    const mockSession: Partial<Session> = {
+        beginTransaction: vi.fn().mockResolvedValue(mockTx),
+        close: vi.fn().mockResolvedValue(undefined),
+    };
+
+    // Create a mock driver
+    const mockDriver: Partial<Driver> = {
+        session: vi.fn().mockReturnValue(mockSession),
+    };
+
+
     const executeOperation = async (query: string, variables) => {
         const context = {
             ogm: ogm,
-            driver: testDriver,
-            token: '', // Add any mock token if needed for authorization
-        };
+            driver: mockDriver as any,
+            jwt: {
+                sub: memberIds[0]
+            }
+        } as any;
 
         const response = await apolloServer.executeOperation(
             {
@@ -42,11 +70,7 @@ export async function createTestSuite() {
                 variables,
             },
             {
-                contextValue: {
-                    ogm: ogm,
-                    driver: testDriver,
-                    token: '',
-                }
+                contextValue: context
             }
         );
         return response;
@@ -55,8 +79,9 @@ export async function createTestSuite() {
     afterAll(async () => {
         if (apolloServer) {
             await apolloServer.stop();
+            await mockTx.closeMock();
         }
     });
 
-    return { executeOperation };
+    return { executeOperation, mockTx };
 }

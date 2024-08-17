@@ -1,39 +1,28 @@
 import {ParentMetaSvc} from "../services/parent_meta.js";
 import {NodeSvc} from "../services/node.js";
+import {gql} from "graphql-tag";
+import {FolderLabels} from "../type-defs/folder.js";
+import {aw} from "vitest/dist/chunks/reporters.C_zwCd4j.js";
+import {Folder_SvcDb} from "../services_db/folder.js";
 
+export const folder_MUT_typeDefs = gql`
+    type Mutation {
+        createFolder(name: String!, position: Int!, parentId: ID!): ID
+        deleteFolder(id: ID!, parentId: ID!): Int!
+    }
+`;
 
 export const folderResolvers = {
     Mutation: {
         createFolder: async (_, {name, position, parentId}: {
             name: string, position: number, parentId: string
-        }, {driver, ogm, jwt}) => {
+        }, {driver, jwt}) => {
             const tx = await driver.session().beginTransaction();
             try {
-                const createFolderInput = {
-                    id: NodeSvc.genFolderId(),
-                    name: name,
-                    parentMeta: {
-                        create: {
-                            node: {
-                                childPositions: []
-                            }
-                        }
-                    },
-                    member: {
-                        connect: { where: { node: { id: jwt.sub } } }
-                    },
-                    ...(parentId ? {
-                        parent: {
-                            connect: {where: {node: {id: parentId}}}
-                        }
-                    } : {})
-                }
-
-                const folder = await ogm.model("Folder").create({input: createFolderInput,});
-
-                const folderId = folder.folders[0].id
+                const folderId = await Folder_SvcDb.create({name, parentId, position}, {tx, jwt})
 
                 await ParentMetaSvc.addChildPositions(jwt.sub, [folderId], parentId, position, tx)
+                await tx.commit()
 
                 return folderId;
             } catch (error) {

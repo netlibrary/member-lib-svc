@@ -1,7 +1,13 @@
 import {gql} from 'graphql-tag';
 
+export const FolderLabels = {
+  list: ["Folder", "Parent", "DeleteCascade", "Child", "CollNode", "BmContainer"],
+  cypherList: () => `${FolderLabels.list.join(':')}`,
+  gqlList: () => `[${FolderLabels.list.map(l => `"${l}"`).join(', ')}]`
+}
+
 export const folder_typeDefs = gql`
-  type Folder implements Parent @node(labels: ["Folder", "Parent", "DeleteCascade", "Child", "CollNode", "BmContainer"]) {
+  type Folder implements Parent @node(labels: ${FolderLabels.gqlList()}) {
     id: ID! @unique
     createdAt: DateTime @timestamp(operations: [CREATE])
     updatedAt: DateTime @timestamp(operations: [UPDATE])
@@ -20,10 +26,5 @@ export const folder_typeDefs = gql`
     bookmarkCount: Int
     hasUnfetchedChildren: Boolean
     children: [ChildDl!]!
-  }
-
-  type Mutation {
-    createFolder(name: String!, position: Int!, parentId: ID!): ID
-    deleteFolder(id: ID!, parentId: ID!): Int!
   }
 `;

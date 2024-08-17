@@ -75,7 +75,6 @@ export async function startApolloServer(schema, driver, ogm) {
         bodyParser.json(),
         expressMiddleware(apolloServer, {
             context: async ({req, res}) => ({
-                memberId: req.headers.authorization || '',
                 ogm: ogm,
                 driver: driver,
                 token: req.headers.authorization || ''
