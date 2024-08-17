@@ -7,6 +7,18 @@ import {gql} from "graphql-tag";
 import {ChildPosSvc} from "../services/child_pos.js";
 
 export const bm_MUT_typeDefs = gql`
+    
+    input CreateBookmarkDl {
+        parentId: ID
+        position: Int
+        name: String
+        domainName: String!
+        urlScheme: String!
+        linkPath: String!
+        iconUri: String
+        description: String
+    }
+    
     type Mutation {
         deleteAllBms: Int!
         moveAllBms(destId: ID!, pos: Int): Int!
@@ -163,9 +175,8 @@ export const bm_MUT_resolver = {
     }, {driver, ogm, jwt}) => {
         const tx = await driver.session().beginTransaction();
         try {
-            const parentId = data.parentId;
-            let bmId = null
-            if (parentId) {
+            let bmId: any = null
+            if (data.parentId) {
                 bmId = await BmCollSvc.create(data, jwt.sub, ogm, tx);
             } else {
                 bmId = await BmLooseSvc.create(data, jwt.sub, tx, ogm);

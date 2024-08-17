@@ -1,8 +1,14 @@
 import {gql} from 'graphql-tag';
 
+export const BookmarkLabels = {
+    list: ["Bookmark", "Child", "CollNode"],
+    cypherList: () => `${BookmarkLabels.list.join(':')}`,
+    gqlList: () => `[${BookmarkLabels.list.map(l => `"${l}"`).join(', ')}]`
+}
+
 export const bookmark_typeDefs = gql`
     type Bookmark 
-    @node(labels: ["Bookmark", "Child", "CollNode"]) 
+    @node(labels: ${BookmarkLabels.gqlList()}) 
     {
         id: ID! @unique
         createdAt: DateTime @timestamp(operations: [CREATE])
@@ -75,16 +81,7 @@ export const bookmark_typeDefs = gql`
         tags: [TagDs!]
     }
 
-    input CreateBookmarkDl {
-        parentId: ID
-        position: Int
-        name: String
-        domainName: String!
-        urlScheme: String!
-        linkPath: String!
-        iconUri: String
-        description: String
-    }
+
 
     input SelectedBms {
         parentId: ID!

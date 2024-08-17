@@ -31,12 +31,15 @@ describe('Folder Svc', () => {
         const position = 1;
 
         try {
-            const folderId = await Folder_SvcDb.create({name, parentId, position}, {tx, jwt: {sub: memberIds[0]}});
+            const folderId = await Folder_SvcDb.create({name, parentId}, {tx, jwt: {sub: memberIds[0]}});
+            expect(folderId).toBeDefined();
             const f = await Folder_SvcDb.get(folderId, tx);
+            expect(f.id).toBeDefined();
             const pm = await Folder_SvcDb.getParentMeta(folderId, tx);
-            const destChildIdsNew = await ChildPosSvc.getChildIds(memberIds[0], folderId, tx);
-            expect(f).toBeDefined();
-
+            expect(pm.id).toBeDefined();
+            const pmChildPositions = await ChildPosSvc.getChildIds(memberIds[0], folderId, tx);
+            expect(pmChildPositions).toBeDefined();
+            expect(pmChildPositions).toEqual([]);
         } catch (error) {
             console.error("Error in test:", error);
             throw error;

@@ -5380,7 +5380,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   createBmLooseContainers: CreateBmLooseContainersMutationResponse;
   createBmsPageds: CreateBmsPagedsMutationResponse;
-  createBookmarkDl?: Maybe<Scalars['ID']['output']>;
+  createBookmarkDl: Scalars['ID']['output'];
   createBookmarkDl2s: CreateBookmarkDl2sMutationResponse;
   createBookmarkDls: CreateBookmarkDlsMutationResponse;
   createBookmarkFilters: CreateBookmarkFiltersMutationResponse;
@@ -10363,7 +10363,7 @@ export type MembersConnectionResolvers<ContextType = any, ParentType extends Res
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createBmLooseContainers?: Resolver<ResolversTypes['CreateBmLooseContainersMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateBmLooseContainersArgs, 'input'>>;
   createBmsPageds?: Resolver<ResolversTypes['CreateBmsPagedsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateBmsPagedsArgs, 'input'>>;
-  createBookmarkDl?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType, RequireFields<MutationCreateBookmarkDlArgs, 'data'>>;
+  createBookmarkDl?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationCreateBookmarkDlArgs, 'data'>>;
   createBookmarkDl2s?: Resolver<ResolversTypes['CreateBookmarkDl2sMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateBookmarkDl2sArgs, 'input'>>;
   createBookmarkDls?: Resolver<ResolversTypes['CreateBookmarkDlsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateBookmarkDlsArgs, 'input'>>;
   createBookmarkFilters?: Resolver<ResolversTypes['CreateBookmarkFiltersMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateBookmarkFiltersArgs, 'input'>>;

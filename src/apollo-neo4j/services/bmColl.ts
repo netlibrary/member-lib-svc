@@ -1,6 +1,8 @@
 import {ParentMetaSvc} from "./parent_meta.js";
 import {CreateBookmarkDl} from "../gen/types.js";
 import {NodeSvc} from "./node.js";
+import {BmColl_SvcDb} from "../services_db/bmColl.js";
+import {Bm_SvcDb} from "../services_db/bm.js";
 
 
 export const BmCollSvc = {
@@ -8,38 +10,12 @@ export const BmCollSvc = {
         const {
             parentId,
             position,
-            name,
-            domainName, urlScheme,
-            linkPath,
-            iconUri,
-            description
         } = data;
 
-        const createBookmarkInput: any = {
-            id: NodeSvc.genBmId(),
-            description: description,
-            name: name,
-            domainName: domainName,
-            urlScheme: urlScheme,
-            linkPath: linkPath,
-            iconUri: iconUri,
-            member: {
-                connect: {where: {node: {id: memberId}}},
-            },
-            parent: {
-                connect: {where: {node: {id: parentId}}}
-            }
-        }
+        const bmId = await Bm_SvcDb.create(data, memberId, tx)
 
-        const bookmark = await ogm.model("Bookmark").create({input: createBookmarkInput,});
+        await ParentMetaSvc.addChildPositions(memberId, [bmId], parentId, position, tx)
 
-        const bookmarkId = bookmark.bookmarks[0].id
-        console.log(
-            `Bookmark created with ID: ${bookmarkId}`
-        );
-
-        await ParentMetaSvc.addChildPositions(memberId, [bookmarkId], parentId, position, tx)
-
-        return bookmarkId;
+        return bmId;
     }
 }

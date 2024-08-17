@@ -3,7 +3,7 @@ import {NodeSvc} from "../services/node.js";
 import {ParentMetaLabels} from "../type-defs/parentMeta.js";
 
 export const Folder_SvcDb = {
-    create: async (input: { name: string, parentId: string, position: number }, {tx, jwt}): Promise<string> => {
+    create: async (input: { name: string, parentId: string }, {tx, jwt}): Promise<string> => {
         return (await tx.run(`
             MATCH (m:Member {id: $memberId})
             MATCH (p:Parent {id: $parentId})

@@ -19,7 +19,7 @@ export const folderResolvers = {
         }, {driver, jwt}) => {
             const tx = await driver.session().beginTransaction();
             try {
-                const folderId = await Folder_SvcDb.create({name, parentId, position}, {tx, jwt})
+                const folderId = await Folder_SvcDb.create({name, parentId}, {tx, jwt})
 
                 await ParentMetaSvc.addChildPositions(jwt.sub, [folderId], parentId, position, tx)
 
