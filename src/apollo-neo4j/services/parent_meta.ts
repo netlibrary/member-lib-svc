@@ -78,5 +78,19 @@ export const ParentMetaSvc = {
         };
 
         return await tx.run(query, params);
-    }
+    },
+    delChPositions2: async (memberId, childIds: string[], tx) => {
+        const query = `
+            MATCH (:Member {id: $memberId})-->(:Child)-->(:Parent)-->(pm:ParentMeta)
+            with distinct pm
+            SET pm.childPositions = [pos IN pm.childPositions WHERE NOT pos IN $childIds]
+        `;
+
+        const params = {
+            memberId,
+            childIds,
+        };
+
+        return await tx.run(query, params);
+    },
 }

@@ -14,15 +14,4 @@ export const collection_typeDefs = gql`
 
     member: Member! @relationship(type: "OWNS", direction: IN)
   }
-
-  type CollectionDs {
-    id: ID!
-    name: String!
-    bookmarkCount: Int!
-    deepness: Int!
-  }
-
-  type CollectionDsList {
-    collections: [CollectionDs!]
-  }
 `;

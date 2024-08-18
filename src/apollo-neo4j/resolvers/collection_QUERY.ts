@@ -2,8 +2,26 @@ import {MemberMetaSvc} from "../services/member_meta.js";
 import {CollNodeSvc} from "../services/collNode.js";
 import {gql} from "graphql-tag";
 import {NodeSvc} from "../services/node.js";
+import {Coll_SvcDb} from "../services_db/coll.js";
 
 export const collection_QUERY_typeDefs = gql`
+    type CollInfo {
+        id: ID!
+        bmCount: Int!
+        deepness: Int!
+    }
+
+    type CollectionDs {
+        id: ID!
+        name: String!
+        bookmarkCount: Int!
+        deepness: Int!
+    }
+
+    type CollectionDsList {
+        collections: [CollectionDs!]
+    }
+
     type Query {
         collectionList(memberId: String!): CollectionDsList
         @cypher(
@@ -25,5 +43,18 @@ export const collection_QUERY_typeDefs = gql`
             """
             columnName: "r"
         )
+        nl_collInfosByids(ids: [String!]!): [CollInfo!]
     }
 `;
+
+export const collection_QUERY_Resolvers = {
+    nl_collInfosByids: async (_, {ids}, {driver, jwt}) => {
+        const tx = await driver.session().beginTransaction();
+        try {
+            return await Coll_SvcDb.getCollInfosByIds(jwt.sub, ids, tx);
+        } finally {
+            await tx.close();
+        }
+    },
+
+};

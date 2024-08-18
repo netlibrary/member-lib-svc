@@ -5,6 +5,7 @@ import {BmCollSvc} from "../services/bmColl.js";
 import {BmLooseSvc} from "../services/bmLoose.js";
 import {gql} from "graphql-tag";
 import {ChildPosSvc} from "../services/child_pos.js";
+import {BmSvc} from "../services/bm.js";
 
 export const bm_MUT_typeDefs = gql`
     
@@ -22,6 +23,7 @@ export const bm_MUT_typeDefs = gql`
     type Mutation {
         deleteAllBms: Int!
         moveAllBms(destId: ID!, pos: Int): Int!
+        moveBms2CollNode(destId: ID!, pos: Int, ids: [ID!]!): Int!
         createBookmarkDl(data: CreateBookmarkDl!): ID!
         deleteCollBookmark(id: ID!, parentId: ID!): Int!
         deleteHierarchBmsXGetCollBmCounts(input: [SelectedBms!]): [CollBmCount!]
@@ -53,7 +55,7 @@ export const bm_MUT_resolver = {
             await tx.close();
         }
     },
-    moveAllBms: async (_, {destId, pos}, {driver, ogm, jwt}) => {
+    moveAllBms: async (_, {destId, pos}, {driver, jwt}) => {
         const tx = await driver.session().beginTransaction();
         try {
             // Construct and execute the Cypher query
@@ -86,6 +88,21 @@ export const bm_MUT_resolver = {
 
             await ParentMetaSvc.addChildPositions(jwt.sub, bmIds, destId, pos, tx)
 
+            await tx.commit()
+            return true;
+        } catch (error) {
+            await tx.rollback()
+            throw error;
+        } finally {
+            await tx.close();
+        }
+    },
+    moveBms2CollNode: async (_, {destId, pos, ids}, {driver, jwt}) => {
+        const tx = await driver.session().beginTransaction();
+        try {
+            await BmSvc.move(jwt.sub, ids, destId, tx)
+            await ParentMetaSvc.delChPositions2(jwt.sub, ids, tx)
+            await ParentMetaSvc.addChildPositions(jwt.sub, ids, destId, pos, tx)
             await tx.commit()
             return true;
         } catch (error) {

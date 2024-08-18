@@ -8,7 +8,7 @@ export const bm_QUERY_resolver = {
         filter: BookmarkFilter_In,
         limit: number,
         offset: number
-    }, {driver}) => {
+    }, {driver, jwt}) => {
         const tx: Transaction = await driver.session().beginTransaction();
         try {
             let baseQueryParts: any = [];
@@ -23,9 +23,10 @@ export const bm_QUERY_resolver = {
                 // General path for all bookmarks
                 baseQueryParts.push('MATCH (member:Member {id: $memberId})-[:OWNS|CONTAINS*1..]->(bookmark:Bookmark)');
             }
+            baseQueryParts.push('with distinct bookmark');
             let queryParams: {
                 [key: string]: string | string[] | Integer
-            } = {memberId: memberIds[0]};
+            } = {memberId: jwt.sub};
 
             // Handle bmUrl filter
             if (filter.bmUrl) {
@@ -45,7 +46,6 @@ export const bm_QUERY_resolver = {
             if (filter.bmTags && filter.bmTags.length > 0) {
                 baseQueryParts.push('WITH bookmark', 'MATCH (bookmark)-[:HAS]->(tag:Tag)');
                 baseQueryParts.push(`WHERE tag.id IN $bmTags`);
-                baseQueryParts.push(`WITH DISTINCT bookmark`);
                 queryParams.bmTags = filter.bmTags;
             }
 
@@ -53,7 +53,6 @@ export const bm_QUERY_resolver = {
             if (filter.bmParents && filter.bmParents.length > 0 && !filter.bmLoose) {
                 baseQueryParts.push('MATCH (bookmark)<-[:CONTAINS*1..]-(p:Parent)');
                 baseQueryParts.push(`WHERE p.id IN $bmParents`);
-                baseQueryParts.push(`WITH DISTINCT bookmark`);
                 queryParams.bmParents = filter.bmParents;
             }
 
