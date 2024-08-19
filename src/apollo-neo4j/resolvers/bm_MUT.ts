@@ -100,8 +100,8 @@ export const bm_MUT_resolver = {
     moveBms2CollNode: async (_, {destId, pos, ids}, {driver, jwt}) => {
         const tx = await driver.session().beginTransaction();
         try {
-            await BmSvc.move(jwt.sub, ids, destId, tx)
             await ParentMetaSvc.delChPositions2(jwt.sub, ids, tx)
+            await BmSvc.move(jwt.sub, ids, destId, tx)
             await ParentMetaSvc.addChildPositions(jwt.sub, ids, destId, pos, tx)
             await tx.commit()
             return true;

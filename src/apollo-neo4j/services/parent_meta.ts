@@ -1,7 +1,5 @@
-import {MutationUpdateParentMetasArgs, ParentMeta, ParentMetaWhere} from "../gen/types.js";
-import {OGM} from "@neo4j/graphql-ogm";
+import {ParentMeta, ParentMetaWhere} from "../gen/types.js";
 import {ChildPosSvc} from "./child_pos.js";
-import {CollChildType} from "../../models/coll.js";
 
 
 export const ParentMetaSvc = {
@@ -81,7 +79,8 @@ export const ParentMetaSvc = {
     },
     delChPositions2: async (memberId, childIds: string[], tx) => {
         const query = `
-            MATCH (:Member {id: $memberId})-->(:Child)-->(:Parent)-->(pm:ParentMeta)
+            MATCH (:Member {id: $memberId})-->(c:Child)<--(:Parent)-->(pm:ParentMeta)
+            where c.id in $childIds
             with distinct pm
             SET pm.childPositions = [pos IN pm.childPositions WHERE NOT pos IN $childIds]
         `;

@@ -2,10 +2,7 @@ import {seedCollections} from "./collection.js";
 import {seedLooseBms} from "./bookmark.js";
 import {seedDriver, seedOgm} from "./_db_seeder.js";
 import {memberIds} from "../global/vars.js";
-import {getOgm_Member, getOgm_MemberMeta} from "../global/ogm.js";
 import {MemberSvc_Ogm} from "../src/apollo-neo4j/services/member_ogm.js";
-import {GeneralSvc_DbOgm} from "../src/apollo-neo4j/services_db/general_ogm.js";
-import {Member} from "../src/apollo-neo4j/gen/types.js";
 
 
 export async function seedMembers() {

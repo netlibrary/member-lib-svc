@@ -111,9 +111,14 @@ export const collNodes_MUT_resolvers = {
         const tx = await driver.session().beginTransaction();
         try {
             const childIds = parentChildsList.map(pc => pc.childIds).flat()
-            await CollNodeSvc.moveChilds2Dest(jwt.sub, childIds, destId, tx)
+
             for (const parentChilds of parentChildsList) {
                 await ParentMetaSvc.delChPositions(jwt.sub, parentChilds.childIds, parentChilds.parentId, tx)
+            }
+
+            await CollNodeSvc.moveChilds2Dest(jwt.sub, childIds, destId, tx)
+
+            for (const parentChilds of parentChildsList) {
                 await ParentMetaSvc.addChildPositions(jwt.sub, parentChilds.childIds, destId, pos, tx)
             }
 
