@@ -6,4 +6,5 @@ export interface Context {
     driver: Driver;
     ogm: OGM;
     token: string;
+    isTest: boolean;
 };

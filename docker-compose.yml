@@ -19,23 +19,23 @@ services:
     networks:
       - netlib-network
 
-  neo4j-graph-db-test:
-    image: neo4j:5.16.0
-    container_name: neo4j-graph-db-test
-    ports:
-      - "7475:7474" # Browser access
-      - "7688:7687" # Bolt protocol access
-    environment:
-      - NEO4J_AUTH=neo4j/password
-      - NEO4J_apoc_import_file_use__neo4j__config=true \
-    volumes:
-      - ./.data/neo4j_test/data:/data
-      - ./.data/neo4j_test/logs:/logs
-      - ./.data/neo4j_test/import:/var/lib/neo4j/import
-      - ./.data/neo4j_test/plugins:/plugins
-      - ./.data/neo4j_test/conf:/var/lib/neo4j/conf
-    networks:
-      - netlib-network
+#  neo4j-graph-db-test:
+#    image: neo4j:5.16.0
+#    container_name: neo4j-graph-db-test
+#    ports:
+#      - "7475:7474" # Browser access
+#      - "7688:7687" # Bolt protocol access
+#    environment:
+#      - NEO4J_AUTH=neo4j/password
+#      - NEO4J_apoc_import_file_use__neo4j__config=true \
+#    volumes:
+#      - ./.data/neo4j_test/data:/data
+#      - ./.data/neo4j_test/logs:/logs
+#      - ./.data/neo4j_test/import:/var/lib/neo4j/import
+#      - ./.data/neo4j_test/plugins:/plugins
+#      - ./.data/neo4j_test/conf:/var/lib/neo4j/conf
+#    networks:
+#      - netlib-network
 
 networks:
   netlib-network:

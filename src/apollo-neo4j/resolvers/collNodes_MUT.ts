@@ -13,7 +13,7 @@ export const collNodes_MUT_typeDefs = gql`
         parentId: ID!
         childIds: [ID!]!
     }
-    
+
     type Mutation {
         deleteManyNodes(nodes: SelectedNodes!): Int!
         moveManyNodes(nodes: NodesToMove!, destinationId: ID, position: Int): Boolean!
@@ -41,7 +41,7 @@ export const collNodes_MUT_resolvers = {
                 await MemberMetaSvc.delCollPositions(jwt.sub, nodes.collectionIds, tx)
             if (nodes.childs) {
                 for (const childsWrapper of nodes.childs) {
-                    await ParentMetaSvc.delChPositions(jwt.sub,[...(childsWrapper.bookmarkIds || []), ...(childsWrapper.folderIds || [])], childsWrapper.parentId, tx)
+                    await ParentMetaSvc.delChPositions(jwt.sub, [...(childsWrapper.bookmarkIds || []), ...(childsWrapper.folderIds || [])], childsWrapper.parentId, tx)
                 }
             }
             await tx.commit()
@@ -106,7 +106,7 @@ export const collNodes_MUT_resolvers = {
             await tx.close();
         }
     },
-    moveCollNodes2CollNode: async (_, {parentChildsList, destId, pos}, {driver, jwt}) => {
+    moveCollNodes2CollNode: async (_, {parentChildsList, destId, pos}, {driver, jwt, isTest}) => {
         parentChildsList = parentChildsList as ParentChilds[]
         const tx = await driver.session().beginTransaction();
         try {
@@ -122,7 +122,11 @@ export const collNodes_MUT_resolvers = {
                 await ParentMetaSvc.addChildPositions(jwt.sub, parentChilds.childIds, destId, pos, tx)
             }
 
-            await tx.commit()
+            if (isTest) {
+                await tx.rollback()
+            } else {
+                await tx.commit()
+            }
             return true;
         } catch (error) {
             await tx.rollback()

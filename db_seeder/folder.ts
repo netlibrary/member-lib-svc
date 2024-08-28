@@ -5,11 +5,11 @@ import {memberIds} from "../global/vars.js";
 import {ParentMetaSvc} from "../src/apollo-neo4j/services/parent_meta.js";
 import {NodeSvc} from "../src/apollo-neo4j/services/node.js";
 
-export async function seedFolders(parentId, level = 0): Promise<[string]> {
+export async function seedFolders(parentId, level = 0, count=2): Promise<[string]> {
     const ogm_Folder = seedOgm.model('Folder')
     const folderIds: any = []
     try {
-        for (let i = 0; i < Math.floor(Math.random() * 2) + 2; i++) {
+        for (let i = 0; i < count; i++) {
             const folderInput = {
                 id: NodeSvc.genFolderId(),
                 name: faker.company.name(), // Replace with actual name

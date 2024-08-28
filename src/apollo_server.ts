@@ -77,7 +77,8 @@ export async function startApolloServer(schema, driver, ogm) {
             context: async ({req, res}) => ({
                 ogm: ogm,
                 driver: driver,
-                token: req.headers.authorization || ''
+                token: req.headers.authorization || '',
+                isTest: req.headers['x-test-request'] === 'true'
             })
         })
     )

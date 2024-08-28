@@ -23,7 +23,7 @@ export async function seedCollections(memberId) {
             });
             console.log(`Collection created with ID: ${ogm_collections_createRes.collections[0].id}`);
             Promise.all([seedBookmarks(ogm_collections_createRes.collections[0].id),
-            seedFolders(ogm_collections_createRes.collections[0].id)])
+            seedFolders(ogm_collections_createRes.collections[0].id, 0,3)])
             .then(res => {
                 const childIds = [...res[0], ...res[1]]
                 ParentMetaSvc.create(ogm_collections_createRes.collections[0].id, childIds, seedOgm)
