@@ -7055,11 +7055,6 @@ export type QueryTagDsConnectionArgs = {
 };
 
 
-export type QueryTagListArgs = {
-  memberId: Scalars['String']['input'];
-};
-
-
 export type QueryTagsArgs = {
   options?: InputMaybe<TagOptions>;
   where?: InputMaybe<TagWhere>;
@@ -10869,7 +10864,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   tagDs?: Resolver<Array<ResolversTypes['TagDs']>, ParentType, ContextType, Partial<QueryTagDsArgs>>;
   tagDsAggregate?: Resolver<ResolversTypes['TagDsAggregateSelection'], ParentType, ContextType, Partial<QueryTagDsAggregateArgs>>;
   tagDsConnection?: Resolver<ResolversTypes['TagDsConnection'], ParentType, ContextType, Partial<QueryTagDsConnectionArgs>>;
-  tagList?: Resolver<Maybe<Array<ResolversTypes['TagDl']>>, ParentType, ContextType, RequireFields<QueryTagListArgs, 'memberId'>>;
+  tagList?: Resolver<Maybe<Array<ResolversTypes['TagDl']>>, ParentType, ContextType>;
   tags?: Resolver<Array<ResolversTypes['Tag']>, ParentType, ContextType, Partial<QueryTagsArgs>>;
   tagsAggregate?: Resolver<ResolversTypes['TagAggregateSelection'], ParentType, ContextType, Partial<QueryTagsAggregateArgs>>;
   tagsConnection?: Resolver<ResolversTypes['TagsConnection'], ParentType, ContextType, Partial<QueryTagsConnectionArgs>>;

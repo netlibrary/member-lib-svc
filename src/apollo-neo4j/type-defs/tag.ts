@@ -10,28 +10,4 @@ export const tag_typeDefs = gql`
         name: String! @unique
         bookmarks: [Bookmark!]! @relationship(type: "HAS", direction: IN)
     }
-
-    type TagDs {
-        id: ID!
-        name: String!
-    }
-
-    type TagDl {
-        id: ID!
-        name: String!
-        count: Int!
-    }
-
-    type Query {
-        tagList(memberId: String!): [TagDl!]
-        @cypher(
-            statement: """
-            MATCH (t:Tag)<-[:HAS|OWNS|CONTAINS*]-(m:Member)
-            WHERE m.id = $memberId
-            with t, COUNT(t) as tagCount
-            RETURN {id: t.id, name:t.name, count:tagCount} AS r
-            """
-            columnName: "r"
-        )
-    }
 `;

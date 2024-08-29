@@ -12,6 +12,10 @@ export const bm_QUERY_resolver = {
         const tx: Transaction = await driver.session().beginTransaction();
         try {
             let baseQueryParts: any = [];
+            let queryParams: {
+                [key: string]: string | string[] | Integer
+            } = {memberId: jwt.sub};
+
             // Determine path based on bmLoose
             if (filter.bmLoose === true) {
                 // Path specifically for BmLooseContainer as parent
@@ -23,10 +27,21 @@ export const bm_QUERY_resolver = {
                 // General path for all bookmarks
                 baseQueryParts.push('MATCH (member:Member {id: $memberId})-[:OWNS|CONTAINS*1..]->(bookmark:Bookmark)');
             }
-            baseQueryParts.push('with distinct bookmark');
-            let queryParams: {
-                [key: string]: string | string[] | Integer
-            } = {memberId: jwt.sub};
+
+
+            // Handle bmTags filter
+            if (filter.bmTags && filter.bmTags.length > 0) {
+                baseQueryParts.push('WITH bookmark', 'MATCH (bookmark)-[:HAS]->(tag:Tag)');
+                baseQueryParts.push(`WHERE tag.id IN $bmTags`);
+                queryParams.bmTags = filter.bmTags;
+            }
+
+            // Handle bmParentsTxt filter, considering bmLoose
+            if (filter.bmParents && filter.bmParents.length > 0 && !filter.bmLoose) {
+                baseQueryParts.push('MATCH (bookmark)<-[:CONTAINS*1..]-(p:Parent)');
+                baseQueryParts.push(`WHERE p.id IN $bmParents`);
+                queryParams.bmParents = filter.bmParents;
+            }
 
             // Handle bmUrl filter
             if (filter.bmUrl) {
@@ -42,19 +57,7 @@ export const bm_QUERY_resolver = {
                 queryParams.bmTxt = filter.bmTxt;
             }
 
-            // Handle bmTags filter
-            if (filter.bmTags && filter.bmTags.length > 0) {
-                baseQueryParts.push('WITH bookmark', 'MATCH (bookmark)-[:HAS]->(tag:Tag)');
-                baseQueryParts.push(`WHERE tag.id IN $bmTags`);
-                queryParams.bmTags = filter.bmTags;
-            }
-
-            // Handle bmParentsTxt filter, considering bmLoose
-            if (filter.bmParents && filter.bmParents.length > 0 && !filter.bmLoose) {
-                baseQueryParts.push('MATCH (bookmark)<-[:CONTAINS*1..]-(p:Parent)');
-                baseQueryParts.push(`WHERE p.id IN $bmParents`);
-                queryParams.bmParents = filter.bmParents;
-            }
+            baseQueryParts.push('with distinct bookmark');
 
             // Clone the base query parts for the count query
             let countQueryParts = Array.from(baseQueryParts);
@@ -74,8 +77,6 @@ export const bm_QUERY_resolver = {
             baseQueryParts.push('WITH bookmark', 'SKIP $offset', "LIMIT $limit");
             queryParams.offset = neo4j.int(offset);
             queryParams.limit = neo4j.int(10);
-
-            // Assuming the count fits into a JS number
 
             // Complete the base query with sorting (optional) and pagination
             baseQueryParts.push(`optional match (p:Collection|Folder)-[:CONTAINS]->(bookmark)`);
