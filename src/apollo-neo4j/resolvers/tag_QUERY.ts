@@ -16,7 +16,9 @@ export const tag_QUERY_typeDefs = gql`
         tagList: [TagDl!]
         @cypher(
             statement: """
-            MATCH (m:Member {id: $jwt.sub})-[:HAS|OWNS|CONTAINS*]->(t:Tag)
+            MATCH (m:Member {id: $jwt.sub})-[:HAS|OWNS|CONTAINS*]->(b:Bookmark)
+            with distinct b
+            match (b)-->(t:Tag)
             with t, COUNT(t) as tagCount
             RETURN {id: t.id, name:t.name, count:tagCount} AS r
             """

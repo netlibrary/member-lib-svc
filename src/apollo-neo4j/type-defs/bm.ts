@@ -52,6 +52,7 @@ export const bookmark_typeDefs = gql`
         bmUrl: String
         bmTags: [ID!]
         bmLoose: Boolean
+        matchAll: Boolean
 
         sortBy: String
         sortDir: String

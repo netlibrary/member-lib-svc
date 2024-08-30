@@ -12,6 +12,7 @@ export const neoSchema = new Neo4jGraphQL({
         authorization: {
             key: "your-256-bit-secret",
         },
+
     },
 });
 

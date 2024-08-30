@@ -16,6 +16,7 @@ services:
       - ./.data/neo4j/import:/var/lib/neo4j/import
       - ./.data/neo4j/plugins:/plugins
       - ./.data/neo4j/conf:/var/lib/neo4j/conf
+      - ./neo4j/server-logs.xml:/var/lib/neo4j/conf/server-logs.xml
     networks:
       - netlib-network
 

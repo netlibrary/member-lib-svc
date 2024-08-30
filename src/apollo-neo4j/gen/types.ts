@@ -1377,6 +1377,7 @@ export type BookmarkFilter_In = {
   bmTxt?: InputMaybe<Scalars['String']['input']>;
   bmUrl?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
+  matchAll?: InputMaybe<Scalars['Boolean']['input']>;
   sortBy?: InputMaybe<Scalars['String']['input']>;
   sortDir?: InputMaybe<Scalars['String']['input']>;
 };

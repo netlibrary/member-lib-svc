@@ -2,6 +2,7 @@ import {BookmarkFilter_In} from "../gen/types.js";
 import neo4j, {Integer, Transaction} from "neo4j-driver";
 import {memberIds} from "../../../global/vars.js";
 import {bm_CypherSel} from "./bm.js";
+import {BmFilterSvc} from "../services/bm_filter.js";
 
 export const bm_QUERY_resolver = {
     bmsByFilter: async (_, {filter, limit, offset}: {
@@ -19,42 +20,55 @@ export const bm_QUERY_resolver = {
             // Determine path based on bmLoose
             if (filter.bmLoose === true) {
                 // Path specifically for BmLooseContainer as parent
-                baseQueryParts.push('MATCH (member:Member {id: $memberId})-[:OWNS]->(container:BmLooseContainer)-[:CONTAINS*1..]->(bookmark:Bookmark)');
+                baseQueryParts.push(`MATCH (member:Member {id: $memberId})-[:OWNS]->(container:BmLooseContainer)-[:CONTAINS*1..]->(bookmark:Bookmark)`);
             } else if (filter.bmLoose === false) {
                 // Path specifically for Collection as root
-                baseQueryParts.push('MATCH (member:Member {id: $memberId})-[:OWNS]->(collection:Collection)-[:CONTAINS*1..]->(bookmark:Bookmark)');
+                baseQueryParts.push(`MATCH (member:Member {id: $memberId})-[:OWNS]->(container:Collection)-[:CONTAINS*1..]->(bookmark:Bookmark)`);
             } else {
                 // General path for all bookmarks
-                baseQueryParts.push('MATCH (member:Member {id: $memberId})-[:OWNS|CONTAINS*1..]->(bookmark:Bookmark)');
+                baseQueryParts.push(`MATCH (member:Member {id: $memberId})-[:OWNS]->(container:BmContainer)-[:CONTAINS*1..]->(bookmark:Bookmark)`);
             }
 
+            const conditions: string[] = [];
+            const conditionVars: string[] = ["bookmark"];
+            // Handle bmUrl filter
+            // if (filter.bmUrl) {
+            //     baseQueryParts.push('WHERE bookmark.urlScheme = $urlScheme AND bookmark.linkPath = $linkPath');
+            //     // queryParams.urlScheme = extractUrlScheme(filter.bmUrl); // Assume a function to extract URL scheme
+            //     // queryParams.linkPath = extractLinkPath(filter.bmUrl); // Assume a function to extract link path
+            // }
+
+            // Handle bmTxt filter
+            if (filter.bmTxt) {
+                const txtCondition =
+                    '(toLower(bookmark.description) CONTAINS toLower($bmTxt) ' +
+                    'OR toLower(bookmark.linkPath) CONTAINS toLower($bmTxt)' +
+                    'OR toLower(bookmark.domainName) CONTAINS toLower($bmTxt)' +
+                    'OR toLower(bookmark.name) CONTAINS toLower($bmTxt))'
+                conditions.push(txtCondition);
+                queryParams.bmTxt = filter.bmTxt;
+            }
 
             // Handle bmTags filter
             if (filter.bmTags && filter.bmTags.length > 0) {
-                baseQueryParts.push('WITH bookmark', 'MATCH (bookmark)-[:HAS]->(tag:Tag)');
-                baseQueryParts.push(`WHERE tag.id IN $bmTags`);
+                baseQueryParts.push(`optional MATCH (bookmark)-[:HAS]->(tag:Tag)`);
+                conditionVars.push(`tag`);
+                conditions.push(`tag.id IN $bmTags`);
                 queryParams.bmTags = filter.bmTags;
             }
 
             // Handle bmParentsTxt filter, considering bmLoose
             if (filter.bmParents && filter.bmParents.length > 0 && !filter.bmLoose) {
-                baseQueryParts.push('MATCH (bookmark)<-[:CONTAINS*1..]-(p:Parent)');
-                baseQueryParts.push(`WHERE p.id IN $bmParents`);
+                baseQueryParts.push(`optional MATCH (bookmark)<-[:CONTAINS*1..]-(p:Parent)`);
+                conditionVars.push(`p`);
+                conditions.push(`p.id IN $bmParents`);
                 queryParams.bmParents = filter.bmParents;
             }
 
-            // Handle bmUrl filter
-            if (filter.bmUrl) {
-                baseQueryParts.push('WHERE bookmark.urlScheme = $urlScheme AND bookmark.linkPath = $linkPath');
-                // queryParams.urlScheme = extractUrlScheme(filter.bmUrl); // Assume a function to extract URL scheme
-                // queryParams.linkPath = extractLinkPath(filter.bmUrl); // Assume a function to extract link path
-            }
-
-            // Handle bmTxt filter
-            if (filter.bmTxt) {
-                const txtCondition = 'toLower(bookmark.description) CONTAINS toLower($bmTxt) OR toLower(bookmark.name) CONTAINS toLower($bmTxt)';
-                baseQueryParts.push(filter.bmUrl ? `AND (${txtCondition})` : `WHERE ${txtCondition}`);
-                queryParams.bmTxt = filter.bmTxt;
+            // Combine the conditions using OR if there are multiple conditions
+            if (conditions.length > 0) {
+                baseQueryParts.push(`with ${conditionVars.join(",")}`);
+                baseQueryParts.push(`WHERE ${conditions.join(filter.matchAll ? ' and ' : ' OR ')}`);
             }
 
             baseQueryParts.push('with distinct bookmark');
