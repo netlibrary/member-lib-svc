@@ -17,17 +17,7 @@ export const bm_QUERY_resolver = {
                 [key: string]: string | string[] | Integer
             } = {memberId: jwt.sub};
 
-            // Determine path based on bmLoose
-            if (filter.bmLoose === true) {
-                // Path specifically for BmLooseContainer as parent
-                baseQueryParts.push(`MATCH (member:Member {id: $memberId})-[:OWNS]->(container:BmLooseContainer)-[:CONTAINS*1..]->(bookmark:Bookmark)`);
-            } else if (filter.bmLoose === false) {
-                // Path specifically for Collection as root
-                baseQueryParts.push(`MATCH (member:Member {id: $memberId})-[:OWNS]->(container:Collection)-[:CONTAINS*1..]->(bookmark:Bookmark)`);
-            } else {
-                // General path for all bookmarks
-                baseQueryParts.push(`MATCH (member:Member {id: $memberId})-[:OWNS]->(container:BmContainer)-[:CONTAINS*1..]->(bookmark:Bookmark)`);
-            }
+            baseQueryParts.push(`MATCH (member:Member {id: $memberId})-[:OWNS]->(container:BmContainer)-[:CONTAINS*1..]->(bookmark:Bookmark)`);
 
             const conditions: string[] = [];
             const conditionVars: string[] = ["bookmark"];
@@ -49,6 +39,19 @@ export const bm_QUERY_resolver = {
                 queryParams.bmTxt = filter.bmTxt;
             }
 
+            // Determine path based on bmLoose
+            if (filter.bmLoose != null) {
+                if (filter.bmLoose === true) {
+                    // Path specifically for BmLooseContainer as parent
+                    baseQueryParts.push(`optional MATCH (container2:BmLooseContainer)-->(bookmark)`);
+                } else  {
+                    // Path specifically for Collection as root
+                    baseQueryParts.push(`optional MATCH (container2:Collection)-[:CONTAINS*1..]->(bookmark)`);
+                }
+                conditionVars.push(`container2`);
+                conditions.push('container2 IS NOT NULL');
+            }
+
             // Handle bmTags filter
             if (filter.bmTags && filter.bmTags.length > 0) {
                 baseQueryParts.push(`optional MATCH (bookmark)-[:HAS]->(tag:Tag)`);
@@ -58,7 +61,7 @@ export const bm_QUERY_resolver = {
             }
 
             // Handle bmParentsTxt filter, considering bmLoose
-            if (filter.bmParents && filter.bmParents.length > 0 && !filter.bmLoose) {
+            if (filter.bmParents && filter.bmParents.length > 0) {
                 baseQueryParts.push(`optional MATCH (bookmark)<-[:CONTAINS*1..]-(p:Parent)`);
                 conditionVars.push(`p`);
                 conditions.push(`p.id IN $bmParents`);
