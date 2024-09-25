@@ -5,6 +5,8 @@ import {NodeSvc} from "../services/node.js";
 import {BmLooseSvc} from "../services/bmLoose.js";
 import {ParentMetaSvc} from "../services/parent_meta.js";
 import {CollectionSvc} from "../services/collection.js";
+import {Folder_SvcDb} from "../services_db/folder.js";
+import {Coll_SvcDb} from "../services_db/coll.js";
 
 export const collection_MUT_typeDefs = gql`
     type Mutation {
@@ -17,42 +19,20 @@ export const collection_MUT_typeDefs = gql`
 
 export const collection_MUT_Resolvers = {
 
-    createCollection: async (t, {name}, {ogm, jwt}) => {
+    createCollection: async (_, {name}, {driver, jwt}) => {
+        const tx = await driver.session().beginTransaction();
         try {
-            const collection = await ogm.model("Collection").create({
-                input: {
-                    id: NodeSvc.genCollId(),
-                    name: name,
-                    parentMeta: {
-                        create: {
-                            node: {
-                                childPositions: []
-                            }
-                        }
-                    },
-                    member: {
-                        connect: {where: {node: {id: jwt.sub}}},
-                    },
-                },
-            });
-            const collectionId = collection.collections[0].id
-            console.log(
-                `Collection created with ID: ${collectionId}`
-            );
-            const MemberMeta = ogm.model("MemberMeta");
-            await MemberMeta.update({
-                update: {
-                    collectionPositions_PUSH: collectionId,
-                },
-                where: {
-                    member: {
-                        id: jwt.sub,
-                    },
-                },
-            });
-            return collectionId;
+            const folderId = await Coll_SvcDb.create(name, jwt.sub, tx)
+
+            await ParentMetaSvc.addChildPositions(jwt.sub, [folderId], parentId, position, tx)
+
+            await tx.commit()
+            return folderId;
         } catch (error) {
+            await tx.rollback()
             throw error;
+        } finally {
+            await tx.close();
         }
     },
     deleteCollection: async (_, {id}, {driver, jwt}) => {

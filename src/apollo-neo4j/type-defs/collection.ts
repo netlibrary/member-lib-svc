@@ -1,8 +1,14 @@
 import {gql} from "graphql-tag";
 
+export const CollectionLabels = {
+  list: ["Collection", "Parent", "DeleteCascade", "CollNode", "BmContainer"],
+  cypherList: () => `${CollectionLabels.list.join(':')}`,
+  gqlList: () => `[${CollectionLabels.list.map(l => `"${l}"`).join(', ')}]`
+}
+
 export const collection_typeDefs = gql`
   type Collection implements Parent
-    @node(labels: ["Collection", "Parent", "DeleteCascade", "CollNode", "BmContainer"])
+    @node(labels: ${CollectionLabels.gqlList()})
   @authorization(filter: [{ operations: [READ, AGGREGATE] where: { node: { member: { id: "$jwt.sub" } } } }])
   {
     id: ID! @unique

@@ -5,7 +5,7 @@ import {Bm_SvcDb} from "../services_db/bm.js";
 
 
 export const BmLooseSvc = {
-    create: async (data: CreateBookmarkDl, memberId, tx: Transaction, ogm) => {
+    create: async (data: CreateBookmarkDl, memberId, tx: Transaction) => {
         data.parentId = await BLC_SvcDb.getId(memberId, tx)
         const bmId = await Bm_SvcDb.create(data, memberId, tx)
         return bmId;

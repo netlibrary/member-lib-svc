@@ -6,7 +6,7 @@ import {Bm_SvcDb} from "../services_db/bm.js";
 
 
 export const BmCollSvc = {
-    create: async (data: CreateBookmarkDl, memberId, ogm, tx) => {
+    create: async (data: CreateBookmarkDl, memberId, tx) => {
         const {
             parentId,
             position,

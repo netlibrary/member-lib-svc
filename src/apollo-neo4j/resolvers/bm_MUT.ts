@@ -189,17 +189,21 @@ export const bm_MUT_resolver = {
     },
     createBookmarkDl: async (_, {data}: {
         data: CreateBookmarkDl
-    }, {driver, ogm, jwt}) => {
+    }, {driver, jwt, isTest}) => {
         const tx = await driver.session().beginTransaction();
         try {
             let bmId: any = null
             if (data.parentId) {
-                bmId = await BmCollSvc.create(data, jwt.sub, ogm, tx);
+                bmId = await BmCollSvc.create(data, jwt.sub, tx);
             } else {
-                bmId = await BmLooseSvc.create(data, jwt.sub, tx, ogm);
+                bmId = await BmLooseSvc.create(data, jwt.sub, tx);
             }
 
-            tx.commit()
+            if (isTest) {
+                await tx.rollback()
+            } else {
+                await tx.commit()
+            }
             return bmId;
         } catch (error) {
             await tx.rollback()
