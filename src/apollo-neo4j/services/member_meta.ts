@@ -41,7 +41,7 @@ export const MemberMetaSvc = {
         WITH mm, currentPositions, $insertIndex AS idx, $collectionIds AS newIds
         WITH mm, currentPositions, idx, newIds,
              CASE
-                WHEN idx <= 0 THEN newIds + currentPositions
+                WHEN idx <= 0 THEN currentPositions + newIds
                 WHEN idx >= SIZE(currentPositions) THEN currentPositions + newIds
                 ELSE 
                     [i IN RANGE(0, SIZE(currentPositions) + SIZE(newIds) - 1) |

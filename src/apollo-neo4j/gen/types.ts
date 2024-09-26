@@ -6801,11 +6801,6 @@ export type QueryCollectionDsListsConnectionArgs = {
 };
 
 
-export type QueryCollectionListArgs = {
-  memberId: Scalars['String']['input'];
-};
-
-
 export type QueryCollectionsArgs = {
   options?: InputMaybe<CollectionOptions>;
   where?: InputMaybe<CollectionWhere>;
@@ -10823,7 +10818,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   collectionDsLists?: Resolver<Array<ResolversTypes['CollectionDsList']>, ParentType, ContextType, Partial<QueryCollectionDsListsArgs>>;
   collectionDsListsAggregate?: Resolver<ResolversTypes['CollectionDsListAggregateSelection'], ParentType, ContextType, Partial<QueryCollectionDsListsAggregateArgs>>;
   collectionDsListsConnection?: Resolver<ResolversTypes['CollectionDsListsConnection'], ParentType, ContextType, Partial<QueryCollectionDsListsConnectionArgs>>;
-  collectionList?: Resolver<Maybe<ResolversTypes['CollectionDsList']>, ParentType, ContextType, RequireFields<QueryCollectionListArgs, 'memberId'>>;
+  collectionList?: Resolver<Maybe<ResolversTypes['CollectionDsList']>, ParentType, ContextType>;
   collections?: Resolver<Array<ResolversTypes['Collection']>, ParentType, ContextType, Partial<QueryCollectionsArgs>>;
   collectionsAggregate?: Resolver<ResolversTypes['CollectionAggregateSelection'], ParentType, ContextType, Partial<QueryCollectionsAggregateArgs>>;
   collectionsByBmIdsXBmCounts?: Resolver<Maybe<Array<ResolversTypes['CollBmCount']>>, ParentType, ContextType, RequireFields<QueryCollectionsByBmIdsXBmCountsArgs, 'ids'>>;

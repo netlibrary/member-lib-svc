@@ -26,6 +26,17 @@ describe('Coll Mutations', () => {
                   createCollection(name: $name)
                 }
         `;
+        const colls_QUERY = `
+            query CollectionList {
+              collectionList {
+                    collections {
+                    bookmarkCount
+                    id
+                    name
+                  }
+              }
+            }
+        `;
 
         try {
             const response = await executeOperation(MUT, {name});
@@ -33,6 +44,10 @@ describe('Coll Mutations', () => {
 
             const collId = Object.values(response.body.singleResult.data)[0];
             expect(collId).toBeDefined();
+
+            // const colls_RESP = await executeOperation(colls_QUERY);
+            // const colls = Object.values(colls_RESP.body.singleResult.data)[0];
+            // expect(collId).toBeDefined();
         } catch (error) {
             console.error("Error in test:", error);
             throw error;

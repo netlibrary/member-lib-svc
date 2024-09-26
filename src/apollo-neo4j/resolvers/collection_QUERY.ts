@@ -23,7 +23,7 @@ export const collection_QUERY_typeDefs = gql`
     }
 
     type Query {
-        collectionList(memberId: String!): CollectionDsList
+        collectionList: CollectionDsList
         @cypher(
             statement: """
             MATCH (m:Member {id: $jwt.sub})-[:OWNS]->(c:Collection)

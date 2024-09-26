@@ -19,7 +19,7 @@ const deleteManyCascade = async (ids: string[], tx: Transaction): Promise<number
 
 const deleteCascade = async (id: string, tx: Transaction): Promise<number> => {
     const result = await tx.run(`
-            MATCH (n:DeleteCascade { id: id })
+            MATCH (n:DeleteCascade { id: $id })
             OPTIONAL MATCH (n)-[r*0..]->(sub:CollNode)
             DETACH DELETE n, sub
             RETURN COUNT(sub) + COUNT(n) AS nodesDeleted
