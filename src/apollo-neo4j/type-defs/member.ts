@@ -18,10 +18,4 @@ export const member_typeDefs = gql`
     
     memberMeta: MemberMeta @relationship(type: "HAS", direction: OUT)
   }
-
-  type MemberMeta {
-    id: ID! @id @unique
-    collectionPositions: [String!]!
-    member: Member @relationship(type: "HAS", direction: IN)
-  }
 `;

@@ -1,39 +1,64 @@
-import {getOgm_MemberMeta} from "../../../global/ogm.js";
-import {MutationUpdateParentMetasArgs, ParentMeta, ParentMetaWhere} from "../gen/types.js";
-import {ChildPosSvc} from "./child_pos.js";
-
-const deleteCollectionPositions = async (memberId: string, collectionIds: string[]) => {
-    const memberMeta = await getOgm_MemberMeta().find({
-        where: {
-            member: {
-                id: memberId
-            }
-        }
-    });
-
-    if (memberMeta && memberMeta.length > 0) {
-        // Filter out the deleted collection IDs from collectionPositions
-        const updatedCollectionPositions = memberMeta[0].collectionPositions.filter(collection => !collectionIds.includes(collection));
-        await getOgm_MemberMeta().update({
-            where: {id: memberMeta[0].id},
-            update: {collectionPositions: updatedCollectionPositions},
-        });
-    } else {
-        // Handle case where MemberMeta object is not found
-        throw new Error('MemberMeta not found for memberId: ' + memberId);
-    }
-}
-
 export const MemberMetaSvc = {
     delCollPositions: async (memberId, collIds: string[], tx) => {
         const query = `
             MATCH (:Member {id: $memberId})-->(mm:MemberMeta)
-            SET mm.childPositions = [pos IN mm.childPositions WHERE NOT pos IN $collIds]
+            SET mm.collectionPositions = [pos IN mm.collectionPositions WHERE NOT pos IN $collIds]
         `;
 
         const params = {
             memberId,
             collIds,
+        };
+
+        return await tx.run(query, params);
+    },
+    pushCollectionPositions: async (memberId, collectionIds: string[], parentId, tx) => {
+        const query = `
+            MATCH (:Member {id: $memberId})-->(mm:MemberMeta)
+            WITH mm
+            UNWIND $collectionIds AS collectionId
+            WITH mm, collectionId
+            WHERE NOT collectionId IN mm.collectionPositions
+            WITH mm, COLLECT(collectionId) AS newCollectionIds
+            SET mm.collectionPositions = mm.collectionPositions + newCollectionIds
+        `;
+
+        const params = {
+            parentId,
+            collectionIds,
+            memberId
+        };
+
+        return await tx.run(query, params);
+    },
+    addCollectionPositions: async (memberId, collectionIds: string[], position, tx) => {
+        const query = `
+        MATCH (:Member {id: $memberId})-->(mm:MemberMeta)
+        WITH mm, CASE
+            WHEN mm.collectionPositions IS NULL THEN []
+            ELSE mm.collectionPositions
+        END AS currentPositions
+        WITH mm, currentPositions, $insertIndex AS idx, $collectionIds AS newIds
+        WITH mm, currentPositions, idx, newIds,
+             CASE
+                WHEN idx <= 0 THEN newIds + currentPositions
+                WHEN idx >= SIZE(currentPositions) THEN currentPositions + newIds
+                ELSE 
+                    [i IN RANGE(0, SIZE(currentPositions) + SIZE(newIds) - 1) |
+                        CASE
+                            WHEN i < idx THEN currentPositions[i]
+                            WHEN i < idx + SIZE(newIds) THEN newIds[i - idx]
+                            ELSE currentPositions[i - SIZE(newIds)]
+                        END
+                    ]
+             END AS updatedPositions
+        SET mm.collectionPositions = updatedPositions
+    `;
+
+        const params = {
+            memberId,
+            collectionIds,
+            insertIndex: position - 1
         };
 
         return await tx.run(query, params);

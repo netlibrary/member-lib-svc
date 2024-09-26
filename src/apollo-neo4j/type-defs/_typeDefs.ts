@@ -10,6 +10,7 @@ import {bmLooseContainer_typeDefs} from "./bmLoose.js";
 import {jwt_typeDefs} from "./jwt.js";
 import {resolver_typeDefs} from "../resolvers/_typeDefs.js";
 import {parentMeta_typeDefs} from "./parentMeta.js";
+import {memberMeta_typeDefs} from "./memberMeta.js";
 
 export const typeDefs = gql`
   ${jwt_typeDefs}
@@ -23,5 +24,6 @@ export const typeDefs = gql`
   ${general_typeDefs}
   ${parentMeta_typeDefs}
   ${resolver_typeDefs}
+  ${memberMeta_typeDefs}
 `
 // ${directive_typeDefs}

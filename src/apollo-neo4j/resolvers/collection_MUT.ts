@@ -10,7 +10,7 @@ import {Coll_SvcDb} from "../services_db/coll.js";
 
 export const collection_MUT_typeDefs = gql`
     type Mutation {
-        createCollection(name: String!, memberId: ID!): ID
+        createCollection(name: String!): ID
         deleteCollection(id: ID!): Int!
         deleteManyColls(ids: [ID!]!): Int!
         moveColls2CollNode(collIds: [ID!]!, destId: ID!, pos: Int): Int!
@@ -18,16 +18,19 @@ export const collection_MUT_typeDefs = gql`
 `;
 
 export const collection_MUT_Resolvers = {
-
-    createCollection: async (_, {name}, {driver, jwt}) => {
+    createCollection: async (_, {name}, {driver, jwt, isTest}) => {
         const tx = await driver.session().beginTransaction();
         try {
-            const folderId = await Coll_SvcDb.create(name, jwt.sub, tx)
+            const collId = await Coll_SvcDb.create(name, jwt.sub, tx)
 
-            await ParentMetaSvc.addChildPositions(jwt.sub, [folderId], parentId, position, tx)
+            await MemberMetaSvc.addCollectionPositions(jwt.sub, [collId], -1, tx)
 
-            await tx.commit()
-            return folderId;
+            if (isTest) {
+                await tx.rollback()
+            } else {
+                await tx.commit()
+            }
+            return collId;
         } catch (error) {
             await tx.rollback()
             throw error;

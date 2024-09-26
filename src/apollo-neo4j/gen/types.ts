@@ -5602,7 +5602,6 @@ export type MutationCreateCollInfosArgs = {
 
 
 export type MutationCreateCollectionArgs = {
-  memberId: Scalars['ID']['input'];
   name: Scalars['String']['input'];
 };
 
@@ -10571,7 +10570,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createBookmarks?: Resolver<ResolversTypes['CreateBookmarksMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateBookmarksArgs, 'input'>>;
   createCollBmCounts?: Resolver<ResolversTypes['CreateCollBmCountsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateCollBmCountsArgs, 'input'>>;
   createCollInfos?: Resolver<ResolversTypes['CreateCollInfosMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateCollInfosArgs, 'input'>>;
-  createCollection?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType, RequireFields<MutationCreateCollectionArgs, 'memberId' | 'name'>>;
+  createCollection?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType, RequireFields<MutationCreateCollectionArgs, 'name'>>;
   createCollectionDs?: Resolver<ResolversTypes['CreateCollectionDsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateCollectionDsArgs, 'input'>>;
   createCollectionDsLists?: Resolver<ResolversTypes['CreateCollectionDsListsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateCollectionDsListsArgs, 'input'>>;
   createCollections?: Resolver<ResolversTypes['CreateCollectionsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateCollectionsArgs, 'input'>>;
