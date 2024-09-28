@@ -56,4 +56,42 @@ describe('Coll Mutations', () => {
             await mockTx.rollbackMock();
         }
     });
+
+    it('should delete all colls', async () => {
+        const {executeOperation, mockTx} = testEnvironment;
+
+        const DELETE_ALL_Colls = `
+            mutation {
+              deleteAllColls
+            }
+        `;
+
+        try {
+            const response = await executeOperation(DELETE_ALL_Colls);
+            expect(response.body.kind).toBe('single');
+            if (response.body.kind === 'single') {
+                expect(response.body.singleResult.errors).toBeUndefined();
+                expect(response.body.singleResult.data?.deleteAllColls).toBeTruthy();
+            }
+
+            // Verify database state
+
+            const bookmarkCount = (await mockTx.run('MATCH (c:Collection) RETURN count(c) as count'))
+                .records[0].get('count').toNumber();
+            expect(bookmarkCount).toBe(0);
+
+
+            const collPositions = (await mockTx.run('MATCH (pm:MemberMeta) RETURN pm.collectionPositions as cp'))
+                .records.map(r => r.get('cp'))[0];
+
+            // check that every child position starts with 'f:'
+            expect(collPositions.length).toBe(0);
+        } catch (error) {
+            console.error("Error in test:", error);
+            throw error;
+        } finally {
+            // Restore initial state
+            await mockTx.rollbackMock();
+        }
+    });
 });

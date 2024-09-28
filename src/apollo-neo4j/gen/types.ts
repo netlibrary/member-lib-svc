@@ -5491,17 +5491,16 @@ export type Mutation = {
   createTagDs: CreateTagDsMutationResponse;
   createTags: CreateTagsMutationResponse;
   deleteAllBms: Scalars['Int']['output'];
+  deleteAllColls: Scalars['Int']['output'];
   deleteAllLooseBms: Scalars['Int']['output'];
   deleteBmLooseContainers: DeleteInfo;
   deleteBmsPageds: DeleteInfo;
-  deleteBookmark: Scalars['Int']['output'];
   deleteBookmarkDl2s: DeleteInfo;
   deleteBookmarkDls: DeleteInfo;
   deleteBookmarkFilters: DeleteInfo;
   deleteBookmarks: DeleteInfo;
   deleteCascade?: Maybe<Scalars['Int']['output']>;
   deleteCollBmCounts: DeleteInfo;
-  deleteCollBookmark: Scalars['Int']['output'];
   deleteCollInfos: DeleteInfo;
   deleteCollection: Scalars['Int']['output'];
   deleteCollectionDs: DeleteInfo;
@@ -5512,8 +5511,8 @@ export type Mutation = {
   deleteFolders: DeleteInfo;
   deleteHierarchBmsXGetCollBmCounts?: Maybe<Array<CollBmCount>>;
   deleteListCascade?: Maybe<Scalars['Int']['output']>;
-  deleteManyBms: Scalars['Int']['output'];
   deleteManyColls: Scalars['Int']['output'];
+  deleteManyLooseBms: Scalars['Int']['output'];
   deleteManyNodes: Scalars['Int']['output'];
   deleteMemberMetas: DeleteInfo;
   deleteMembers: DeleteInfo;
@@ -5689,11 +5688,6 @@ export type MutationDeleteBmsPagedsArgs = {
 };
 
 
-export type MutationDeleteBookmarkArgs = {
-  id: Scalars['ID']['input'];
-};
-
-
 export type MutationDeleteBookmarkDl2sArgs = {
   where?: InputMaybe<BookmarkDl2Where>;
 };
@@ -5723,12 +5717,6 @@ export type MutationDeleteCascadeArgs = {
 
 export type MutationDeleteCollBmCountsArgs = {
   where?: InputMaybe<CollBmCountWhere>;
-};
-
-
-export type MutationDeleteCollBookmarkArgs = {
-  id: Scalars['ID']['input'];
-  parentId: Scalars['ID']['input'];
 };
 
 
@@ -5785,13 +5773,13 @@ export type MutationDeleteListCascadeArgs = {
 };
 
 
-export type MutationDeleteManyBmsArgs = {
-  ids?: InputMaybe<Array<Scalars['ID']['input']>>;
+export type MutationDeleteManyCollsArgs = {
+  ids: Array<Scalars['ID']['input']>;
 };
 
 
-export type MutationDeleteManyCollsArgs = {
-  ids: Array<Scalars['ID']['input']>;
+export type MutationDeleteManyLooseBmsArgs = {
+  ids?: InputMaybe<Array<Scalars['ID']['input']>>;
 };
 
 
@@ -10581,17 +10569,16 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createTagDs?: Resolver<ResolversTypes['CreateTagDsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateTagDsArgs, 'input'>>;
   createTags?: Resolver<ResolversTypes['CreateTagsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateTagsArgs, 'input'>>;
   deleteAllBms?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  deleteAllColls?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   deleteAllLooseBms?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   deleteBmLooseContainers?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteBmLooseContainersArgs>>;
   deleteBmsPageds?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteBmsPagedsArgs>>;
-  deleteBookmark?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationDeleteBookmarkArgs, 'id'>>;
   deleteBookmarkDl2s?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteBookmarkDl2sArgs>>;
   deleteBookmarkDls?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteBookmarkDlsArgs>>;
   deleteBookmarkFilters?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteBookmarkFiltersArgs>>;
   deleteBookmarks?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteBookmarksArgs>>;
   deleteCascade?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationDeleteCascadeArgs, 'id'>>;
   deleteCollBmCounts?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteCollBmCountsArgs>>;
-  deleteCollBookmark?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationDeleteCollBookmarkArgs, 'id' | 'parentId'>>;
   deleteCollInfos?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteCollInfosArgs>>;
   deleteCollection?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationDeleteCollectionArgs, 'id'>>;
   deleteCollectionDs?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteCollectionDsArgs>>;
@@ -10602,8 +10589,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteFolders?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteFoldersArgs>>;
   deleteHierarchBmsXGetCollBmCounts?: Resolver<Maybe<Array<ResolversTypes['CollBmCount']>>, ParentType, ContextType, Partial<MutationDeleteHierarchBmsXGetCollBmCountsArgs>>;
   deleteListCascade?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationDeleteListCascadeArgs, 'ids'>>;
-  deleteManyBms?: Resolver<ResolversTypes['Int'], ParentType, ContextType, Partial<MutationDeleteManyBmsArgs>>;
   deleteManyColls?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationDeleteManyCollsArgs, 'ids'>>;
+  deleteManyLooseBms?: Resolver<ResolversTypes['Int'], ParentType, ContextType, Partial<MutationDeleteManyLooseBmsArgs>>;
   deleteManyNodes?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationDeleteManyNodesArgs, 'nodes'>>;
   deleteMemberMetas?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteMemberMetasArgs>>;
   deleteMembers?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteMembersArgs>>;

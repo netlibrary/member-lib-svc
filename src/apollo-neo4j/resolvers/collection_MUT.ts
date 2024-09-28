@@ -13,6 +13,7 @@ export const collection_MUT_typeDefs = gql`
         createCollection(name: String!): ID
         deleteCollection(id: ID!): Int!
         deleteManyColls(ids: [ID!]!): Int!
+        deleteAllColls: Int!
         moveColls2CollNode(collIds: [ID!]!, destId: ID!, pos: Int): Int!
     }
 `;
@@ -38,13 +39,17 @@ export const collection_MUT_Resolvers = {
             await tx.close();
         }
     },
-    deleteCollection: async (_, {id}, {driver, jwt}) => {
+    deleteCollection: async (_, {id}, {driver, jwt, isTest}) => {
         const tx = await driver.session().beginTransaction();
         try {
             // Extract the nodesDeleted count from the result
             const nodesDeleted = await CollNodeSvc.deleteCascade(id, tx);
             await MemberMetaSvc.delCollPositions(jwt.sub, [id], tx);
-
+            if (isTest) {
+                await tx.rollback()
+            } else {
+                await tx.commit()
+            }
             return nodesDeleted;
         } catch (error) {
             await tx.rollback()
@@ -53,13 +58,36 @@ export const collection_MUT_Resolvers = {
             await tx.close();
         }
     },
-    deleteManyColls: async (_, {ids}, {driver, jwt}) => {
+    deleteManyColls: async (_, {ids}, {driver, jwt, isTest}) => {
         const tx = await driver.session().beginTransaction();
         try {
             // Construct and execute the Cypher query for multiple IDs
             const nDeleted = await CollNodeSvc.deleteManyCascade(ids, tx);
             await MemberMetaSvc.delCollPositions(jwt.sub, ids, tx);
-
+            if (isTest) {
+                await tx.rollback()
+            } else {
+                await tx.commit()
+            }
+            return nDeleted;
+        } catch (error) {
+            await tx.rollback()
+            throw error;
+        } finally {
+            await tx.close();
+        }
+    },
+    deleteAllColls: async (_, _2, {driver, jwt, isTest}) => {
+        const tx = await driver.session().beginTransaction();
+        try {
+            // Construct and execute the Cypher query for multiple IDs
+            const nDeleted = await CollNodeSvc.deleteAllCascade("Collection", tx);
+            await MemberMetaSvc.delAllCollPositions(jwt.sub, tx);
+            if (isTest) {
+                await tx.rollback()
+            } else {
+                await tx.commit()
+            }
             return nDeleted;
         } catch (error) {
             await tx.rollback()

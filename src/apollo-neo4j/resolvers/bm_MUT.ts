@@ -8,7 +8,6 @@ import {ChildPosSvc} from "../services/child_pos.js";
 import {BmSvc} from "../services/bm.js";
 
 export const bm_MUT_typeDefs = gql`
-    
     input CreateBookmarkDl {
         parentId: ID
         position: Int
@@ -25,28 +24,31 @@ export const bm_MUT_typeDefs = gql`
         moveAllBms(destId: ID!, pos: Int): Int!
         moveBms2CollNode(destId: ID!, pos: Int, ids: [ID!]!): Int!
         createBookmarkDl(data: CreateBookmarkDl!): ID!
-        deleteCollBookmark(id: ID!, parentId: ID!): Int!
         deleteHierarchBmsXGetCollBmCounts(input: [SelectedBms!]): [CollBmCount!]
-        deleteBookmark(id: ID!): Int!
-        deleteManyBms(ids: [ID!]): Int!
     }
 `;
 
 export const bm_MUT_resolver = {
-    deleteAllBms: async (_, {}, {driver, ogm}) => {
+    deleteAllBms: async (_, {}, {driver, jwt, isTest}) => {
         const tx = await driver.session().beginTransaction();
         try {
-            // Construct and execute the Cypher query
-            await tx.run(`
-                    MATCH (b:Bookmark)
-                    DETACH DELETE b
-                `);
 
             await tx.run(`
-                    MATCH (p:ParentMeta)
-                    SET p.childPositions = []
-                `);
-            await tx.commit()
+                    MATCH (m:Member {id: $memberId})-->(b:Bookmark)
+                    DETACH DELETE b
+                `, {memberId: jwt.sub});
+
+            await tx.run(`
+                    MATCH (m:Member {id: $memberId})-->(Parent)-->(pm:ParentMeta)
+                    SET pm.childPositions = [id IN pm.childPositions WHERE id STARTS WITH 'f:']
+                `, {memberId: jwt.sub});
+
+            if (isTest) {
+                await tx.rollback();
+            }
+            else {
+                await tx.commit();
+            }
             return true;
         } catch (error) {
             await tx.rollback()
@@ -105,49 +107,6 @@ export const bm_MUT_resolver = {
             await ParentMetaSvc.addChildPositions(jwt.sub, ids, destId, pos, tx)
             await tx.commit()
             return true;
-        } catch (error) {
-            await tx.rollback()
-            throw error;
-        } finally {
-            await tx.close();
-        }
-    },
-    deleteCollBookmark: async (_, {id, parentId}, {driver, ogm}) => {
-        const tx = await driver.session().beginTransaction();
-        try {
-            // Construct and execute the Cypher query
-            const result = await tx.run(`
-                    MATCH (n:Bookmark { id: $id })
-                    DETACH DELETE n
-                    RETURN COUNT(n) AS nodesDeleted
-                `, {id});
-
-            // Extract the nodesDeleted count from the result
-            const nodesDeleted = result.records[0].get('nodesDeleted').toNumber();
-
-            // update parent meta
-            const parentMeta = await getOgm_ParentMeta().find({
-                where: {
-                    parentConnection: {
-                        node: {
-                            id: parentId
-                        }
-                    }
-                }
-            });
-            // If parentMeta is found, update the child positions
-            if (parentMeta && parentMeta.length > 0) {
-                const childPositions = parentMeta[0].childPositions.filter(childId => childId !== ChildPosSvc.getPrefixedId(id));
-                await getOgm_ParentMeta().update({
-                    where: {id: parentMeta[0].id},
-                    update: {childPositions: childPositions},
-                });
-            } else {
-                // Handle case where MemberMeta object is not found
-                throw new Error('ParentMeta not found for parentId: ' + parentId);
-            }
-            await tx.commit()
-            return nodesDeleted;
         } catch (error) {
             await tx.rollback()
             throw error;

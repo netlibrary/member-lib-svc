@@ -12,6 +12,18 @@ export const MemberMetaSvc = {
 
         return await tx.run(query, params);
     },
+    delAllCollPositions: async (memberId, tx) => {
+        const query = `
+            MATCH (:Member {id: $memberId})-->(mm:MemberMeta)
+            SET mm.collectionPositions = []
+        `;
+
+        const params = {
+            memberId,
+        };
+
+        return await tx.run(query, params);
+    },
     pushCollectionPositions: async (memberId, collectionIds: string[], parentId, tx) => {
         const query = `
             MATCH (:Member {id: $memberId})-->(mm:MemberMeta)

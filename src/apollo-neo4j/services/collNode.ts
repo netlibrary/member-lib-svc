@@ -13,9 +13,10 @@ const deleteManyCascade = async (ids: string[], tx: Transaction): Promise<number
             RETURN COUNT(sub) + COUNT(n) AS nodesDeleted
         `, {ids}); // Note that we're now passing an array of ids
 
-    // Since we're deleting multiple nodes, aggregate the total count of nodes deleted
     return result.records.reduce((acc, record) => acc + record.get('nodesDeleted').toNumber(), 0);
 }
+
+
 
 const deleteCascade = async (id: string, tx: Transaction): Promise<number> => {
     const result = await tx.run(`
@@ -25,7 +26,6 @@ const deleteCascade = async (id: string, tx: Transaction): Promise<number> => {
             RETURN COUNT(sub) + COUNT(n) AS nodesDeleted
         `, {id}); // Note that we're now passing an array of ids
 
-    // Since we're deleting multiple nodes, aggregate the total count of nodes deleted
     return result.records[0].get('nodesDeleted').toNumber();
 }
 
@@ -51,12 +51,10 @@ const removeHierarch = async (nodes: NodesToMove, tx: Transaction): Promise<numb
                 RETURN COUNT(*) AS nodesDeleted
         `, {parentId: ch.parentId, childIds: ch.childIds}); // Note that we're now passing an array of ids
 
-        // Since we're deleting multiple nodes, aggregate the total count of nodes deleted
         const tmpDeleted = result.records[0].get('nodesDeleted').toNumber()
         deleted += tmpDeleted
     }
 
-    // Since we're deleting multiple nodes, aggregate the total count of nodes deleted
     return deleted;
 }
 
@@ -72,7 +70,6 @@ const removeHierarchFromCollections = async (collectionIds: string[], tx: Transa
                 RETURN COUNT(*) AS nodesDeleted
         `, {collectionIds}); // Note that we're now passing an array of ids
 
-    // Since we're deleting multiple nodes, aggregate the total count of nodes deleted
     return result.records[0].get('nodesDeleted').toNumber();
 }
 
@@ -160,5 +157,15 @@ export const CollNodeSvc = {
         await CollNodeSvcDb.removeBmsChPositions(bmIds, tx)
         await CollNodeSvcDb.moveBmsToBLC(bmIds, tx)
     },
+    deleteAllCascade: async (label: string, tx: Transaction): Promise<number> => {
+        const result = await tx.run(`
+            MATCH (n:${label})
+            OPTIONAL MATCH (n)-[r*1..]->(sub:CollNode)
+            DETACH DELETE n, sub
+            RETURN COUNT(sub) + COUNT(n) AS nodesDeleted
+        `); // Note that we're now passing an array of ids
+
+        return result.records.reduce((acc, record) => acc + record.get('nodesDeleted').toNumber(), 0);
+    }
 }
 
