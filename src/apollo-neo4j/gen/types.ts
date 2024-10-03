@@ -5528,6 +5528,7 @@ export type Mutation = {
   moveBmsToBLC: Scalars['Int']['output'];
   moveCollBmsInContainer: Scalars['Int']['output'];
   moveCollNodes2CollNode: Scalars['Int']['output'];
+  moveCollection: Scalars['Boolean']['output'];
   moveColls2CollNode: Scalars['Int']['output'];
   moveLooseBms2CollNode: Scalars['Int']['output'];
   moveManyNodes: Scalars['Boolean']['output'];
@@ -5864,6 +5865,12 @@ export type MutationMoveCollNodes2CollNodeArgs = {
   destId: Scalars['ID']['input'];
   parentChildsList: Array<ParentChilds>;
   pos?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type MutationMoveCollectionArgs = {
+  collId: Scalars['String']['input'];
+  pos: Scalars['Int']['input'];
 };
 
 
@@ -10606,6 +10613,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   moveBmsToBLC?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationMoveBmsToBlcArgs, 'nodes'>>;
   moveCollBmsInContainer?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationMoveCollBmsInContainerArgs, 'nodes'>>;
   moveCollNodes2CollNode?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationMoveCollNodes2CollNodeArgs, 'destId' | 'parentChildsList'>>;
+  moveCollection?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationMoveCollectionArgs, 'collId' | 'pos'>>;
   moveColls2CollNode?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationMoveColls2CollNodeArgs, 'collIds' | 'destId'>>;
   moveLooseBms2CollNode?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationMoveLooseBms2CollNodeArgs, 'destId'>>;
   moveManyNodes?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationMoveManyNodesArgs, 'nodes'>>;

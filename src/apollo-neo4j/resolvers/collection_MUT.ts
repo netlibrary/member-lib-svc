@@ -14,6 +14,7 @@ export const collection_MUT_typeDefs = gql`
         deleteCollection(id: ID!): Int!
         deleteManyColls(ids: [ID!]!): Int!
         deleteAllColls: Int!
+        moveCollection(collId: String!, pos: Int!): Boolean!
         moveColls2CollNode(collIds: [ID!]!, destId: ID!, pos: Int): Int!
     }
 `;
@@ -110,6 +111,19 @@ export const collection_MUT_Resolvers = {
         } finally {
             await tx.close();
         }
-
+    },
+    moveCollection: async (_, {collId, pos}, {driver, jwt}) => {
+        const tx = await driver.session().beginTransaction();
+        try {
+            await MemberMetaSvc.delCollPositions(jwt.sub, [collId], tx)
+            await MemberMetaSvc.addCollectionPositions(jwt.sub, [collId], pos, tx)
+            await tx.commit()
+            return true;
+        } catch (error) {
+            await tx.rollback()
+            throw error;
+        } finally {
+            await tx.close();
+        }
     }
 };

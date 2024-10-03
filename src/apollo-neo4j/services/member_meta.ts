@@ -74,5 +74,5 @@ export const MemberMetaSvc = {
         };
 
         return await tx.run(query, params);
-    },
+    }
 }
