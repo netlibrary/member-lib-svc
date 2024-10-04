@@ -147,15 +147,15 @@ export const CollNodeSvc = {
             await ParentMetaSvc.addChildPositions(memberId, ch.childIds, destId, pos, tx)
         }
     },
-    moveDeepParentBmsToBLC: async (parentIds: string[], tx: Transaction): Promise<void> => {
+    moveDeepParentBmsToBLC: async (memberId, parentIds: string[], tx: Transaction): Promise<void> => {
         // move bms to bmLooseContainer
-        await CollNodeSvcDb.removeBmsChPositionsDeep(parentIds, tx)
-        await CollNodeSvcDb.moveParentBmsDeepToBLC(parentIds, tx)
+        await CollNodeSvcDb.removeBmsChPositionsDeep(memberId, parentIds, tx)
+        await CollNodeSvcDb.moveParentBmsDeepToBLC(memberId, parentIds, tx)
     },
-    moveBmsToBLC: async (bmIds: string[], tx: Transaction): Promise<void> => {
+    moveBmsToBLC: async (memberId, bmIds: string[], tx: Transaction): Promise<void> => {
         // move bms to bmLooseContainer
-        await CollNodeSvcDb.removeBmsChPositions(bmIds, tx)
-        await CollNodeSvcDb.moveBmsToBLC(bmIds, tx)
+        await CollNodeSvcDb.removeBmsChPositions(memberId, bmIds, tx)
+        await CollNodeSvcDb.moveBmsToBLC(memberId, bmIds, tx)
     },
     deleteAllCascade: async (label: string, tx: Transaction): Promise<number> => {
         const result = await tx.run(`

@@ -97,13 +97,17 @@ export const collection_MUT_Resolvers = {
             await tx.close();
         }
     },
-    moveColls2CollNode: async (_, {collIds, destId, pos}, {driver, jwt}) => {
+    moveColls2CollNode: async (_, {collIds, destId, pos}, {driver, jwt, isTest}) => {
         const tx = await driver.session().beginTransaction();
         try {
             const folderIds = await CollectionSvc.moveColls2CollNode(jwt.sub, collIds, destId, tx)
             await MemberMetaSvc.delCollPositions(jwt.sub, collIds, tx)
             await ParentMetaSvc.addChildPositions(jwt.sub, folderIds, destId, pos, tx)
-            await tx.commit()
+            if (isTest) {
+                await tx.rollback()
+            } else {
+                await tx.commit()
+            }
             return true;
         } catch (error) {
             await tx.rollback()

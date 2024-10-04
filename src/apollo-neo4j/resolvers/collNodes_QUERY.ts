@@ -1,6 +1,35 @@
 import {ParentsChildren} from "../gen/types.js";
 import neo4j from "neo4j-driver";
 import {bm_CypherSel} from "./bm.js";
+import {gql} from "graphql-tag";
+
+export const collNodes_QUERY_typeDefs = gql`
+    union ChildDl = FolderDl | BookmarkDl
+
+    type ParentsChildren {
+        id: ID!
+        children: [ChildDl!]!
+    }
+
+    type ParentDs {
+        id: ID!
+        name: String!
+        bmCount: Int!
+        parentId: ID
+    }
+    
+    type CollBmCount {
+        id: ID!
+        bmCount: Int!
+    }
+
+    type Query {
+        parentChildren(id: String!, level: Int!): [ChildDl!]!
+        nl_parentsChildren(ids: [String!]!, level: Int!): [ParentsChildren!]!
+        parentsByFilter(name: String!, limit: Int!, offset: Int!): [ParentDs!]
+        collectionsByBmIdsXBmCounts(ids: [String!]!): [CollBmCount!]
+    }
+`;
 
 export const collNodes_QUERY_resolvers = {
     parentChildren: async (_, {id: rootId, level}, {driver}) => {

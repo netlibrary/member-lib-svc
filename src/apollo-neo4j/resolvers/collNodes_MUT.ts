@@ -14,6 +14,22 @@ export const collNodes_MUT_typeDefs = gql`
         childIds: [ID!]!
     }
 
+    input NodesToMove {
+        collectionIds: [ID!]!
+        childs: [ParentChilds!]!
+    }
+
+    input SelectedChilds {
+        parentId: ID!
+        bookmarkIds: [ID!]
+        folderIds: [ID!]
+    }
+
+    input SelectedNodes {
+        collectionIds: [ID!]
+        childs: [SelectedChilds!]
+    }
+    
     type Mutation {
         deleteManyNodes(nodes: SelectedNodes!): Int!
         moveManyNodes(nodes: NodesToMove!, destinationId: ID, position: Int): Boolean!
@@ -76,7 +92,7 @@ export const collNodes_MUT_resolvers = {
             await tx.close();
         }
     },
-    moveBmsToBLC: async (_, {nodes}: { nodes: SelectedNodes }, {driver}: { driver: Driver }) => {
+    moveBmsToBLC: async (_, {nodes}: { nodes: SelectedNodes }, {driver, jwt, isTest}) => {
         const tx = await driver.session().beginTransaction();
         try {
             // move collection Bms
@@ -91,13 +107,17 @@ export const collNodes_MUT_resolvers = {
                 }
             }
             if (parentIds.length > 0) {
-                await CollNodeSvc.moveDeepParentBmsToBLC(parentIds, tx)
+                await CollNodeSvc.moveDeepParentBmsToBLC(jwt.sub, parentIds, tx)
             }
             if (bmIds.length > 0) {
-                await CollNodeSvc.moveBmsToBLC(bmIds, tx)
+                await CollNodeSvc.moveBmsToBLC(jwt.sub, bmIds, tx)
             }
 
-            await tx.commit()
+            if (isTest) {
+                await tx.rollback()
+            } else {
+                await tx.commit()
+            }
             return 1;
         } catch (error) {
             await tx.rollback()
