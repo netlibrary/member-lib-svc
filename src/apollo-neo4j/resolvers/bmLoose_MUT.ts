@@ -10,7 +10,8 @@ export const bmLoose_MUT_typeDefs = gql`
         moveCollBmsInContainer(nodes: SelectedNodes!): Int!
         deleteAllLooseBms: Int!
         deleteManyLooseBms(ids: [ID!]): Int!
-        moveLooseBms2CollNode(destId: ID!, pos: Int, ids: [ID!]): Int!
+        moveAllLooseBm2CollNode(destId: ID!, pos: Int): Int!
+        moveManyLooseBm2CollNode(destId: ID!, pos: Int, ids: [ID!]): Int!
     }
 `;
 
@@ -54,7 +55,7 @@ export const bmLoose_MUT_resolver = {
             await tx.close();
         }
     },
-    moveLooseBms2CollNode: async (_, {destId, pos}, {driver, jwt}) => {
+    moveAllLooseBm2CollNode: async (_, {destId, pos}, {driver, jwt, isTest}) => {
         const tx = await driver.session().beginTransaction();
         try {
             // Construct and execute the Cypher query
@@ -64,7 +65,31 @@ export const bmLoose_MUT_resolver = {
 
             await ParentMetaSvc.addChildPositions(jwt.sub, looseBmIds, destId, pos, tx)
 
-            await tx.commit()
+            if (isTest) {
+                await tx.rollback()
+            } else {
+                await tx.commit()
+            }
+            return true;
+        } catch (error) {
+            await tx.rollback()
+            throw error;
+        } finally {
+            await tx.close();
+        }
+    },
+    moveManyLooseBm2CollNode: async (_, {destId, pos, ids}, {driver, jwt, isTest}) => {
+        const tx = await driver.session().beginTransaction();
+        try {
+            await BmSvc.move(jwt.sub, ids, destId, tx)
+
+            await ParentMetaSvc.addChildPositions(jwt.sub, ids, destId, pos, tx)
+
+            if (isTest) {
+                await tx.rollback()
+            } else {
+                await tx.commit()
+            }
             return true;
         } catch (error) {
             await tx.rollback()

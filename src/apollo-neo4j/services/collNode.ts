@@ -1,8 +1,8 @@
 import {Transaction} from "neo4j-driver";
-import {ChildsToMove, NodesToMove, ParentChilds} from "../gen/types.js";
 import {MemberMetaSvc} from "./member_meta.js";
 import {ParentMetaSvc} from "./parent_meta.js";
 import {CollNodeSvcDb} from "../services_db/collNode.js";
+import {NodesToMove, ParentChilds} from "../gen/types.js";
 
 const deleteManyCascade = async (ids: string[], tx: Transaction): Promise<number> => {
     const result = await tx.run(`
@@ -88,7 +88,7 @@ const moveCollectionsToDest = async (collectionIds: string[], destId: string, tx
         `, {collectionIds, destId}); // Note that we're now passing an array of ids
 }
 
-const moveChildToDest = async (childs: ChildsToMove, destId: string, tx: Transaction): Promise<void> => {
+const moveChildToDest = async (childs: ParentChilds, destId: string, tx: Transaction): Promise<void> => {
     const result = await tx.run(`
                 MATCH (ch:Child)
                 WHERE ch.id IN $childIds
@@ -103,7 +103,7 @@ const moveChildToDest = async (childs: ChildsToMove, destId: string, tx: Transac
         `, {childIds: childs.childIds, parentId: childs.parentId, destId}); // Note that we're now passing an array of ids
 }
 
-const moveBmsToBmLooseContainer = async (childs: ChildsToMove, destId: string, tx: Transaction): Promise<void> => {
+const moveBmsToBmLooseContainer = async (childs: ParentChilds, destId: string, tx: Transaction): Promise<void> => {
     const result = await tx.run(`
                 MATCH (ch:Child)
                 WHERE ch.id IN $childIds
