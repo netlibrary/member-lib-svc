@@ -5,7 +5,6 @@ import {startApolloServer} from "./apollo_server.js";
 import {setOGMs} from "../global/ogm.js";
 
 
-
 async function startServer() {
     process.on('uncaughtException', (error) => {
         console.error('Uncaught Exception:', error);

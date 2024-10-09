@@ -1,54 +1,42 @@
 import {beforeAll, describe, expect, it} from "vitest";
-import {createTestSuite} from "./_init.js";
+import {createTestSuite, TestEnvironment} from "./_init.js";
 import {testDriver} from "../helpers/driver.js";
-import {ParentChilds, SelectedChilds, SelectedNodes} from "../../src/apollo-neo4j/gen/types.js";
+import {Nodes, ParentChilds} from "../../src/apollo-neo4j/gen/types.js";
 import {restoreDbState, saveDbState} from "../helpers/utils_db.js";
 import {memberIds} from "../../global/vars.js";
 import {ChildPosSvc} from "../../src/apollo-neo4j/services/child_pos.js";
 
 describe('Collection Node Mutations', () => {
-    let testEnvironment: {
-        executeOperation: (query: string, variables?: any) => Promise<any>;
-        mockTx: any;
-    };
+    let testEnvironment: TestEnvironment
 
     beforeAll(async () => {
         testEnvironment = await createTestSuite();
     });
 
     it('delete a collection', async () => {
-        const {executeOperation} = testEnvironment;
-        // Save initial state
-        const initialState = await saveDbState(testDriver);
+        const {executeOperation, mockTx} = testEnvironment;
 
         // query coll id
         let collId
-        let session = testDriver.session();
-        try {
-            collId = (await session.run('MATCH (c:Collection) RETURN c.id as id LIMIT 1'))
-                .records[0].get('id');
-            expect(collId).toBeDefined();
-        } finally {
-            await session.close();
-        }
+        collId = (await mockTx.run('MATCH (c:Collection) RETURN c.id as id LIMIT 1')).records[0].get('id');
+        expect(collId).toBeDefined();
+
 
         // query count of Nodes to be deleted
         let count
-        try {
-            session = testDriver.session();
-            count = (await session.run('MATCH (c:Collection {id: $id}) optional match (c)-[r*]->(sub:CollNode) return count(sub) + 1 as count', {id: collId}))
-                .records[0].get('count').toNumber();
-        } finally {
-            await session.close();
-        }
 
-        const selectedNodes: SelectedNodes = {
+
+        count = (await mockTx.run('MATCH (c:Collection {id: $id}) optional match (c)-[r*]->(sub:CollNode) return count(sub) + 1 as count', {id: collId}))
+            .records[0].get('count').toNumber();
+
+
+        const selectedNodes: Nodes = {
             childs: [],
             collectionIds: [collId]
         }
 
         const MUT = `
-            mutation DeleteManyNodes($nodes: SelectedNodes!) {
+            mutation DeleteManyNodes($nodes: Nodes!) {
               deleteManyNodes(nodes: $nodes)
             }
         `;
@@ -62,24 +50,22 @@ describe('Collection Node Mutations', () => {
             }
 
             // Verify database state
-            const session = testDriver.session();
-            try {
-                const bookmarkCount = (await session.run('MATCH (b:Bookmark) RETURN count(b) as count'))
-                    .records[0].get('count').toNumber();
-                expect(bookmarkCount).toBe(0);
 
-                const childPositions = (await session.run('MATCH (pm:ParentMeta) RETURN pm.childPositions as cp'))
-                    .records.map(r => r.get('cp'));
-                expect(childPositions.every(cp => cp.length === 0)).toBe(true);
-            } finally {
-                await session.close();
-            }
+
+            const bookmarkCount = (await mockTx.run('MATCH (b:Bookmark) RETURN count(b) as count'))
+                .records[0].get('count').toNumber();
+            expect(bookmarkCount).toBe(0);
+
+            const childPositions = (await mockTx.run('MATCH (pm:ParentMeta) RETURN pm.childPositions as cp'))
+                .records.map(r => r.get('cp'));
+            expect(childPositions.every(cp => cp.length === 0)).toBe(true);
+
         } catch (error) {
             console.error("Error in test:", error);
             throw error;
         } finally {
             // Restore initial state
-            await restoreDbState(testDriver, initialState);
+            await mockTx.rollbackMock();
         }
     });
 
@@ -112,8 +98,8 @@ describe('Collection Node Mutations', () => {
             await session.close();
         }
 
-        const selectedNodes: SelectedNodes = {
-            childs: [{bookmarkIds: [bmId], parentId: parentId, folderIds: []}],
+        const selectedNodes: Nodes = {
+            childs: [{childIds: [bmId], parentId: parentId}],
             collectionIds: []
         }
 
@@ -157,7 +143,7 @@ describe('Collection Node Mutations', () => {
 
         // query coll, parentId & bmIds
         let collId
-        const selectedChilds: SelectedChilds[] = []
+        const selectedChilds: ParentChilds[] = []
         let session = testDriver.session();
         try {
             collId = (await session.run('MATCH (c:Collection) RETURN c.id as id LIMIT 1'))
@@ -176,17 +162,19 @@ describe('Collection Node Mutations', () => {
                 .records[0].get('r');
             console.log(r);
             for (const obj of r) {
-                selectedChilds.push({bookmarkIds: obj.bookmarkIds, parentId: obj.parentId});
+                selectedChilds.push({childIds: obj.bookmarkIds, parentId: obj.parentId});
             }
         } finally {
             await session.close();
         }
 
-        const selectedNodes_MUT1: SelectedNodes = {
-            collectionIds: [collId]
+        const selectedNodes_MUT1: Nodes = {
+            collectionIds: [collId],
+            childs: []
         }
-        const selectedNodes_MUT2: SelectedNodes = {
-            childs: selectedChilds
+        const selectedNodes_MUT2: Nodes = {
+            childs: selectedChilds,
+            collectionIds: []
         }
 
         const MUT = `
@@ -222,7 +210,7 @@ describe('Collection Node Mutations', () => {
             match (c2:Collection)
             where c.id <> c2.id
             return {bmId: b.id, parentId: c.id, destId: c2.id} as r
-        `,{memberId: memberIds[0]})).records[0].get('r');
+        `, {memberId: memberIds[0]})).records[0].get('r');
         const parentChildsList: ParentChilds[] = [{parentId, childIds: [bmId]}];
         const MUT = `
             mutation MoveCollNodes2CollNode($parentChildsList: [ParentChilds!]!, $destId: ID!, $pos: Int) {
@@ -239,7 +227,7 @@ describe('Collection Node Mutations', () => {
             const bmMoved = (await mockTx.run(`
                 match (c:Collection {id: $destId})-->(b:Bookmark {id: $bmId})
                 RETURN true AS r
-            `,{bmId, destId})).records[0]?.get('r');
+            `, {bmId, destId})).records[0]?.get('r');
             expect(bmMoved).toBe(true);
 
             const destChildIdsNew = await ChildPosSvc.getChildIds(memberIds[0], destId, mockTx);

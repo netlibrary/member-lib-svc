@@ -1,5 +1,4 @@
 import {GraphQLUpload} from "graphql-upload-ts";
-import {ogm} from "../ogm.js";
 import {memberIds} from "../../../global/vars.js";
 import {getOgm_Folder} from "../../../global/ogm.js";
 import {ParentMetaSvc} from "../services/parent_meta.js";

@@ -1,7 +1,4 @@
-import {MemberMetaSvc} from "../services/member_meta.js";
-import {CollNodeSvc} from "../services/collNode.js";
 import {gql} from "graphql-tag";
-import {NodeSvc} from "../services/node.js";
 import {Coll_SvcDb} from "../services_db/coll.js";
 
 export const collection_QUERY_typeDefs = gql`

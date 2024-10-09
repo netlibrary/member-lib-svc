@@ -2,11 +2,8 @@ import {ParentChilds} from "../gen/types.js";
 import {CollNodeSvc} from "../services/collNode.js";
 import {MemberMetaSvc} from "../services/member_meta.js";
 import {ParentMetaSvc} from "../services/parent_meta.js";
-import {Driver, Transaction} from "neo4j-driver";
-import {memberIds} from "../../../global/vars.js";
-import {setOGMs} from "../../../global/ogm.js";
+import {Transaction} from "neo4j-driver";
 import {gql} from "graphql-tag";
-import {CollectionSvc} from "../services/collection.js";
 
 export const collNodes_MUT_typeDefs = gql`
     input ParentChilds {

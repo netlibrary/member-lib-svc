@@ -1,6 +1,5 @@
 import {OGM} from "@neo4j/graphql-ogm";
 import {Driver} from "neo4j-driver/types/driver.js";
-import {memberIds} from "../../global/vars.js";
 
 export interface Context {
     driver: Driver;

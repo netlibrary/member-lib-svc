@@ -1,4 +1,4 @@
-import { OGM, Model } from '@neo4j/graphql-ogm';
+import {Model, OGM} from '@neo4j/graphql-ogm';
 
 let ogm_MemberMeta: Model | undefined;
 let ogm_ParentMeta: Model | undefined;

@@ -1,5 +1,4 @@
 import {AuthSvc} from "./auth.js";
-import {Model} from "@neo4j/graphql-ogm";
 import {Member} from "../gen/types.js";
 import {AuthenticationError} from "../../errors.js";
 

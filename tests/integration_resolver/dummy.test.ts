@@ -1,22 +1,19 @@
-import {beforeAll, describe, expect, it} from 'vitest';
-import {createTestSuite} from "./_init.js";
+import {beforeAll, describe, it} from 'vitest';
+import {createTestSuite, TestEnvironment} from "./_init.js";
 import {testDriver} from "../helpers/driver.js";
 import {restoreDbState, saveDbState} from "../helpers/utils_db.js";
 
 
 describe('Dummy for state preserving', () => {
-    let testEnvironment: {
-        executeOperation: (query: string, variables?: any) => Promise<any>;
-    };
+    let testEnvironment: TestEnvironment
 
     beforeAll(async () => {
         testEnvironment = await createTestSuite();
     });
 
     it('dummy test', async () => {
-        const { executeOperation } = testEnvironment;
-        // Save initial state
-        const initialState = await saveDbState(testDriver);
+        const {executeOperation, mockTx} = testEnvironment;
+
         try {
             console.log('Dummy test')
         } catch (error) {
@@ -24,7 +21,7 @@ describe('Dummy for state preserving', () => {
             throw error;
         } finally {
             // Restore initial state
-            await restoreDbState(testDriver, initialState);
+            await mockTx.rollbackMock();
         }
     });
 });

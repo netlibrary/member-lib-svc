@@ -1,11 +1,8 @@
 import {MemberMetaSvc} from "../services/member_meta.js";
 import {CollNodeSvc} from "../services/collNode.js";
 import {gql} from "graphql-tag";
-import {NodeSvc} from "../services/node.js";
-import {BmLooseSvc} from "../services/bmLoose.js";
 import {ParentMetaSvc} from "../services/parent_meta.js";
 import {CollectionSvc} from "../services/collection.js";
-import {Folder_SvcDb} from "../services_db/folder.js";
 import {Coll_SvcDb} from "../services_db/coll.js";
 
 export const collection_MUT_typeDefs = gql`

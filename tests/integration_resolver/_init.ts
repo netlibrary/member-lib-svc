@@ -1,4 +1,4 @@
-import {afterAll} from "vitest";
+import {afterAll, vi} from "vitest";
 import {typeDefs} from "../../src/apollo-neo4j/type-defs/_typeDefs.js";
 import {resolvers} from "../../src/apollo-neo4j/resolvers/_resolvers.js";
 import {testDriver} from "../helpers/driver.js";
@@ -7,7 +7,6 @@ import {OGM} from "@neo4j/graphql-ogm";
 import {startApolloServer} from "../../src/apollo_server.js";
 import {setOGMs} from "../../global/ogm.js";
 import {memberIds} from "../../global/vars.js";
-import { vi } from 'vitest';
 import {Session} from "neo4j-driver";
 import {Driver} from "neo4j-driver/types/driver.js";
 
@@ -15,6 +14,11 @@ import {Driver} from "neo4j-driver/types/driver.js";
 export type MyContext = {
     driver: typeof testDriver;
 };
+
+export type TestEnvironment = {
+    executeOperation: (query: string, variables?: any) => Promise<any>;
+    mockTx: any;
+}
 
 export async function createTestSuite() {
     // Create OGM instance

@@ -2,7 +2,7 @@ import {Transaction} from "neo4j-driver";
 import {MemberMetaSvc} from "./member_meta.js";
 import {ParentMetaSvc} from "./parent_meta.js";
 import {CollNodeSvcDb} from "../services_db/collNode.js";
-import {NodesToMove, ParentChilds} from "../gen/types.js";
+import {Nodes, ParentChilds} from "../gen/types.js";
 
 const deleteManyCascade = async (ids: string[], tx: Transaction): Promise<number> => {
     const result = await tx.run(`
@@ -29,7 +29,7 @@ const deleteCascade = async (id: string, tx: Transaction): Promise<number> => {
     return result.records[0].get('nodesDeleted').toNumber();
 }
 
-const removeHierarch = async (nodes: NodesToMove, tx: Transaction): Promise<number> => {
+const removeHierarch = async (nodes: Nodes, tx: Transaction): Promise<number> => {
     let deleted = 0
     if (nodes.collectionIds.length > 0) {
         deleted = await removeHierarchFromCollections(nodes.collectionIds, tx)
@@ -134,7 +134,7 @@ export const CollNodeSvc = {
                 MERGE (destParent)-[:CONTAINS]->(ch) // Create a new CONTAINS relationship
         `, {memberId, childIds: childIds, destId}); // Note that we're now passing an array of ids
     },
-    moveToDest: async (nodes: NodesToMove, destId, pos, memberId, tx: Transaction): Promise<void> => {
+    moveToDest: async (nodes: Nodes, destId, pos, memberId, tx: Transaction): Promise<void> => {
         let deleted = 0
         if (nodes.collectionIds.length > 0) {
             await moveCollectionsToDest(nodes.collectionIds, destId, tx)

@@ -1,7 +1,5 @@
 import {ParentMetaSvc} from "./parent_meta.js";
 import {CreateBookmarkDl} from "../gen/types.js";
-import {NodeSvc} from "./node.js";
-import {BmColl_SvcDb} from "../services_db/bmColl.js";
 import {Bm_SvcDb} from "../services_db/bm.js";
 
 

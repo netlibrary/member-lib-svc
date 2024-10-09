@@ -1,5 +1,4 @@
 import {Driver} from "neo4j-driver";
-import {ChildPosSvc} from "../services/child_pos.js";
 import {BmLooseSvc} from "../services/bmLoose.js";
 import {ParentMetaSvc} from "../services/parent_meta.js";
 import {gql} from "graphql-tag";

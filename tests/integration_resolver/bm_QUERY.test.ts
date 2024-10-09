@@ -1,21 +1,15 @@
 import {beforeAll, describe, expect, it} from "vitest";
-import {createTestSuite} from "./_init.js";
-import {restoreDbState, saveDbState} from "../helpers/utils_db.js";
-import {testDriver} from "../helpers/driver.js";
+import {createTestSuite, TestEnvironment} from "./_init.js";
 
 describe('Bookmark Queries', () => {
-    let testEnvironment: {
-        executeOperation: (query: string, variables?: any) => Promise<any>;
-    };
+    let testEnvironment: TestEnvironment
 
     beforeAll(async () => {
         testEnvironment = await createTestSuite();
     });
 
     it('should delete all bookmarks', async () => {
-        const { executeOperation } = testEnvironment;
-        // Save initial state
-        const initialState = await saveDbState(testDriver);
+        const {executeOperation, mockTx} = testEnvironment;
 
         const DELETE_ALL_BMS = `
             mutation {
@@ -36,7 +30,7 @@ describe('Bookmark Queries', () => {
             throw error;
         } finally {
             // Restore initial state
-            await restoreDbState(testDriver, initialState);
+            await mockTx.rollbackMock();
         }
     });
 });

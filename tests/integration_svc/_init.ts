@@ -4,9 +4,6 @@ import {resolvers} from "../../src/apollo-neo4j/resolvers/_resolvers.js";
 import {testDriver} from "../helpers/driver.js";
 import {Neo4jGraphQL} from "@neo4j/graphql";
 import {OGM} from "@neo4j/graphql-ogm";
-import {startApolloServer} from "../../src/apollo_server.js";
-import {setOGMs} from "../../global/ogm.js";
-import {driver} from "neo4j-driver";
 
 export async function createTestSuite() {
     // Create OGM instance

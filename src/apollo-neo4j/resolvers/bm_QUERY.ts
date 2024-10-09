@@ -1,8 +1,6 @@
 import {BookmarkFilter_In} from "../gen/types.js";
 import neo4j, {Integer, Transaction} from "neo4j-driver";
-import {memberIds} from "../../../global/vars.js";
 import {bm_CypherSel} from "./bm.js";
-import {BmFilterSvc} from "../services/bm_filter.js";
 
 export const bm_QUERY_resolver = {
     bmsByFilter: async (_, {filter, limit, offset}: {

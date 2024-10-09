@@ -1,11 +1,9 @@
-import {CreateBookmarkDl, SelectedBms} from "../gen/types.js";
+import {CreateBookmarkDl} from "../gen/types.js";
 import {ParentMetaSvc} from "../services/parent_meta.js";
-import {getOgm_ParentMeta} from "../../../global/ogm.js";
 import {BmCollSvc} from "../services/bmColl.js";
 import {BmLooseSvc} from "../services/bmLoose.js";
 import {gql} from "graphql-tag";
 import {ChildPosSvc} from "../services/child_pos.js";
-import {BmSvc} from "../services/bm.js";
 
 export const bm_MUT_typeDefs = gql`
     input CreateBookmarkDl {

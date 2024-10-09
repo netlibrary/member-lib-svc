@@ -1,11 +1,8 @@
 import {beforeAll, describe, expect, it} from "vitest";
-import {createTestSuite} from "./_init.js";
+import {createTestSuite, TestEnvironment} from "./_init.js";
 
 describe('Coll Mutations', () => {
-    let testEnvironment: {
-        executeOperation: (query: string, variables?: any) => Promise<any>;
-        mockTx: any;
-    };
+    let testEnvironment: TestEnvironment
 
     beforeAll(async () => {
         testEnvironment = await createTestSuite();

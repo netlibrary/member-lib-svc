@@ -1,7 +1,7 @@
-import { faker } from '@faker-js/faker';
-import { seedBookmarks } from './bookmark.js';
-import { seedFolders } from './folder.js';
-import { seedMemberMeta } from './meta.js';
+import {faker} from '@faker-js/faker';
+import {seedBookmarks} from './bookmark.js';
+import {seedFolders} from './folder.js';
+import {seedMemberMeta} from './meta.js';
 import {seedOgm} from "./_db_seeder.js";
 import {NodeSvc} from "../src/apollo-neo4j/services/node.js";
 import {ParentMetaSvc} from "../src/apollo-neo4j/services/parent_meta.js";

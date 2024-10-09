@@ -1,4 +1,3 @@
-import {collection_MUT_Resolvers} from './collection_MUT.js';
 import {generalResolvers} from './general.js';
 import {collNodesResolvers} from './collNodes.js';
 // Define resolvers

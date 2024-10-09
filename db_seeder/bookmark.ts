@@ -2,7 +2,6 @@ import {faker} from '@faker-js/faker';
 import {seedTags} from "./tag.js";
 import {seedOgm} from "./_db_seeder.js";
 import {memberIds} from "../global/vars.js";
-import  {v4 as uuid} from 'uuid';
 import {NodeSvc} from "../src/apollo-neo4j/services/node.js";
 
 

@@ -1,7 +1,6 @@
 import {beforeAll, describe, expect, it} from "vitest";
 import {createTestSuite} from "./_init.js";
 import {OGM} from "@neo4j/graphql-ogm";
-import {Transaction} from "neo4j-driver";
 import {ChildPosSvc} from "../../src/apollo-neo4j/services/child_pos.js";
 import {memberIds} from "../../global/vars.js";
 import {CollChildType} from "../../src/models/coll.js";

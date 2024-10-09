@@ -3,7 +3,6 @@ import {createTestSuite} from "./_init.js";
 import {restoreDbState, saveDbState} from "../helpers/utils_db.js";
 import {testDriver} from "../helpers/driver.js";
 import {memberIds} from "../../global/vars.js";
-import {ParentChilds} from "../../src/apollo-neo4j/gen/types.js";
 import {ChildPosSvc} from "../../src/apollo-neo4j/services/child_pos.js";
 import {BLC_SvcDb} from "../../src/apollo-neo4j/services_db/blc.js";
 import {BmCont_SvcDb} from "../../src/apollo-neo4j/services_db/bmContainer.js";
@@ -59,9 +58,7 @@ describe('Bookmark Mutations', () => {
     });
 
     it('move bms to container', async () => {
-        const {executeOperation} = testEnvironment;
-        // Save initial state
-        const initialState = await saveDbState(testDriver);
+        const {executeOperation, mockTx} = testEnvironment;
 
         const DELETE_ALL_BMS = `
             mutation {
@@ -77,25 +74,21 @@ describe('Bookmark Mutations', () => {
                 expect(response.body.singleResult.data?.deleteAllBms).toBeTruthy();
             }
 
-            // Verify database state
-            const session = testDriver.session();
-            try {
-                const bookmarkCount = (await session.run('MATCH (b:Bookmark) RETURN count(b) as count'))
-                    .records[0].get('count').toNumber();
-                expect(bookmarkCount).toBe(0);
 
-                const childPositions = (await session.run('MATCH (pm:ParentMeta) RETURN pm.childPositions as cp'))
-                    .records.map(r => r.get('cp'));
-                expect(childPositions.every(cp => cp.length === 0)).toBe(true);
-            } finally {
-                await session.close();
-            }
+            const bookmarkCount = (await mockTx.run('MATCH (b:Bookmark) RETURN count(b) as count'))
+                .records[0].get('count').toNumber();
+            expect(bookmarkCount).toBe(0);
+
+            const childPositions = (await mockTx.run('MATCH (pm:ParentMeta) RETURN pm.childPositions as cp'))
+                .records.map(r => r.get('cp'));
+            expect(childPositions.every(cp => cp.length === 0)).toBe(true);
+
         } catch (error) {
             console.error("Error in test:", error);
             throw error;
         } finally {
             // Restore initial state
-            await restoreDbState(testDriver, initialState);
+            await mockTx.rollbackMock();
         }
     });
     it('move bms 2 CollNode', async () => {
