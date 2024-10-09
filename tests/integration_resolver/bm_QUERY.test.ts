@@ -1,6 +1,8 @@
 import {beforeAll, describe, expect, it} from "vitest";
 import {createTestSuite, TestEnvironment} from "./_init.js";
 
+import {getDriverTxMock} from "../helpers/tx.js";
+
 describe('Bookmark Queries', () => {
     let testEnvironment: TestEnvironment
 
@@ -9,7 +11,8 @@ describe('Bookmark Queries', () => {
     });
 
     it('should delete all bookmarks', async () => {
-        const {executeOperation, mockTx} = testEnvironment;
+        const {executeOperation} = testEnvironment;
+        const {mockDriver, mockTx} = await getDriverTxMock()
 
         const DELETE_ALL_BMS = `
             mutation {
@@ -18,7 +21,7 @@ describe('Bookmark Queries', () => {
         `;
 
         try {
-            const response = await executeOperation(DELETE_ALL_BMS);
+            const response = await executeOperation(mockDriver, DELETE_ALL_BMS);
             console.log("Response from executeOperation:", response);
             expect(response.body.kind).toBe('single');
             if (response.body.kind === 'single') {
@@ -31,6 +34,7 @@ describe('Bookmark Queries', () => {
         } finally {
             // Restore initial state
             await mockTx.rollbackMock();
+            await mockTx.closeMock()
         }
     });
 });

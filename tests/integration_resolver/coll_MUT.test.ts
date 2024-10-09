@@ -1,6 +1,8 @@
 import {beforeAll, describe, expect, it} from "vitest";
 import {createTestSuite, TestEnvironment} from "./_init.js";
 
+import {getDriverTxMock} from "../helpers/tx.js";
+
 describe('Coll Mutations', () => {
     let testEnvironment: TestEnvironment
 
@@ -9,7 +11,8 @@ describe('Coll Mutations', () => {
     });
 
     it('create', async () => {
-        const {executeOperation, mockTx} = testEnvironment;
+        const {executeOperation} = testEnvironment;
+        const {mockDriver, mockTx} = await getDriverTxMock()
         // Save initial state
 
         const name = 'testColl';
@@ -31,7 +34,7 @@ describe('Coll Mutations', () => {
         `;
 
         try {
-            const response = await executeOperation(MUT, {name});
+            const response = await executeOperation(mockDriver, MUT, {name});
             expect(response.body.singleResult.errors).toBeUndefined();
 
             const collId = Object.values(response.body.singleResult.data)[0];
@@ -46,11 +49,13 @@ describe('Coll Mutations', () => {
         } finally {
             // Restore initial state
             await mockTx.rollbackMock();
+            await mockTx.closeMock()
         }
     });
 
     it('should delete all colls', async () => {
-        const {executeOperation, mockTx} = testEnvironment;
+        const {executeOperation} = testEnvironment;
+        const {mockDriver, mockTx} = await getDriverTxMock()
 
         const DELETE_ALL_Colls = `
             mutation {
@@ -59,7 +64,7 @@ describe('Coll Mutations', () => {
         `;
 
         try {
-            const response = await executeOperation(DELETE_ALL_Colls);
+            const response = await executeOperation(mockDriver, DELETE_ALL_Colls);
             expect(response.body.kind).toBe('single');
             if (response.body.kind === 'single') {
                 expect(response.body.singleResult.errors).toBeUndefined();
@@ -84,6 +89,7 @@ describe('Coll Mutations', () => {
         } finally {
             // Restore initial state
             await mockTx.rollbackMock();
+            await mockTx.closeMock()
         }
     });
 });

@@ -1,4 +1,4 @@
-import {afterAll, vi} from "vitest";
+import {afterAll} from "vitest";
 import {typeDefs} from "../../src/apollo-neo4j/type-defs/_typeDefs.js";
 import {resolvers} from "../../src/apollo-neo4j/resolvers/_resolvers.js";
 import {testDriver} from "../helpers/driver.js";
@@ -7,8 +7,6 @@ import {OGM} from "@neo4j/graphql-ogm";
 import {startApolloServer} from "../../src/apollo_server.js";
 import {setOGMs} from "../../global/ogm.js";
 import {memberIds} from "../../global/vars.js";
-import {Session} from "neo4j-driver";
-import {Driver} from "neo4j-driver/types/driver.js";
 
 // Define your context type
 export type MyContext = {
@@ -16,8 +14,7 @@ export type MyContext = {
 };
 
 export type TestEnvironment = {
-    executeOperation: (query: string, variables?: any) => Promise<any>;
-    mockTx: any;
+    executeOperation: (driverMock: any, query: string, variables?: any) => Promise<any>;
 }
 
 export async function createTestSuite() {
@@ -37,30 +34,7 @@ export async function createTestSuite() {
 
     const {httpServer, apolloServer} = await startApolloServer(schema, testDriver, ogm);
 
-    const tx = await testDriver.session().beginTransaction();
-    const mockTx = {
-        run: vi.fn().mockImplementation(async (query, params) => await tx.run(query, params)),
-        commit: vi.fn().mockResolvedValue(undefined),
-        commitMock: vi.fn().mockImplementation(() => tx.commit()),
-        rollback: vi.fn().mockResolvedValue(undefined),
-        rollbackMock: vi.fn().mockImplementation(() => tx.rollback()),
-        close: vi.fn().mockResolvedValue(undefined),
-        closeMock: vi.fn().mockImplementation(() => tx.close()),
-    };
-
-    // Create a mock session
-    const mockSession: Partial<Session> = {
-        beginTransaction: vi.fn().mockResolvedValue(mockTx),
-        close: vi.fn().mockResolvedValue(undefined),
-    };
-
-    // Create a mock driver
-    const mockDriver: Partial<Driver> = {
-        session: vi.fn().mockReturnValue(mockSession),
-    };
-
-
-    const executeOperation = async (query: string, variables) => {
+    const executeOperation = async (mockDriver, query: string, variables) => {
         const context = {
             ogm: ogm,
             driver: mockDriver as any,
@@ -84,9 +58,8 @@ export async function createTestSuite() {
     afterAll(async () => {
         if (apolloServer) {
             await apolloServer.stop();
-            await mockTx.closeMock();
         }
     });
 
-    return { executeOperation, mockTx };
+    return { executeOperation };
 }

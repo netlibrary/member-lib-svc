@@ -1,25 +1,24 @@
 import {beforeAll, describe, expect, it} from 'vitest';
-import {createTestSuite} from "./_init.js";
+import {createTestSuite, TestEnvironment} from "./_init.js";
 import {restoreDbState, saveDbState} from "../helpers/utils_db.js";
 import {testDriver} from "../helpers/driver.js";
 import {memberIds} from "../../global/vars.js";
 import {ChildPosSvc} from "../../src/apollo-neo4j/services/child_pos.js";
 import {BLC_SvcDb} from "../../src/apollo-neo4j/services_db/blc.js";
 import {BmCont_SvcDb} from "../../src/apollo-neo4j/services_db/bmContainer.js";
+import {getDriverTxMock} from "../helpers/tx.js";
 
 
 describe('Bookmark Mutations', () => {
-    let testEnvironment: {
-        executeOperation: (query: string, variables?: any) => Promise<any>;
-        mockTx: any;
-    };
+    let testEnvironment: TestEnvironment;
 
     beforeAll(async () => {
         testEnvironment = await createTestSuite();
     });
 
     it('should delete all bookmarks', async () => {
-        const {executeOperation, mockTx} = testEnvironment;
+        const {executeOperation} = testEnvironment;
+        const {mockDriver, mockTx} = await getDriverTxMock()
 
         const DELETE_ALL_BMS = `
             mutation {
@@ -28,7 +27,7 @@ describe('Bookmark Mutations', () => {
         `;
 
         try {
-            const response = await executeOperation(DELETE_ALL_BMS);
+            const response = await executeOperation(mockDriver, DELETE_ALL_BMS);
             expect(response.body.kind).toBe('single');
             if (response.body.kind === 'single') {
                 expect(response.body.singleResult.errors).toBeUndefined();
@@ -54,11 +53,13 @@ describe('Bookmark Mutations', () => {
         } finally {
             // Restore initial state
             await mockTx.rollbackMock();
+            await mockTx.closeMock()
         }
     });
 
     it('move bms to container', async () => {
-        const {executeOperation, mockTx} = testEnvironment;
+        const {executeOperation} = testEnvironment;
+        const {mockDriver, mockTx} = await getDriverTxMock()
 
         const DELETE_ALL_BMS = `
             mutation {
@@ -67,7 +68,7 @@ describe('Bookmark Mutations', () => {
         `;
 
         try {
-            const response = await executeOperation(DELETE_ALL_BMS);
+            const response = await executeOperation(mockDriver, DELETE_ALL_BMS);
             expect(response.body.kind).toBe('single');
             if (response.body.kind === 'single') {
                 expect(response.body.singleResult.errors).toBeUndefined();
@@ -89,11 +90,12 @@ describe('Bookmark Mutations', () => {
         } finally {
             // Restore initial state
             await mockTx.rollbackMock();
+            await mockTx.closeMock()
         }
     });
     it('move bms 2 CollNode', async () => {
-        const {executeOperation, mockTx} = testEnvironment;
-        // Save initial state
+        const {executeOperation} = testEnvironment;
+        const {mockDriver, mockTx} = await getDriverTxMock()
 
         const {bmIds, destCollId, sourceCollId} = (await mockTx.run(`
             match (:Member {id: $memberId})-->(c:Collection)
@@ -115,31 +117,31 @@ describe('Bookmark Mutations', () => {
             }
         `;
 
-        const destChildIds = await ChildPosSvc.getChildIds(memberIds[0], destCollId, mockTx);
-        const sourceChildIds = await ChildPosSvc.getChildIds(memberIds[0], sourceCollId, mockTx);
-        const blcBmCount = await BLC_SvcDb.getBmCount(memberIds[0], mockTx);
-        const sourceBmCount = await BmCont_SvcDb.getBmCount(memberIds[0], sourceCollId, mockTx);
-        const destBmCount = await BmCont_SvcDb.getBmCount(memberIds[0], destCollId, mockTx);
+        const destChildIds = await ChildPosSvc.getChildIds(memberIds[0], destCollId, mockTx as any);
+        const sourceChildIds = await ChildPosSvc.getChildIds(memberIds[0], sourceCollId, mockTx as any);
+        const blcBmCount = await BLC_SvcDb.getBmCount(memberIds[0], mockTx as any);
+        const sourceBmCount = await BmCont_SvcDb.getBmCount(memberIds[0], sourceCollId, mockTx as any);
+        const destBmCount = await BmCont_SvcDb.getBmCount(memberIds[0], destCollId, mockTx as any);
 
         try {
-            const response = await executeOperation(MUT, {destId: destCollId, ids: bmIds, pos});
+            const response = await executeOperation(mockDriver, MUT, {destId: destCollId, ids: bmIds, pos});
             expect(response.body.singleResult.errors).toBeUndefined();
 
-            const newDestChildIds = await ChildPosSvc.getChildIds(memberIds[0], destCollId, mockTx);
+            const newDestChildIds = await ChildPosSvc.getChildIds(memberIds[0], destCollId, mockTx as any);
             expect(newDestChildIds.length).toBe(destChildIds.length + bmIds.length);
             expect(newDestChildIds.slice(pos - 1, pos - 1 + bmIds.length)).toEqual(bmIds);
 
-            const newSourceChildIds = await ChildPosSvc.getChildIds(memberIds[0], sourceCollId, mockTx);
+            const newSourceChildIds = await ChildPosSvc.getChildIds(memberIds[0], sourceCollId, mockTx as any);
             expect(newSourceChildIds.length).toBe(sourceChildIds.length - 1);
             expect(newSourceChildIds).not.toContain(bmIds[0]);
 
-            const newBlcBmCount = await BLC_SvcDb.getBmCount(memberIds[0], mockTx);
+            const newBlcBmCount = await BLC_SvcDb.getBmCount(memberIds[0], mockTx as any);
             expect(newBlcBmCount).toBe(blcBmCount - 1);
 
-            const newSourceBmCount = await BmCont_SvcDb.getBmCount(memberIds[0], sourceCollId, mockTx);
+            const newSourceBmCount = await BmCont_SvcDb.getBmCount(memberIds[0], sourceCollId, mockTx as any);
             expect(newSourceBmCount).toBe(sourceBmCount - 1);
 
-            const newDestBmCount = await BmCont_SvcDb.getBmCount(memberIds[0], destCollId, mockTx);
+            const newDestBmCount = await BmCont_SvcDb.getBmCount(memberIds[0], destCollId, mockTx as any);
             expect(newDestBmCount).toBe(destBmCount + bmIds.length);
         } catch (error) {
             console.error("Error in test:", error);
@@ -147,6 +149,7 @@ describe('Bookmark Mutations', () => {
         } finally {
             // Restore initial state
             await mockTx.rollbackMock();
+            await mockTx.closeMock()
         }
     });
 });

@@ -3,6 +3,8 @@ import {createTestSuite, TestEnvironment} from "./_init.js";
 import {memberIds} from "../../global/vars.js";
 import {ChildPosSvc} from "../../src/apollo-neo4j/services/child_pos.js";
 
+import {getDriverTxMock} from "../helpers/tx.js";
+
 describe('Folder Mutations', () => {
     let testEnvironment: TestEnvironment
 
@@ -11,7 +13,8 @@ describe('Folder Mutations', () => {
     });
 
     it('create', async () => {
-        const {executeOperation, mockTx} = testEnvironment;
+        const {executeOperation} = testEnvironment;
+        const {mockDriver, mockTx} = await getDriverTxMock()
         // Save initial state
 
         const {parentId} = (await mockTx.run(`
@@ -28,11 +31,11 @@ describe('Folder Mutations', () => {
         `;
 
         try {
-            const response = await executeOperation(MUT, {name, position, parentId});
+            const response = await executeOperation(mockDriver, MUT, {name, position, parentId});
             expect(response.body.singleResult.errors).toBeUndefined();
 
             const folderId = Object.values(response.body.singleResult.data)[0];
-            const pmChildIds = await ChildPosSvc.getChildIds(memberIds[0], folderId, mockTx);
+            const pmChildIds = await ChildPosSvc.getChildIds(memberIds[0], folderId, mockTx as any);
             expect(pmChildIds).toBeDefined();
             expect(pmChildIds?.length).toBe(0);
 
@@ -42,6 +45,7 @@ describe('Folder Mutations', () => {
         } finally {
             // Restore initial state
             await mockTx.rollbackMock();
+            await mockTx.closeMock()
         }
     });
 });

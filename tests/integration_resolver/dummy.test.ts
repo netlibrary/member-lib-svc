@@ -2,6 +2,7 @@ import {beforeAll, describe, it} from 'vitest';
 import {createTestSuite, TestEnvironment} from "./_init.js";
 import {testDriver} from "../helpers/driver.js";
 import {restoreDbState, saveDbState} from "../helpers/utils_db.js";
+import {getDriverTxMock} from "../helpers/tx.js";
 
 
 describe('Dummy for state preserving', () => {
@@ -12,7 +13,8 @@ describe('Dummy for state preserving', () => {
     });
 
     it('dummy test', async () => {
-        const {executeOperation, mockTx} = testEnvironment;
+        const {executeOperation} = testEnvironment;
+        const {mockDriver, mockTx} = await getDriverTxMock()
 
         try {
             console.log('Dummy test')
@@ -22,6 +24,7 @@ describe('Dummy for state preserving', () => {
         } finally {
             // Restore initial state
             await mockTx.rollbackMock();
+            await mockTx.closeMock()
         }
     });
 });

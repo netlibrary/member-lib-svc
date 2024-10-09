@@ -5,6 +5,7 @@ import {Nodes, ParentChilds} from "../../src/apollo-neo4j/gen/types.js";
 import {restoreDbState, saveDbState} from "../helpers/utils_db.js";
 import {memberIds} from "../../global/vars.js";
 import {ChildPosSvc} from "../../src/apollo-neo4j/services/child_pos.js";
+import {getDriverTxMock} from "../helpers/tx.js";
 
 describe('Collection Node Mutations', () => {
     let testEnvironment: TestEnvironment
@@ -14,7 +15,8 @@ describe('Collection Node Mutations', () => {
     });
 
     it('delete a collection', async () => {
-        const {executeOperation, mockTx} = testEnvironment;
+        const {executeOperation} = testEnvironment;
+        const {mockDriver, mockTx} = await getDriverTxMock()
 
         // query coll id
         let collId
@@ -42,7 +44,7 @@ describe('Collection Node Mutations', () => {
         `;
 
         try {
-            const response = await executeOperation(MUT, {nodes: selectedNodes});
+            const response = await executeOperation(mockDriver, MUT, {nodes: selectedNodes});
             expect(response.body.kind).toBe('single');
             if (response.body.kind === 'single') {
                 expect(response.body.singleResult.errors).toBeUndefined();
@@ -66,13 +68,13 @@ describe('Collection Node Mutations', () => {
         } finally {
             // Restore initial state
             await mockTx.rollbackMock();
+            await mockTx.closeMock()
         }
     });
 
     it('delete a bm', async () => {
         const {executeOperation} = testEnvironment;
-        // Save initial state
-        const initialState = await saveDbState(testDriver);
+        const {mockDriver, mockTx} = await getDriverTxMock()
 
         // query parent id & bm id
         let bmId, parentId
@@ -110,42 +112,37 @@ describe('Collection Node Mutations', () => {
         `;
 
         try {
-            const response = await executeOperation(MUT, {nodes: selectedNodes});
+            const response = await executeOperation(mockDriver, MUT, {nodes: selectedNodes});
             expect(response.body.kind).toBe('single');
             if (response.body.kind === 'single') {
                 expect(response.body.singleResult.errors).toBeUndefined();
                 expect(Object.values(response.body.singleResult.data || {})[0]).eq(1);
             }
 
-            // Verify database state
-            const session = testDriver.session();
-            try {
+
                 const newChildPositions = (await session.run('MATCH (p:Parent {id: $id}) match (p)-[r:HAS]->(pm:ParentMeta) return pm.childPositions as r limit 1', {id: parentId}))
                     .records[0].get('r');
                 expect(newChildPositions.length).eq(childPositions.length - 1);
                 expect(newChildPositions).not.contains(bmId);
-            } finally {
-                await session.close();
-            }
+
         } catch (error) {
             console.error("Error in test:", error);
             throw error;
         } finally {
-            // Restore initial state
-            await restoreDbState(testDriver, initialState);
+            await mockTx.rollbackMock();
+            await mockTx.closeMock()
         }
     });
 
     it('delete a coll & bms', async () => {
         const {executeOperation} = testEnvironment;
-        // Save initial state
-        const initialState = await saveDbState(testDriver);
+        const {mockDriver, mockTx} = await getDriverTxMock()
 
         // query coll, parentId & bmIds
         let collId
         const selectedChilds: ParentChilds[] = []
         let session = testDriver.session();
-        try {
+
             collId = (await session.run('MATCH (c:Collection) RETURN c.id as id LIMIT 1'))
                 .records[0].get('id');
             expect(collId).toBeDefined();
@@ -164,9 +161,7 @@ describe('Collection Node Mutations', () => {
             for (const obj of r) {
                 selectedChilds.push({childIds: obj.bookmarkIds, parentId: obj.parentId});
             }
-        } finally {
-            await session.close();
-        }
+
 
         const selectedNodes_MUT1: Nodes = {
             collectionIds: [collId],
@@ -184,11 +179,11 @@ describe('Collection Node Mutations', () => {
         `;
 
         try {
-            let response = await executeOperation(MUT, {nodes: selectedNodes_MUT1});
+            let response = await executeOperation(mockDriver, MUT, {nodes: selectedNodes_MUT1});
             expect(response.body.kind).toBe('single');
             expect(response.body.singleResult.errors).toBeUndefined();
 
-            response = await executeOperation(MUT, {nodes: selectedNodes_MUT2});
+            response = await executeOperation(mockDriver, MUT, {nodes: selectedNodes_MUT2});
             expect(response.body.kind).toBe('single');
             expect(response.body.singleResult.errors).toBeUndefined();
         } catch (error) {
@@ -196,13 +191,14 @@ describe('Collection Node Mutations', () => {
             throw error;
         } finally {
             // Restore initial state
-            await restoreDbState(testDriver, initialState);
+            await mockTx.rollbackMock();
+            await mockTx.closeMock()
         }
     });
 
     it('move bm 2 CollNode', async () => {
-        const {executeOperation, mockTx} = testEnvironment;
-        // Save initial state
+        const {executeOperation} = testEnvironment;
+        const {mockDriver, mockTx} = await getDriverTxMock()
 
         const {bmId, parentId, destId} = (await mockTx.run(`
             match (:Member {id: $memberId})
@@ -218,10 +214,10 @@ describe('Collection Node Mutations', () => {
             }
         `;
 
-        const destChildIds = await ChildPosSvc.getChildIds(memberIds[0], destId, mockTx);
+        const destChildIds = await ChildPosSvc.getChildIds(memberIds[0], destId, mockTx as any);
 
         try {
-            const response = await executeOperation(MUT, {parentChildsList, destId, pos: 1});
+            const response = await executeOperation(mockDriver, MUT, {parentChildsList, destId, pos: 1});
             expect(response.body.singleResult.errors).toBeUndefined();
 
             const bmMoved = (await mockTx.run(`
@@ -230,7 +226,7 @@ describe('Collection Node Mutations', () => {
             `, {bmId, destId})).records[0]?.get('r');
             expect(bmMoved).toBe(true);
 
-            const destChildIdsNew = await ChildPosSvc.getChildIds(memberIds[0], destId, mockTx);
+            const destChildIdsNew = await ChildPosSvc.getChildIds(memberIds[0], destId, mockTx as any);
             expect(destChildIdsNew.length).toBe(destChildIds.length + 1);
             expect(destChildIdsNew[0]).toBe(bmId);
         } catch (error) {
@@ -239,6 +235,7 @@ describe('Collection Node Mutations', () => {
         } finally {
             // Restore initial state
             await mockTx.rollbackMock();
+            await mockTx.closeMock()
         }
     });
 });
