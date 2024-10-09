@@ -7,7 +7,6 @@ import {BmSvc} from "../services/bm.js";
 
 export const bmLoose_MUT_typeDefs = gql`
     type Mutation {
-        moveCollBmsInContainer(nodes: SelectedNodes!): Int!
         deleteAllLooseBms: Int!
         deleteManyLooseBms(ids: [ID!]): Int!
         moveAllLooseBm2CollNode(destId: ID!, pos: Int): Int!

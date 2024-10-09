@@ -22,9 +22,7 @@ export const bm_MUT_typeDefs = gql`
     type Mutation {
         deleteAllBms: Int!
         moveAllBms(destId: ID!, pos: Int): Int!
-        moveBms2CollNode(destId: ID!, pos: Int, ids: [ID!]!): Int!
         createBookmarkDl(data: CreateBookmarkDl!): ID!
-        deleteHierarchBmsXGetCollBmCounts(input: [SelectedBms!]): [CollBmCount!]
     }
 `;
 
@@ -57,7 +55,7 @@ export const bm_MUT_resolver = {
             await tx.close();
         }
     },
-    moveAllBms: async (_, {destId, pos}, {driver, jwt}) => {
+    moveAllBms: async (_, {destId, pos}, {driver, jwt, isTest}) => {
         const tx = await driver.session().beginTransaction();
         try {
             // Construct and execute the Cypher query
@@ -90,55 +88,13 @@ export const bm_MUT_resolver = {
 
             await ParentMetaSvc.addChildPositions(jwt.sub, bmIds, destId, pos, tx)
 
-            await tx.commit()
-            return true;
-        } catch (error) {
-            await tx.rollback()
-            throw error;
-        } finally {
-            await tx.close();
-        }
-    },
-    moveBms2CollNode: async (_, {destId, pos, ids}, {driver, jwt}) => {
-        const tx = await driver.session().beginTransaction();
-        try {
-            await ParentMetaSvc.delChPositions2(jwt.sub, ids, tx)
-            await BmSvc.move(jwt.sub, ids, destId, tx)
-            await ParentMetaSvc.addChildPositions(jwt.sub, ids, destId, pos, tx)
-            await tx.commit()
-            return true;
-        } catch (error) {
-            await tx.rollback()
-            throw error;
-        } finally {
-            await tx.close();
-        }
-    },
-    deleteHierarchBmsXGetCollBmCounts: async (_, {input}: { input: SelectedBms[] }, {driver, jwt}) => {
-        const tx = await driver.session().beginTransaction();
-        const bmIds = input.map(i => i.bmIds).flat();
-        try {
-            // Construct and execute the Cypher query
-            const result = await tx.run(`
-                        MATCH (b:Bookmark) WHERE b.id IN $bmIds
-                        OPTIONAL MATCH (c:Collection)-[:CONTAINS*]->(b)
-                        DETACH DELETE b
-                        WITH distinct c
-                        OPTIONAL MATCH (c)-[:CONTAINS*]->(b2:Bookmark)
-                        with c, COUNT(b2) as bmCount
-                        with collect({id: c.id, bmCount: bmCount}) as r
-                        RETURN r
-                `, {bmIds});
-
-            // Extract the nodesDeleted count from the result
-            const res = result.records[0].get('r');
-
-            for (const childsWrapper of input) {
-                await ParentMetaSvc.delChPositions(jwt.sub, childsWrapper.bmIds, childsWrapper.parentId, tx)
+            if (isTest) {
+                await tx.rollback();
             }
-
-            await tx.commit()
-            return res;
+            else {
+                await tx.commit();
+            }
+            return true;
         } catch (error) {
             await tx.rollback()
             throw error;

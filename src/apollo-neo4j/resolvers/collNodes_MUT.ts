@@ -1,4 +1,4 @@
-import {NodesToMove, ParentChilds, SelectedNodes} from "../gen/types.js";
+import {ParentChilds} from "../gen/types.js";
 import {CollNodeSvc} from "../services/collNode.js";
 import {MemberMetaSvc} from "../services/member_meta.js";
 import {ParentMetaSvc} from "../services/parent_meta.js";
@@ -14,32 +14,21 @@ export const collNodes_MUT_typeDefs = gql`
         childIds: [ID!]!
     }
 
-    input NodesToMove {
+    input Nodes {
         collectionIds: [ID!]!
         childs: [ParentChilds!]!
     }
-
-    input SelectedChilds {
-        parentId: ID!
-        bookmarkIds: [ID!]
-        folderIds: [ID!]
-    }
-
-    input SelectedNodes {
-        collectionIds: [ID!]
-        childs: [SelectedChilds!]
-    }
     
     type Mutation {
-        deleteManyNodes(nodes: SelectedNodes!): Int!
-        moveManyNodes(nodes: NodesToMove!, destinationId: ID, position: Int): Boolean!
-        moveBmsToBLC(nodes: SelectedNodes!): Int!
+        deleteManyNodes(nodes: Nodes!): Int!
+        moveManyNodes(nodes: Nodes!, destinationId: ID, position: Int): Boolean!
+        moveBmsToBLC(nodes: [String!]!): Int!
         moveCollNodes2CollNode(parentChildsList: [ParentChilds!]!, destId: ID!, pos: Int): Int!
     }
 `;
 
 export const collNodes_MUT_resolvers = {
-    deleteManyNodes: async (_, {nodes}: { nodes: SelectedNodes }, {driver, jwt}) => {
+    deleteManyNodes: async (_, {nodes}: { nodes: any }, {driver, jwt}) => {
         const tx = await driver.session().beginTransaction();
         try {
             console.log("deleteManyNodes", nodes);
@@ -71,7 +60,7 @@ export const collNodes_MUT_resolvers = {
         }
     },
     moveManyNodes: async (_, {nodes, destinationId, position}: {
-        nodes: NodesToMove,
+        nodes: any,
         destinationId: string | null,
         position: number | null
     }, {driver, jwt}) => {
@@ -92,20 +81,13 @@ export const collNodes_MUT_resolvers = {
             await tx.close();
         }
     },
-    moveBmsToBLC: async (_, {nodes}: { nodes: SelectedNodes }, {driver, jwt, isTest}) => {
+    moveBmsToBLC: async (_, {nodes}: { nodes: string[] }, {driver, jwt, isTest}) => {
         const tx = await driver.session().beginTransaction();
         try {
-            // move collection Bms
-            const parentIds = nodes.collectionIds || []
-            const bmIds: string[] = []
-            if (nodes.childs) {
-                for (const child of nodes.childs) {
-                    if (child.bookmarkIds)
-                        bmIds.push(...child.bookmarkIds)
-                    if (child.folderIds)
-                        parentIds.push(...child.folderIds)
-                }
-            }
+            // extract parent ids from nodes (start with f: or c:)
+            const parentIds = nodes.filter(n => n.startsWith("f:") || n.startsWith("c:"))
+            const bmIds = nodes.filter(n => n.startsWith("b:"))
+
             if (parentIds.length > 0) {
                 await CollNodeSvc.moveDeepParentBmsToBLC(jwt.sub, parentIds, tx)
             }

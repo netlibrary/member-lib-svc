@@ -14,6 +14,7 @@ export const resolvers: Resolvers = mergeResolvers(
         collNodesResolvers,
         generalResolvers,
         bookmarkResolvers,
+        bookmarkResolvers,
         collResolvers,
         folderResolvers,
         member_QUERY_resolvers]

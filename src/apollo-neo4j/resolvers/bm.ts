@@ -1,10 +1,11 @@
 import {bm_MUT_resolver} from "./bm_MUT.js";
 import {bm_QUERY_resolver} from "./bm_QUERY.js";
 import {bmLoose_MUT_resolver} from "./bmLoose_MUT.js";
+import {bmColl_MUT_resolver} from "./bmColl_MUT.js";
 
 
 export const bookmarkResolvers = {
-    Mutation: {...bm_MUT_resolver, ...bmLoose_MUT_resolver},
+    Mutation: {...bm_MUT_resolver, ...bmLoose_MUT_resolver, ...bmColl_MUT_resolver},
     Query: bm_QUERY_resolver
 };
 

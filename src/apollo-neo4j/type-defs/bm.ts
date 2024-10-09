@@ -84,10 +84,7 @@ export const bookmark_typeDefs = gql`
 
 
 
-    input SelectedBms {
-        parentId: ID!
-        bmIds: [ID!]!
-    }
+
 
 
 
