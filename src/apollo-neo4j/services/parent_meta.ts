@@ -1,4 +1,4 @@
-import {ParentMeta, ParentMetaWhere} from "../gen/types.js";
+import {ParentMeta, ParentMetaWhere} from "../../gen/types.js";
 import {ChildPosSvc} from "./child_pos.js";
 
 

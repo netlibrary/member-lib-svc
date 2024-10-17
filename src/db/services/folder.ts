@@ -1,6 +1,6 @@
 import {FolderLabels} from "../type-defs/folder.js";
-import {NodeSvc} from "../services/node.js";
 import {ParentMetaLabels} from "../type-defs/parentMeta.js";
+import {NodeSvc} from "../../apollo-neo4j/services/node.js";
 
 export const Folder_SvcDb = {
     create: async (input: { name: string, parentId: string }, {tx, jwt}): Promise<string> => {

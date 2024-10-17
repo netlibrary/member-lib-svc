@@ -1,6 +1,6 @@
 import {ParentMetaSvc} from "../services/parent_meta.js";
 import {gql} from "graphql-tag";
-import {Folder_SvcDb} from "../services_db/folder.js";
+import {Folder_SvcDb} from "../../db/services/folder.js";
 
 export const folder_MUT_typeDefs = gql`
     type Mutation {

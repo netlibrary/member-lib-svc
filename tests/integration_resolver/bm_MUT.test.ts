@@ -1,12 +1,11 @@
 import {beforeAll, describe, expect, it} from 'vitest';
 import {createTestSuite, TestEnvironment} from "./_init.js";
-import {restoreDbState, saveDbState} from "../helpers/utils_db.js";
-import {testDriver} from "../helpers/driver.js";
 import {memberIds} from "../../global/vars.js";
 import {ChildPosSvc} from "../../src/apollo-neo4j/services/child_pos.js";
-import {BLC_SvcDb} from "../../src/apollo-neo4j/services_db/blc.js";
-import {BmCont_SvcDb} from "../../src/apollo-neo4j/services_db/bmContainer.js";
+
 import {getDriverTxMock} from "../helpers/tx.js";
+import {BmCont_SvcDb} from "../../src/db/services/bmContainer.js";
+import {BLC_SvcDb} from "../../src/db/services/blc.js";
 
 
 describe('Bookmark Mutations', () => {

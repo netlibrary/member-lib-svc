@@ -4,7 +4,7 @@ const config: CodegenConfig = {
   overwrite: true,
   schema: "http://localhost:4000/graphql",
   generates: {
-    "src/apollo-neo4j/gen/types.ts": {
+    "src/gen/types.ts": {
       plugins: ["typescript", "typescript-resolvers"]
     }
   }

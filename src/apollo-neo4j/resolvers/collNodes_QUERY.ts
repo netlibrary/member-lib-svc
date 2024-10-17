@@ -1,4 +1,4 @@
-import {ParentsChildren} from "../gen/types.js";
+import {ParentsChildren} from "../../gen/types.js";
 import neo4j from "neo4j-driver";
 import {bm_CypherSel} from "./bm.js";
 import {gql} from "graphql-tag";

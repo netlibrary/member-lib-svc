@@ -1,4 +1,4 @@
-import {SelectedBms} from "../gen/types.js";
+import {SelectedBms} from "../../gen/types.js";
 import {ParentMetaSvc} from "../services/parent_meta.js";
 import {gql} from "graphql-tag";
 import {BmSvc} from "../services/bm.js";

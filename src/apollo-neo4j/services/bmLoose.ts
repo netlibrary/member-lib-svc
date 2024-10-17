@@ -1,7 +1,7 @@
-import {CreateBookmarkDl} from "../gen/types.js";
-import {BLC_SvcDb} from "../services_db/blc.js";
+import {CreateBookmarkDl} from "../../gen/types.js";
 import {Transaction} from "neo4j-driver";
-import {Bm_SvcDb} from "../services_db/bm.js";
+import {BLC_SvcDb} from "../../db/services/blc.js";
+import {Bm_SvcDb} from "../../db/services/bm.js";
 
 
 export const BmLooseSvc = {

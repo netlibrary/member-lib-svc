@@ -1,5 +1,4 @@
-import {GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig} from 'graphql';
-
+import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -5528,6 +5527,7 @@ export type Mutation = {
   moveColls2CollNode: Scalars['Int']['output'];
   moveManyLooseBm2CollNode: Scalars['Int']['output'];
   moveManyNodes: Scalars['Boolean']['output'];
+  resolveParents: Scalars['Int']['output'];
   updateBmLooseContainers: UpdateBmLooseContainersMutationResponse;
   updateBmsPageds: UpdateBmsPagedsMutationResponse;
   updateBookmarkDl2s: UpdateBookmarkDl2sMutationResponse;
@@ -5889,6 +5889,11 @@ export type MutationMoveManyNodesArgs = {
   destinationId?: InputMaybe<Scalars['ID']['input']>;
   nodes: Nodes;
   position?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type MutationResolveParentsArgs = {
+  parentIds: Array<Scalars['String']['input']>;
 };
 
 
@@ -10597,6 +10602,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   moveColls2CollNode?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationMoveColls2CollNodeArgs, 'collIds' | 'destId'>>;
   moveManyLooseBm2CollNode?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationMoveManyLooseBm2CollNodeArgs, 'destId'>>;
   moveManyNodes?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationMoveManyNodesArgs, 'nodes'>>;
+  resolveParents?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationResolveParentsArgs, 'parentIds'>>;
   updateBmLooseContainers?: Resolver<ResolversTypes['UpdateBmLooseContainersMutationResponse'], ParentType, ContextType, Partial<MutationUpdateBmLooseContainersArgs>>;
   updateBmsPageds?: Resolver<ResolversTypes['UpdateBmsPagedsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateBmsPagedsArgs>>;
   updateBookmarkDl2s?: Resolver<ResolversTypes['UpdateBookmarkDl2sMutationResponse'], ParentType, ContextType, Partial<MutationUpdateBookmarkDl2sArgs>>;

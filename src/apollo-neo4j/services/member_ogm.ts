@@ -1,5 +1,5 @@
 import {AuthSvc} from "./auth.js";
-import {Member} from "../gen/types.js";
+import {Member} from "../../gen/types.js";
 import {AuthenticationError} from "../../errors.js";
 
 

@@ -1,6 +1,6 @@
-import {NodeSvc} from "../services/node.js";
 import {CollectionLabels} from "../type-defs/collection.js";
 import {MemberMetaLabels} from "../type-defs/memberMeta.js";
+import {NodeSvc} from "../../apollo-neo4j/services/node.js";
 
 export const Coll_SvcDb = {
     getCollInfosByIds: async (memberId, ids: string[], tx): Promise<any> => {

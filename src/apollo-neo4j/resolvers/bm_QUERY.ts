@@ -1,4 +1,4 @@
-import {BookmarkFilter_In} from "../gen/types.js";
+import {BookmarkFilter_In} from "../../gen/types.js";
 import neo4j, {Integer, Transaction} from "neo4j-driver";
 import {bm_CypherSel} from "./bm.js";
 

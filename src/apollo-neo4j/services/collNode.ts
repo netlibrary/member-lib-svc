@@ -1,8 +1,8 @@
 import {Transaction} from "neo4j-driver";
 import {MemberMetaSvc} from "./member_meta.js";
 import {ParentMetaSvc} from "./parent_meta.js";
-import {CollNodeSvcDb} from "../services_db/collNode.js";
-import {Nodes, ParentChilds} from "../gen/types.js";
+import {Nodes, ParentChilds} from "../../gen/types.js";
+import {CollNodeSvcDb} from "../../db/services/collNode.js";
 
 const deleteManyCascade = async (ids: string[], tx: Transaction): Promise<number> => {
     const result = await tx.run(`

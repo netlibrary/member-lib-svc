@@ -1,7 +1,7 @@
 import {beforeAll, describe, expect, it} from "vitest";
 import {createTestSuite, TestEnvironment} from "./_init.js";
 import {testDriver} from "../helpers/driver.js";
-import {Nodes, ParentChilds} from "../../src/apollo-neo4j/gen/types.js";
+import {Nodes, ParentChilds} from "../../src/gen/types.js";
 import {restoreDbState, saveDbState} from "../helpers/utils_db.js";
 import {memberIds} from "../../global/vars.js";
 import {ChildPosSvc} from "../../src/apollo-neo4j/services/child_pos.js";

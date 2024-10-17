@@ -3,7 +3,7 @@ import {CollNodeSvc} from "../services/collNode.js";
 import {gql} from "graphql-tag";
 import {ParentMetaSvc} from "../services/parent_meta.js";
 import {CollectionSvc} from "../services/collection.js";
-import {Coll_SvcDb} from "../services_db/coll.js";
+import {Coll_SvcDb} from "../../db/services/coll.js";
 
 export const collection_MUT_typeDefs = gql`
     type Mutation {

@@ -1,9 +1,9 @@
 import {afterAll, vi} from "vitest";
-import {typeDefs} from "../../src/apollo-neo4j/type-defs/_typeDefs.js";
 import {resolvers} from "../../src/apollo-neo4j/resolvers/_resolvers.js";
 import {testDriver} from "../helpers/driver.js";
 import {Neo4jGraphQL} from "@neo4j/graphql";
 import {OGM} from "@neo4j/graphql-ogm";
+import {typeDefs} from "../../src/db/type-defs/_typeDefs.js";
 
 export async function createTestSuite() {
     // Create OGM instance

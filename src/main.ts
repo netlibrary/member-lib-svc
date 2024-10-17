@@ -1,6 +1,6 @@
-import {ogm} from "./apollo-neo4j/ogm.js";
+import {ogm} from "./db/ogm.js";
 import {neoSchema} from "./apollo-neo4j/schema.js"; // Assuming schema is defined in another file
-import {driver} from "./apollo-neo4j/driver.js";
+import {driver} from "./db/driver.js";
 import {startApolloServer} from "./apollo_server.js";
 import {setOGMs} from "../global/ogm.js";
 

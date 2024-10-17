@@ -3,7 +3,7 @@ import {createTestSuite} from "./_init.js";
 import {memberIds} from "../../global/vars.js";
 import {ChildPosSvc} from "../../src/apollo-neo4j/services/child_pos.js";
 import {OGM} from "@neo4j/graphql-ogm";
-import {Folder_SvcDb} from "../../src/apollo-neo4j/services_db/folder.js";
+import {Folder_SvcDb} from "../../src/db/services/folder.js";
 
 describe('Folder Svc', () => {
     let testEnvironment: {

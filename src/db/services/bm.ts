@@ -1,6 +1,6 @@
-import {NodeSvc} from "../services/node.js";
 import {BookmarkLabels} from "../type-defs/bm.js";
-import {CreateBookmarkDl} from "../gen/types.js";
+import {NodeSvc} from "../../apollo-neo4j/services/node.js";
+import {CreateBookmarkDl} from "../../gen/types.js";
 
 export const Bm_SvcDb = {
     create: async (data: CreateBookmarkDl, memberId, tx): Promise<string> => {

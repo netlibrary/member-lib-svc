@@ -1,5 +1,4 @@
 import {afterAll} from "vitest";
-import {typeDefs} from "../../src/apollo-neo4j/type-defs/_typeDefs.js";
 import {resolvers} from "../../src/apollo-neo4j/resolvers/_resolvers.js";
 import {testDriver} from "../helpers/driver.js";
 import {Neo4jGraphQL} from "@neo4j/graphql";
@@ -7,6 +6,7 @@ import {OGM} from "@neo4j/graphql-ogm";
 import {startApolloServer} from "../../src/apollo_server.js";
 import {setOGMs} from "../../global/ogm.js";
 import {memberIds} from "../../global/vars.js";
+import {typeDefs} from "../../src/db/type-defs/_typeDefs.js";
 
 // Define your context type
 export type MyContext = {

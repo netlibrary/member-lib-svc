@@ -1,6 +1,6 @@
 import {ParentMetaSvc} from "./parent_meta.js";
-import {CreateBookmarkDl} from "../gen/types.js";
-import {Bm_SvcDb} from "../services_db/bm.js";
+import {CreateBookmarkDl} from "../../gen/types.js";
+import {Bm_SvcDb} from "../../db/services/bm.js";
 
 
 export const BmCollSvc = {

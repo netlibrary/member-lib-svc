@@ -8,9 +8,9 @@ import {member_typeDefs} from './member.js';
 import {tag_typeDefs} from "./tag.js";
 import {bmLooseContainer_typeDefs} from "./bmLoose.js";
 import {jwt_typeDefs} from "./jwt.js";
-import {resolver_typeDefs} from "../resolvers/_typeDefs.js";
 import {parentMeta_typeDefs} from "./parentMeta.js";
 import {memberMeta_typeDefs} from "./memberMeta.js";
+import {resolver_typeDefs} from "../../apollo-neo4j/resolvers/_typeDefs.js";
 
 export const typeDefs = gql`
   ${jwt_typeDefs}

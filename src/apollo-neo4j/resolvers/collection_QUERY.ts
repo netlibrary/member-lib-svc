@@ -1,5 +1,5 @@
 import {gql} from "graphql-tag";
-import {Coll_SvcDb} from "../services_db/coll.js";
+import {Coll_SvcDb} from "../../db/services/coll.js";
 
 export const collection_QUERY_typeDefs = gql`
     type CollInfo {

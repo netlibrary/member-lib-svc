@@ -4,7 +4,7 @@ import {collNodesResolvers} from './collNodes.js';
 import {mergeResolvers} from '@graphql-tools/merge';
 import {folderResolvers} from "./folder.js";
 import {bookmarkResolvers} from "./bm.js";
-import {Resolvers} from "../gen/types.js";
+import {Resolvers} from "../../gen/types.js";
 import {member_QUERY_resolvers} from "./member_QUERY.js";
 import {collResolvers} from "./collection.js";
 

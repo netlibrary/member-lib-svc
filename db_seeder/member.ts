@@ -7,10 +7,6 @@ import {MemberSvc_Ogm} from "../src/apollo-neo4j/services/member_ogm.js";
 
 export async function seedMembers() {
     const session = seedDriver.session();
-    await session.run(
-        'MATCH (n)\n' +
-        'DETACH DELETE n'
-    );
     try {
         for (const id of memberIds) {
             // const result = await session.run(

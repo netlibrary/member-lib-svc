@@ -1,9 +1,10 @@
-import {ParentChilds} from "../gen/types.js";
+import {ParentChilds} from "../../gen/types.js";
 import {CollNodeSvc} from "../services/collNode.js";
 import {MemberMetaSvc} from "../services/member_meta.js";
 import {ParentMetaSvc} from "../services/parent_meta.js";
 import {Transaction} from "neo4j-driver";
 import {gql} from "graphql-tag";
+import {NodeSvc} from "../services/node.js";
 
 export const collNodes_MUT_typeDefs = gql`
     input ParentChilds {
@@ -20,6 +21,7 @@ export const collNodes_MUT_typeDefs = gql`
         deleteManyNodes(nodes: Nodes!): Int!
         moveManyNodes(nodes: Nodes!, destinationId: ID, position: Int): Boolean!
         moveBmsToBLC(nodes: [String!]!): Int!
+        resolveParents(parentIds: [String!]!): Int!
         moveCollNodes2CollNode(parentChildsList: [ParentChilds!]!, destId: ID!, pos: Int): Int!
     }
 `;
@@ -90,6 +92,27 @@ export const collNodes_MUT_resolvers = {
             }
             if (bmIds.length > 0) {
                 await CollNodeSvc.moveBmsToBLC(jwt.sub, bmIds, tx)
+            }
+
+            if (isTest) {
+                await tx.rollback()
+            } else {
+                await tx.commit()
+            }
+            return 1;
+        } catch (error) {
+            await tx.rollback()
+            throw error;
+        } finally {
+            await tx.close();
+        }
+    },
+    resolveParents: async (_, {parentIds}: { parentIds: string[] }, {driver, jwt, isTest}) => {
+        const tx = await driver.session().beginTransaction();
+        try {
+            if (parentIds.length > 0) {
+                await CollNodeSvc.moveDeepParentBmsToBLC(jwt.sub, parentIds, tx)
+                await NodeSvc.deleteManyCascade(parentIds, tx)
             }
 
             if (isTest) {
